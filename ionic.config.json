@@ -1,0 +1,7 @@
+{
+  "name": "ticket-soporte-rucaray",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
