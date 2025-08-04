@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Panel Principal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+
+      <!--Tarjeta I-->
+      <ion-col size="12" size-md="4" size-lg="3">
+        <ion-card>
+          <ion-item button detail="false" routerLink="/nuevo-ticket" lines="none">
+            <ion-card-header class="ion-text-center">
+              <ion-card-title>NUEVA SOLICITUD DE SOPORTE</ion-card-title>
+              <ion-card-subtitle>
+                Presiona aquí para crear un nuevo ticket de soporte
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content class="ion-text-center">
+              <ion-img
+                src="assets/stickers/soporte-ti.png"
+                alt="Crear nueva orden de trabajo"
+              ></ion-img>
+            </ion-card-content>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <!--Tarjeta II-->
+      <ion-col size="12" size-md="4" size-lg="3">
+        <ion-card>
+          <ion-item button detail="false" routerLink="/nuevaorden" lines="none">
+            <ion-card-header class="ion-text-center">
+              <ion-card-title>HISTORIAL DE SOLICITUDES</ion-card-title>
+              <ion-card-subtitle>
+                Presiona aquí para ver el historial de tus tickets
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content class="ion-text-center">
+              <ion-img
+                src="assets/stickers/historial-tickets.png"
+                alt="Crear nueva orden de trabajo"
+              ></ion-img>
+            </ion-card-content>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-content>
