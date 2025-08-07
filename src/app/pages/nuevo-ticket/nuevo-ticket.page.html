@@ -1,13 +1,103 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>nuevo-ticket</ion-title>
+    <ion-title>Soporte TI - Rucaray</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">nuevo-ticket</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-text>
+        <h1>Enviar una solicitud de soporte</h1>
+      </ion-text>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <p>
+        Estamos aquí para ayudarte. Completa el formulario a continuación y nos
+        pondremos en contacto contigo lo antes posible.
+      </p>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-input
+          fill="outline"
+          label="Título"
+          labelPlacement="stacked"
+          placeholder="Ej.: No puedo conectarme al wifi de la oficina"
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-textarea
+          label="Descripción del problema"
+          labelPlacement="stacked"
+          fill="outline"
+          placeholder="Proporcione tantos detalles como sea posible, incluidos los mensajes de error y los pasos para reproducir el problema."
+        ></ion-textarea>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-select
+          label="Tipo de problema"
+          label-placement="stacked"
+          fill="outline"
+          placeholder="Seleccione una categoría"
+        >
+          <ion-select-option value="hardware">Hardware</ion-select-option>
+          <ion-select-option value="software">Software</ion-select-option>
+          <ion-select-option value="red">Red</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-select
+          label="Prioridad"
+          label-placement="stacked"
+          fill="outline"
+          placeholder="Seleccione un nivel de prioridad"
+        >
+          <ion-select-option value="alta">Alta</ion-select-option>
+          <ion-select-option value="media">Media</ion-select-option>
+          <ion-select-option value="baja">Baja</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-input
+          fill="outline"
+          label="Dispositivo afectado"
+          labelPlacement="stacked"
+          placeholder="Ej.: Dell Laptop, iPhone 13 Pro, etc."
+        ></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item button lines="full">
+          <ion-grid>
+            <ion-row>
+              <ion-label>
+                <p>Adjuntar archivo</p>
+              </ion-label>
+            </ion-row>
+            <ion-row class="ion-justify-content-center">
+              <ion-img src="assets/icon/anadir-doc.png"></ion-img>
+            </ion-row>
+            <ion-row class="ion-justify-content-center">
+              <ion-label>
+                <p>Suba un archivo o arrastre y suelte aquí</p>
+              </ion-label>
+            </ion-row>
+            <ion-row class="ion-justify-content-center">
+              <ion-label>
+                <p>PNG, JPG, PDF hasta 5MB.</p>
+              </ion-label>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
