@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'nuevo-ticket',
     loadChildren: () => import('./pages/nuevo-ticket/nuevo-ticket.module').then( m => m.NuevoTicketPageModule)
   },
+  {
+    path: 'mis-tickets',
+    loadChildren: () => import('./pages/mis-tickets/mis-tickets.module').then( m => m.MisTicketsPageModule)
+  },
 ];
 
 @NgModule({
