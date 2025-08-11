@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'mis-tickets',
     loadChildren: () => import('./pages/mis-tickets/mis-tickets.module').then( m => m.MisTicketsPageModule)
   },
+  {
+    path: 'detalle-ticket',
+    loadChildren: () => import('./pages/detalle-ticket/detalle-ticket.module').then( m => m.DetalleTicketPageModule)
+  },
 ];
 
 @NgModule({

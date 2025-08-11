@@ -1,0 +1,199 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Soporte TI - Rucaray</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="8">
+        <ion-breadcrumbs>
+          <ion-breadcrumb>Tickets</ion-breadcrumb>
+          <ion-breadcrumb>Ticket N°</ion-breadcrumb>
+        </ion-breadcrumbs>
+        <ion-text>
+          <h1>Problema de conectividad de red</h1>
+        </ion-text>
+        <p>
+          Reportado por Victor Sepúlveda el 15 de enero de 2024 a las 10:00 am
+        </p>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Detalles del ticket</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <p>Asunto</p>
+                  <p>Problema de conectividad de red</p>
+                </ion-col>
+                <ion-col>
+                  <p>Prioridad</p>
+                  <ion-chip color="danger">Alta</ion-chip>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <p>Descripción</p>
+                  <p>
+                    No puedo conectarme a la red de la empresa desde mi estación
+                    de trabajo. Esto afecta la productividad.
+                  </p>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <p>Asignado a</p>
+                  <p>Equipo Soporte TI</p>
+                </ion-col>
+                <ion-col>
+                  <p>Departamento</p>
+                  <p>Marketing</p>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <p>Categoría</p>
+                  <p>Red</p>
+                </ion-col>
+                <ion-col>
+                  <p>Estado</p>
+                  <ion-chip color="success">Abierto</ion-chip>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Feed de actividades</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item lines="none">
+                <ion-grid>
+                  <ion-row class="ion-align-items-center">
+                    <ion-col size="auto">
+                      <ion-icon name="ticket-outline" size="large"></ion-icon>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label>Ticket creado</ion-label>
+                      <ion-note>15-ENE-2025 10:00 am</ion-note>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-grid>
+                  <ion-row class="ion-align-items-center">
+                    <ion-col size="auto">
+                      <ion-icon name="person-outline" size="large"></ion-icon>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label>Asignado al Equipo de Soporte TI</ion-label>
+                      <ion-note>15-ENE-2025 10:15 am</ion-note>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-grid>
+                  <ion-row class="ion-align-items-start">
+                    <ion-col size="auto">
+                      <ion-avatar
+                        ><img
+                          alt=""
+                          src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                      /></ion-avatar>
+                    </ion-col>
+                    <ion-col>
+                      <ion-label>Asignado al Equipo de Soporte TI</ion-label>
+                      <ion-note
+                        >Actualmente estamos investigando el problema y
+                        proporcionaremos una actualización en breve.</ion-note
+                      >
+                    </ion-col>
+                    <ion-col size="auto">
+                      <ion-note>15-ENE-2025 10:30 am</ion-note>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Añadir comentario</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="auto">
+                  <ion-avatar
+                    ><img
+                      alt=""
+                      src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                  /></ion-avatar>
+                </ion-col>
+                <ion-col>
+                  <ion-textarea
+                    [autoGrow]="true"
+                    fill="outline"
+                    placeholder="Añadir un comentario..."
+                  ></ion-textarea>
+                  <ion-row class="ion-justify-content-between ion-align-items-center">
+                      <ion-button fill="clear" size="large"><ion-icon name="attach-outline"></ion-icon></ion-button>
+                      <ion-button>ENVIAR</ion-button>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Acciones de tickets</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button expand="block">CERRAR TICKET</ion-button>
+            <ion-button expand="block" fill="clear"
+              >REASIGNAR TICKET</ion-button
+            >
+            <ion-button expand="block" fill="clear">ESCALAR TICKET</ion-button>
+          </ion-card-content>
+        </ion-card>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Archivos adjuntos</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-item button class="item-adjunto">
+              <ion-grid>
+                <ion-row class="ion-justify-content-center">
+                  <ion-text>
+                    <h2>Sin archivos adjuntos</h2>
+                  </ion-text>
+                </ion-row>
+                <ion-row class="ion-justify-content-center">
+                  <p>
+                    Arrastre y suelte archivos aquí, o navegue para cargarlos
+                  </p>
+                </ion-row>
+                <ion-row class="ion-justify-content-center">
+                  <ion-text class="ion-text-center" color="primary">
+                    Buscar archivos
+                  </ion-text>
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
