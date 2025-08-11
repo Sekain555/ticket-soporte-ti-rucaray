@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'detalle-ticket',
     loadChildren: () => import('./pages/detalle-ticket/detalle-ticket.module').then( m => m.DetalleTicketPageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
 ];
 
 @NgModule({
