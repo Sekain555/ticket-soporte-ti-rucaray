@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { NuevoTicketPageRoutingModule } from './nuevo-ticket-routing.module';
 
 import { NuevoTicketPage } from './nuevo-ticket.page';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NuevoTicketPageRoutingModule
+    NuevoTicketPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [NuevoTicketPage]
 })

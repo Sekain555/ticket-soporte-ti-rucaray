@@ -8,12 +8,15 @@ import { PanelPrincipalPageRoutingModule } from './panel-principal-routing.modul
 
 import { PanelPrincipalPage } from './panel-principal.page';
 
+import { ComponentsModule } from '../../components/components.module';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PanelPrincipalPageRoutingModule
+    PanelPrincipalPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [PanelPrincipalPage]
 })

@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { MisTicketsPageRoutingModule } from './mis-tickets-routing.module';
 
 import { MisTicketsPage } from './mis-tickets.page';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MisTicketsPageRoutingModule
+    MisTicketsPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [MisTicketsPage]
 })
