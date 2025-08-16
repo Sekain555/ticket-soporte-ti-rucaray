@@ -17,6 +17,7 @@
           <ion-row class="ion-justify-content-center">
             <ion-col>
               <ion-input
+                [(ngModel)]="usuario"
                 fill="outline"
                 label="Nombre de usuario"
                 labelPlacement="stacked"
@@ -27,17 +28,21 @@
           <ion-row class="ion-justify-content-center">
             <ion-col>
               <ion-input
+                [(ngModel)]="contrasena"
                 fill="outline"
                 label="Contraseña"
                 labelPlacement="stacked"
                 placeholder="Ingrese su contraseña"
+                type="password"
               ></ion-input>
             </ion-col>
           </ion-row>
+          <!--
           <ion-row class="ion-justify-content-between ion-align-items-center">
             <ion-checkbox labelPlacement="end">Recuerdame</ion-checkbox>
             <ion-button fill="clear">¿Has olvidado tu contraseña?</ion-button>
           </ion-row>
+          -->
           <ion-row>
             <ion-col>
               <ion-button expand="block" routerLink="/panel-principal">INICIAR SESIÓN</ion-button>
