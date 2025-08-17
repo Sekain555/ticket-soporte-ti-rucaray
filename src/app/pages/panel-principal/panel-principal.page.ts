@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-panel-principal',
@@ -7,10 +9,21 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 export class PanelPrincipalPage implements OnInit {
+  nombreUsuario: string = '';
+  mensajeBienvenida: string = '';
 
-  constructor() { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-  }
+    if (!this.authService.isLoggedIn()) {
+      // Si no está logueado, redirige al login
+      this.router.navigate(['/login']);
+      return;
+    }
 
+    this.nombreUsuario = this.authService.getNombre() || '';
+  }
 }
