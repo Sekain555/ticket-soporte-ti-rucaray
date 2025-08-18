@@ -18,6 +18,7 @@
     <ion-row>
       <ion-col>
         <ion-input
+          [(ngModel)]="titulo"
           fill="outline"
           label="Título"
           labelPlacement="stacked"
@@ -28,6 +29,7 @@
     <ion-row>
       <ion-col>
         <ion-textarea
+          [(ngModel)]="descripcion"
           label="Descripción del problema"
           labelPlacement="stacked"
           fill="outline"
@@ -38,6 +40,7 @@
     <ion-row>
       <ion-col>
         <ion-select
+          [(ngModel)]="tipo_problema"
           label="Tipo de problema"
           label-placement="stacked"
           fill="outline"
@@ -46,10 +49,12 @@
           <ion-select-option value="hardware">Hardware</ion-select-option>
           <ion-select-option value="software">Software</ion-select-option>
           <ion-select-option value="red">Red</ion-select-option>
+          <ion-select-option value="otro">Otro</ion-select-option>
         </ion-select>
       </ion-col>
       <ion-col>
         <ion-select
+          [(ngModel)]="prioridad"
           label="Prioridad"
           label-placement="stacked"
           fill="outline"
@@ -64,6 +69,7 @@
     <ion-row>
       <ion-col>
         <ion-input
+          [(ngModel)]="dispositivo"
           fill="outline"
           label="Dispositivo afectado"
           labelPlacement="stacked"
@@ -71,6 +77,7 @@
         ></ion-input>
       </ion-col>
     </ion-row>
+    <!--
     <ion-row>
       <ion-col>
         <ion-item button lines="full">
@@ -97,8 +104,9 @@
         </ion-item>
       </ion-col>
     </ion-row>
+    -->
     <ion-row class="ion-justify-content-end">
-      <ion-button>ENVIAR SOLICITUD</ion-button>
+      <ion-button (click)="crearTicket()">ENVIAR SOLICITUD</ion-button>
     </ion-row>
   </ion-grid>
 </ion-content>

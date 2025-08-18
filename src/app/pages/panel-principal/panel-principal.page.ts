@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./panel-principal.page.scss'],
   standalone: false
 })
+
 export class PanelPrincipalPage implements OnInit {
   nombreUsuario: string = '';
   mensajeBienvenida: string = '';
