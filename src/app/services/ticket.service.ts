@@ -22,7 +22,6 @@ export class TicketService {
     dispositivo?: string
   ): Observable<any> {
     const token = this.authService.getToken();
-    console.log("Token enviado:", token);
     if (!token) throw new Error('Usuario no autenticado');
 
     const headers = new HttpHeaders({
