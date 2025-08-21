@@ -9,10 +9,7 @@ import { Observable } from 'rxjs';
 export class TicketService {
   private apiUrl = 'http://127.0.0.1:8000';
 
-  constructor(
-    private http: HttpClient, 
-    private authService: AuthService
-) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   crearTicket(
     titulo: string,
@@ -52,5 +49,9 @@ export class TicketService {
     });
 
     return this.http.get(`${this.apiUrl}/tickets/`, { headers });
+  }
+
+  obtenerTicketPorId(id_ticket: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/tickets/${id_ticket}/`);
   }
 }

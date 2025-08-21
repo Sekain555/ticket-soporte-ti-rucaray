@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
         if(rol === 'admin') {
           this.router.navigate(['/panel-principal']);
         } else if(rol === 'soporte') {
-          this.router.navigate(['/mis-tickets']);
+          this.router.navigate(['/panel-principal']);
         } else {
           this.router.navigate(['/panel-principal']);
         }

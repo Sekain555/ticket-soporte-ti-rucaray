@@ -20,7 +20,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/mis-tickets/mis-tickets.module').then( m => m.MisTicketsPageModule)
   },
   {
-    path: 'detalle-ticket',
+    path: 'detalle-ticket/:id_ticket',
     loadChildren: () => import('./pages/detalle-ticket/detalle-ticket.module').then( m => m.DetalleTicketPageModule)
   },
   {

@@ -1,5 +1,5 @@
 <ion-header>
-  <app-header></app-header>
+  <app-header [mostrarBackButton]="true"></app-header>
 </ion-header>
 
 <ion-content>
@@ -52,14 +52,14 @@
     </ion-row>
     <ion-row class="ion-align-items-center">
       <ion-list>
-        <ion-item *ngFor="let ticket of tickets" lines="full">
+        <ion-item *ngFor="let ticket of tickets" lines="full" [routerLink]="['/detalle-ticket', ticket.id_ticket]">
           <ion-grid [fixed]="true">
             <ion-row>
               <ion-col size="2.4">{{ ticket.id_ticket }}</ion-col>
               <ion-col size="2.4">{{ ticket.titulo }}</ion-col>
               <ion-col size="2.4">{{ ticket.estado }}</ion-col>
-              <ion-col size="2.4">{{ ticket.fecha_creacion | date:'short' }}</ion-col>
-              <ion-col size="2.4">{{ ticket.fecha_actualizacion | date:'short' }}</ion-col>
+              <ion-col size="2.4">{{ ticket.fecha_creacion | date:'dd-MMM-yyyy HH:mm' }}</ion-col>
+              <ion-col size="2.4">{{ ticket.fecha_actualizacion | date:'dd-MMM-yyyy HH:mm' }}</ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>

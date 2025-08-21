@@ -1,5 +1,5 @@
 <ion-header>
-  <app-header></app-header>
+  <app-header [mostrarBackButton]="true"></app-header>
 </ion-header>
 
 <ion-content>
@@ -8,13 +8,13 @@
       <ion-col size="8">
         <ion-breadcrumbs>
           <ion-breadcrumb>Tickets</ion-breadcrumb>
-          <ion-breadcrumb>Ticket N°</ion-breadcrumb>
+          <ion-breadcrumb>Ticket N° {{ ticket?.id_ticket }}</ion-breadcrumb>
         </ion-breadcrumbs>
         <ion-text>
-          <h1>Problema de conectividad de red</h1>
+          <h1>{{ ticket?.titulo }}</h1>
         </ion-text>
         <p>
-          Reportado por Victor Sepúlveda el 15 de enero de 2024 a las 10:00 am
+          Reportado por {{ticket?.id_usuario}} el {{ticket?.fecha_creacion | date: 'dd-MMM-yyyy HH:mm'}}
         </p>
         <ion-card>
           <ion-card-header>
@@ -25,19 +25,18 @@
               <ion-row>
                 <ion-col>
                   <p>Asunto</p>
-                  <p>Problema de conectividad de red</p>
+                  <p>{{ticket?.titulo}}</p>
                 </ion-col>
                 <ion-col>
                   <p>Prioridad</p>
-                  <ion-chip color="danger">Alta</ion-chip>
+                  <ion-chip color="danger">{{ticket?.prioridad}}</ion-chip>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col>
                   <p>Descripción</p>
                   <p>
-                    No puedo conectarme a la red de la empresa desde mi estación
-                    de trabajo. Esto afecta la productividad.
+                    {{ticket?.descripcion}}
                   </p>
                 </ion-col>
               </ion-row>
@@ -54,11 +53,11 @@
               <ion-row>
                 <ion-col>
                   <p>Categoría</p>
-                  <p>Red</p>
+                  <p>{{ticket?.tipo_problema}}</p>
                 </ion-col>
                 <ion-col>
                   <p>Estado</p>
-                  <ion-chip color="success">Abierto</ion-chip>
+                  <ion-chip color="success">{{ticket?.estado}}</ion-chip>
                 </ion-col>
               </ion-row>
             </ion-grid>
