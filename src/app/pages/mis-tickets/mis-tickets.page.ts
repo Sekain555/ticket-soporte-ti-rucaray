@@ -6,7 +6,7 @@ import { ToastController } from '@ionic/angular';
   selector: 'app-mis-tickets',
   templateUrl: './mis-tickets.page.html',
   styleUrls: ['./mis-tickets.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class MisTicketsPage implements OnInit {
   tickets: any[] = [];
@@ -14,7 +14,7 @@ export class MisTicketsPage implements OnInit {
   constructor(
     private ticketService: TicketService,
     private toastCtrl: ToastController
-  ) { }
+  ) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token');
@@ -25,13 +25,38 @@ export class MisTicketsPage implements OnInit {
         },
         error: (err) => {
           console.error('Error al cargar los tickets:', err);
-          this.toastCtrl.create({
-            message: 'Error al cargar los tickets',
-            color: 'danger',
-            duration: 3000
-          }).then(toast => toast.present());
-        }
+          this.toastCtrl
+            .create({
+              message: 'Error al cargar los tickets',
+              color: 'danger',
+              duration: 3000,
+            })
+            .then((toast) => toast.present());
+        },
       });
     }
+  }
+
+  getColorPrioridad(prioridad: string): string {
+    const colores: Record<string, string> = {
+      alta: 'danger',
+      media: 'warning',
+      baja: 'success',
+    };
+    return colores[prioridad?.toLowerCase()] || 'medium';
+  }
+
+  getColorEstado(estado: string): string {
+    const colores: Record<string, string> = {
+      abierto: 'success',
+      'en progreso': 'warning',
+      cerrado: 'danger',
+    };
+    return colores[estado?.toLowerCase()] || 'medium';
+  }
+
+  capitalize(text: string): string {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
 }

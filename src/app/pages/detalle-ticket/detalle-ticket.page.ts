@@ -8,7 +8,6 @@ import { TicketService } from 'src/app/services/ticket.service';
   styleUrls: ['./detalle-ticket.page.scss'],
   standalone: false,
 })
-
 export class DetalleTicketPage implements OnInit {
   ticket: any;
 
@@ -24,5 +23,28 @@ export class DetalleTicketPage implements OnInit {
         this.ticket = res;
       });
     }
+  }
+
+  getColorPrioridad(prioridad: string): string {
+    const colores: Record<string, string> = {
+      alta: 'danger',
+      media: 'warning',
+      baja: 'success',
+    };
+    return colores[prioridad?.toLowerCase()] || 'medium';
+  }
+
+  getColorEstado(estado: string): string {
+    const colores: Record<string, string> = {
+      abierto: 'success',
+      'en progreso': 'warning',
+      cerrado: 'danger',
+    };
+    return colores[estado?.toLowerCase()] || 'medium';
+  }
+
+  capitalize(text: string): string {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
 }

@@ -10,11 +10,13 @@
           <ion-breadcrumb>Tickets</ion-breadcrumb>
           <ion-breadcrumb>Ticket N° {{ ticket?.id_ticket }}</ion-breadcrumb>
         </ion-breadcrumbs>
-        <ion-text>
+        <ion-text class="ion-margin-bottom">
           <h1>{{ ticket?.titulo }}</h1>
         </ion-text>
         <p>
-          Reportado por {{ticket?.id_usuario}} el {{ticket?.fecha_creacion | date: 'dd-MMM-yyyy HH:mm'}}
+          Reportado por {{ticket?.nombre_usuario}} {{ticket?.apellido_usuario}}
+          el {{ticket?.fecha_creacion | date: 'dd-MMM-yyyy HH:mm'}} | {{
+          ticket?.departamento_usuario }} | {{ ticket?.puesto_usuario }}
         </p>
         <ion-card>
           <ion-card-header>
@@ -22,44 +24,38 @@
           </ion-card-header>
           <ion-card-content>
             <ion-grid>
-              <ion-row>
+              <ion-row class="ion-margin-bottom">
                 <ion-col>
-                  <p>Asunto</p>
-                  <p>{{ticket?.titulo}}</p>
+                  <strong>DESCRIPCIÓN</strong>
+                  <p>{{ticket?.descripcion}}</p>
                 </ion-col>
                 <ion-col>
-                  <p>Prioridad</p>
-                  <ion-chip color="danger">{{ticket?.prioridad}}</ion-chip>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col>
-                  <p>Descripción</p>
-                  <p>
-                    {{ticket?.descripcion}}
-                  </p>
+                  <strong>CATEGORÍA</strong>
+                  <p>{{ capitalize(ticket?.tipo_problema) }}</p>
                 </ion-col>
               </ion-row>
+              <ion-row class="ion-margin-bottom">
+                <ion-col>
+                  <strong class="ion-display-block">ESTADO</strong>
+                  <ion-chip [color]="getColorEstado(ticket?.estado)"
+                    >{{ capitalize(ticket?.estado) }}</ion-chip
+                  >
+                </ion-col>
+                <ion-col>
+                  <strong class="ion-display-block">PRIORIDAD</strong>
+                  <ion-chip [color]="getColorPrioridad(ticket?.prioridad)"
+                    >{{ capitalize(ticket?.prioridad) }}</ion-chip
+                  >
+                </ion-col>
+              </ion-row>
+              <!--
               <ion-row>
                 <ion-col>
-                  <p>Asignado a</p>
+                  <p>ASIGNADO A</p>
                   <p>Equipo Soporte TI</p>
                 </ion-col>
-                <ion-col>
-                  <p>Departamento</p>
-                  <p>Marketing</p>
-                </ion-col>
               </ion-row>
-              <ion-row>
-                <ion-col>
-                  <p>Categoría</p>
-                  <p>{{ticket?.tipo_problema}}</p>
-                </ion-col>
-                <ion-col>
-                  <p>Estado</p>
-                  <ion-chip color="success">{{ticket?.estado}}</ion-chip>
-                </ion-col>
-              </ion-row>
+              -->
             </ion-grid>
           </ion-card-content>
         </ion-card>
@@ -141,9 +137,11 @@
                     fill="outline"
                     placeholder="Añadir un comentario..."
                   ></ion-textarea>
-                  <ion-row class="ion-justify-content-between ion-align-items-center">
-                      <ion-button fill="clear" size="large"><ion-icon name="attach-outline"></ion-icon></ion-button>
-                      <ion-button>ENVIAR</ion-button>
+                  <ion-row
+                    class="ion-justify-content-end ion-align-items-center"
+                  >
+                    <!--<ion-button fill="clear" size="large"><ion-icon name="attach-outline"></ion-icon></ion-button>-->
+                    <ion-button>ENVIAR</ion-button>
                   </ion-row>
                 </ion-col>
               </ion-row>
@@ -164,6 +162,7 @@
             <ion-button expand="block" fill="clear">ESCALAR TICKET</ion-button>
           </ion-card-content>
         </ion-card>
+        <!--
         <ion-card>
           <ion-card-header>
             <ion-card-title>Archivos adjuntos</ion-card-title>
@@ -190,6 +189,7 @@
             </ion-item>
           </ion-card-content>
         </ion-card>
+        -->
       </ion-col>
     </ion-row>
   </ion-grid>
