@@ -10,13 +10,12 @@
           <ion-breadcrumb>Tickets</ion-breadcrumb>
           <ion-breadcrumb>Ticket N° {{ ticket?.id_ticket }}</ion-breadcrumb>
         </ion-breadcrumbs>
-        <ion-text class="ion-margin-bottom">
-          <h1>{{ ticket?.titulo }}</h1>
+        <ion-text>
+          <h1>{{ ticket?.titulo }} | {{ ticket?.dispositivo }}</h1>
         </ion-text>
         <p>
           Reportado por {{ticket?.nombre_usuario}} {{ticket?.apellido_usuario}}
-          el {{ticket?.fecha_creacion | date: 'dd-MMM-yyyy HH:mm'}} | {{
-          ticket?.departamento_usuario }} | {{ ticket?.puesto_usuario }}
+          | {{ ticket?.departamento_usuario }} | {{ ticket?.puesto_usuario }}
         </p>
         <ion-card>
           <ion-card-header>
@@ -65,51 +64,40 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ion-item lines="none">
+              <ion-item lines="none" *ngFor="let item of feed">
                 <ion-grid>
                   <ion-row class="ion-align-items-center">
+                    <!-- Icono o avatar según tipo -->
                     <ion-col size="auto">
-                      <ion-icon name="ticket-outline" size="large"></ion-icon>
+                      <ng-container *ngIf="!esComentario(item); else avatar">
+                        <ion-icon
+                          [name]="getIconoActividad(item.tipo)"
+                          size="large"
+                        ></ion-icon>
+                      </ng-container>
+                      <ng-template #avatar>
+                        <ion-avatar>
+                          <img
+                            alt=""
+                            src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                          />
+                        </ion-avatar>
+                      </ng-template>
                     </ion-col>
+
+                    <!-- Detalle de actividad o comentario -->
                     <ion-col>
-                      <ion-label>Ticket creado</ion-label>
-                      <ion-note>15-ENE-2025 10:00 am</ion-note>
+                      <ion-label>{{ item.detalle || item.tipo }}</ion-label>
+                      <ion-note>
+                        {{ item.nombre_usuario }} {{ item.apellido_usuario }}
+                      </ion-note>
                     </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-grid>
-                  <ion-row class="ion-align-items-center">
+
+                    <!-- Fecha -->
                     <ion-col size="auto">
-                      <ion-icon name="person-outline" size="large"></ion-icon>
-                    </ion-col>
-                    <ion-col>
-                      <ion-label>Asignado al Equipo de Soporte TI</ion-label>
-                      <ion-note>15-ENE-2025 10:15 am</ion-note>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-grid>
-                  <ion-row class="ion-align-items-start">
-                    <ion-col size="auto">
-                      <ion-avatar
-                        ><img
-                          alt=""
-                          src="https://ionicframework.com/docs/img/demos/avatar.svg"
-                      /></ion-avatar>
-                    </ion-col>
-                    <ion-col>
-                      <ion-label>Asignado al Equipo de Soporte TI</ion-label>
                       <ion-note
-                        >Actualmente estamos investigando el problema y
-                        proporcionaremos una actualización en breve.</ion-note
+                        >{{ item.fecha | date:'dd-MMM-yyyy HH:mm' }}</ion-note
                       >
-                    </ion-col>
-                    <ion-col size="auto">
-                      <ion-note>15-ENE-2025 10:30 am</ion-note>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -133,6 +121,7 @@
                 </ion-col>
                 <ion-col>
                   <ion-textarea
+                    [(ngModel)]="nuevoComentario"
                     [autoGrow]="true"
                     fill="outline"
                     placeholder="Añadir un comentario..."
@@ -141,7 +130,7 @@
                     class="ion-justify-content-end ion-align-items-center"
                   >
                     <!--<ion-button fill="clear" size="large"><ion-icon name="attach-outline"></ion-icon></ion-button>-->
-                    <ion-button>ENVIAR</ion-button>
+                    <ion-button (click)="agregarComentario()">ENVIAR</ion-button>
                   </ion-row>
                 </ion-col>
               </ion-row>
