@@ -1,9 +1,57 @@
-ion-avatar {
-  width: 40px;
-  height: 40px;
+.card-accion {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  ion-card-header {
+    text-align: center;
+  }
+
+  ion-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  ion-card-subtitle {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .img-sticker {
+    width: 100%;
+    height: auto;       // mantiene proporción
+    max-height: 250px;  // opcional, evita que se haga demasiado grande en pantallas grandes
+    object-fit: contain; // no recorta
+    display: block;
+    margin: 16px 16px;
+  }
 }
 
-.img-sticker {
-  width: 180px;
-  height: 180px;
+// Ajustes responsivos
+@media (max-width: 768px) {
+  .img-sticker {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .img-sticker {
+    max-height: 150px;
+  }
 }

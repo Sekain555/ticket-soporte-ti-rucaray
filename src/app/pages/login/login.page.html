@@ -1,5 +1,5 @@
 <ion-content>
-  <ion-grid>
+  <ion-grid class="ion-padding-top ion-padding-bottom">
     <ion-row class="ion-justify-content-center">
       <ion-img src="assets/stickers/soporte-ti-rucaray.png"></ion-img>
     </ion-row>
@@ -11,45 +11,51 @@
     <ion-row class="ion-justify-content-center">
       <p>¡Bienvenido de nuevo! Inicia sesión en tu cuenta.</p>
     </ion-row>
-    <ion-card>
-      <ion-card-content>
-        <ion-grid>
-          <ion-row class="ion-justify-content-center">
-            <ion-col>
-              <ion-input
-                [(ngModel)]="usuario"
-                fill="outline"
-                label="Nombre de usuario"
-                labelPlacement="stacked"
-                placeholder="Ingrese su nombre de usuario"
-              ></ion-input>
-            </ion-col>
-          </ion-row>
-          <ion-row class="ion-justify-content-center">
-            <ion-col>
-              <ion-input
-                [(ngModel)]="contrasena"
-                fill="outline"
-                label="Contraseña"
-                labelPlacement="stacked"
-                placeholder="Ingrese su contraseña"
-                type="password"
-              ></ion-input>
-            </ion-col>
-          </ion-row>
-          <!--
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-xs="12" size-sm="8" size-md="6" size-lg="4">
+        <ion-card class="form-card">
+          <ion-card-content>
+            <ion-grid>
+              <ion-row class="ion-justify-content-center">
+                <ion-col>
+                  <ion-input
+                    [(ngModel)]="usuario"
+                    fill="outline"
+                    label="Nombre de usuario"
+                    labelPlacement="stacked"
+                    placeholder="Ingrese su nombre de usuario"
+                  ></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-justify-content-center">
+                <ion-col>
+                  <ion-input
+                    [(ngModel)]="contrasena"
+                    fill="outline"
+                    label="Contraseña"
+                    labelPlacement="stacked"
+                    placeholder="Ingrese su contraseña"
+                    type="password"
+                  ></ion-input>
+                </ion-col>
+              </ion-row>
+              <!--
           <ion-row class="ion-justify-content-between ion-align-items-center">
             <ion-checkbox labelPlacement="end">Recuerdame</ion-checkbox>
             <ion-button fill="clear">¿Has olvidado tu contraseña?</ion-button>
           </ion-row>
           -->
-          <ion-row>
-            <ion-col>
-              <ion-button expand="block" (click)="loginUser()">INICIAR SESIÓN</ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-card-content>
-    </ion-card>
+              <ion-row>
+                <ion-col>
+                  <ion-button expand="block" (click)="loginUser()"
+                    >INICIAR SESIÓN</ion-button
+                  >
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>

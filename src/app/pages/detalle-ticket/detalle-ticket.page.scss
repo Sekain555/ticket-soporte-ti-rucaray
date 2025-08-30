@@ -8,3 +8,9 @@ ion-avatar {
   --border-width: 1px;
   --border-radius: 6px;
 }
+
+.subtitulo-pagina {
+  margin: 16px 0;
+  padding-left: 16px;  // misma sangría que los cards
+  font-size: 1rem;
+}

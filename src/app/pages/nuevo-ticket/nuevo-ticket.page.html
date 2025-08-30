@@ -11,73 +11,81 @@
     </ion-row>
     <ion-row class="ion-justify-content-center">
       <p>
-        Estamos aquí para ayudarte. Completa el formulario a continuación y nos
-        pondremos en contacto contigo lo antes posible.
+        Estamos aquí para ayudarte. Completa el formulario y nos pondremos en
+        contacto contigo lo antes posible.
       </p>
     </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-input
-          [(ngModel)]="titulo"
-          fill="outline"
-          label="Título"
-          labelPlacement="stacked"
-          placeholder="Ej.: No puedo conectarme al wifi de la oficina"
-        ></ion-input>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-textarea
-          [(ngModel)]="descripcion"
-          label="Descripción del problema"
-          labelPlacement="stacked"
-          fill="outline"
-          placeholder="Proporcione tantos detalles como sea posible, incluidos los mensajes de error y los pasos para reproducir el problema."
-        ></ion-textarea>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-select
-          [(ngModel)]="tipo_problema"
-          label="Tipo de problema"
-          label-placement="stacked"
-          fill="outline"
-          placeholder="Seleccione una categoría"
-        >
-          <ion-select-option value="hardware">Hardware</ion-select-option>
-          <ion-select-option value="software">Software</ion-select-option>
-          <ion-select-option value="red">Red</ion-select-option>
-          <ion-select-option value="otro">Otro</ion-select-option>
-        </ion-select>
-      </ion-col>
-      <ion-col>
-        <ion-select
-          [(ngModel)]="prioridad"
-          label="Prioridad"
-          label-placement="stacked"
-          fill="outline"
-          placeholder="Seleccione un nivel de prioridad"
-        >
-          <ion-select-option value="alta">Alta</ion-select-option>
-          <ion-select-option value="media">Media</ion-select-option>
-          <ion-select-option value="baja">Baja</ion-select-option>
-        </ion-select>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-input
-          [(ngModel)]="dispositivo"
-          fill="outline"
-          label="Dispositivo afectado"
-          labelPlacement="stacked"
-          placeholder="Ej.: Dell Laptop, iPhone 13 Pro, etc."
-        ></ion-input>
-      </ion-col>
-    </ion-row>
-    <!--
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6">
+        <ion-card class="form-card">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  [(ngModel)]="titulo"
+                  fill="outline"
+                  label="Título"
+                  labelPlacement="stacked"
+                  placeholder="Ej.: No puedo conectarme al wifi de la oficina"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-textarea
+                  [(ngModel)]="descripcion"
+                  label="Descripción del problema"
+                  labelPlacement="stacked"
+                  fill="outline"
+                  placeholder="Proporcione tantos detalles como sea posible."
+                ></ion-textarea>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-select
+                  [(ngModel)]="tipo_problema"
+                  label="Tipo de problema"
+                  label-placement="stacked"
+                  fill="outline"
+                  placeholder="Seleccione una categoría"
+                >
+                  <ion-select-option value="hardware"
+                    >Hardware</ion-select-option
+                  >
+                  <ion-select-option value="software"
+                    >Software</ion-select-option
+                  >
+                  <ion-select-option value="red">Red</ion-select-option>
+                  <ion-select-option value="otro">Otro</ion-select-option>
+                </ion-select>
+              </ion-col>
+              <ion-col>
+                <ion-select
+                  [(ngModel)]="prioridad"
+                  label="Prioridad"
+                  label-placement="stacked"
+                  fill="outline"
+                  placeholder="Seleccione un nivel de prioridad"
+                >
+                  <ion-select-option value="alta">Alta</ion-select-option>
+                  <ion-select-option value="media">Media</ion-select-option>
+                  <ion-select-option value="baja">Baja</ion-select-option>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  [(ngModel)]="dispositivo"
+                  fill="outline"
+                  label="Dispositivo afectado"
+                  labelPlacement="stacked"
+                  placeholder="Ej.: Dell Laptop, iPhone 13 Pro, etc."
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+            <!--
     <ion-row>
       <ion-col>
         <ion-item button lines="full">
@@ -105,8 +113,12 @@
       </ion-col>
     </ion-row>
     -->
-    <ion-row class="ion-justify-content-end">
-      <ion-button (click)="crearTicket()">ENVIAR SOLICITUD</ion-button>
+            <ion-row class="ion-justify-content-end">
+              <ion-button (click)="crearTicket()">ENVIAR SOLICITUD</ion-button>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

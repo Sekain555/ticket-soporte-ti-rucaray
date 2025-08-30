@@ -35,3 +35,16 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+.form-card {
+  border-radius: 12px;       /* Bordes redondeados consistentes */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+  padding: 6px;
+}
+
+.titulo-pagina {
+  margin: 16px 0;
+  padding-left: 16px;  // misma sangría que los cards
+  font-size: 1.5rem;
+  font-weight: bold;
+}

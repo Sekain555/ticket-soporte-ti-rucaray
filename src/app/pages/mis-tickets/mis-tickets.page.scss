@@ -1,0 +1,26 @@
+.titulo-mis-solicitudes {
+  margin: 16px 0;       // separa de arriba y abajo
+  padding-left: 16px;   // mismo valor que el margin del card
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.tabla-tickets {
+  width: calc(100% - 32px); // resta márgenes laterales
+  margin: 0 16px 16px 16px; // misma sangría que el título
+  padding: 6px 6px;
+  border-radius: 12px;
+  overflow-x: auto;
+
+  ion-list {
+    width: 100%;
+  }
+}
+
+.listado-tickets {
+  ion-item {
+    justify-content: center;   // centra horizontalmente
+    text-align: center;        // centra el texto
+    align-items: center;       // centra verticalmente el contenido
+  }
+}
