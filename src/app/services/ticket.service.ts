@@ -88,4 +88,25 @@ export class TicketService {
       headers,
     });
   }
+
+  cambiarEstadoTicket(id_ticket: string, nuevoEstado: string, comentario: string): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) throw new Error('Usuario no autenticado');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    const body = {
+      nuevo_estado: nuevoEstado,
+      comentario: comentario,
+    };
+
+    return this.http.patch(
+      `${this.apiUrl}/tickets/${id_ticket}/estado`,
+      body,
+      { headers }
+    );
+  }
 }

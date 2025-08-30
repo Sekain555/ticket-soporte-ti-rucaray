@@ -64,14 +64,14 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              <ion-item lines="none" *ngFor="let item of feed">
+              <ion-item lines="inset" *ngFor="let item of feed">
                 <ion-grid>
                   <ion-row class="ion-align-items-center">
                     <!-- Icono o avatar según tipo -->
                     <ion-col size="auto">
                       <ng-container *ngIf="!esComentario(item); else avatar">
                         <ion-icon
-                          [name]="getIconoActividad(item.tipo)"
+                          [name]="getIconoActividad(item.tipo, item.detalle)"
                           size="large"
                         ></ion-icon>
                       </ng-container>
@@ -130,7 +130,9 @@
                     class="ion-justify-content-end ion-align-items-center"
                   >
                     <!--<ion-button fill="clear" size="large"><ion-icon name="attach-outline"></ion-icon></ion-button>-->
-                    <ion-button (click)="agregarComentario()">ENVIAR</ion-button>
+                    <ion-button (click)="agregarComentario()"
+                      >ENVIAR</ion-button
+                    >
                   </ion-row>
                 </ion-col>
               </ion-row>
@@ -144,7 +146,12 @@
             <ion-card-title>Acciones de tickets</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button expand="block">CERRAR TICKET</ion-button>
+            <ion-button
+              expand="block"
+              [color]="ticket?.estado === 'cerrado' ? 'success' : 'danger'"
+              (click)="toggleEstadoTicket()"
+              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR TICKET' }}</ion-button
+            >
             <ion-button expand="block" fill="clear"
               >REASIGNAR TICKET</ion-button
             >
