@@ -6,17 +6,13 @@ import { Router } from '@angular/router';
   selector: 'app-panel-principal',
   templateUrl: './panel-principal.page.html',
   styleUrls: ['./panel-principal.page.scss'],
-  standalone: false
+  standalone: false,
 })
-
 export class PanelPrincipalPage implements OnInit {
   nombreUsuario: string = '';
   mensajeBienvenida: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     if (!this.authService.isLoggedIn()) {
@@ -26,5 +22,13 @@ export class PanelPrincipalPage implements OnInit {
     }
 
     this.nombreUsuario = this.authService.getNombre() || '';
+
+    this.aplicarTema();
+  }
+
+  aplicarTema() {
+    const tema = localStorage.getItem('tema') || 'theme-default';
+    document.body.classList.remove('theme-default', 'theme-especial');
+    document.body.classList.add(tema);
   }
 }

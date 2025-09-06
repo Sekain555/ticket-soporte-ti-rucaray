@@ -34,7 +34,7 @@
   }
 
   .img-sticker {
-    width: 100%;
+    max-width: 100%;
     height: auto;       // mantiene proporción
     max-height: 250px;  // opcional, evita que se haga demasiado grande en pantallas grandes
     object-fit: contain; // no recorta

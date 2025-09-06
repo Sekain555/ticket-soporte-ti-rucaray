@@ -37,14 +37,189 @@
 @import "@ionic/angular/css/palettes/dark.system.css";
 
 .form-card {
-  border-radius: 12px;       /* Bordes redondeados consistentes */
+  border-radius: 12px; /* Bordes redondeados consistentes */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra ligera */
   padding: 6px;
 }
 
 .titulo-pagina {
   margin: 16px 0;
-  padding-left: 16px;  // misma sangría que los cards
+  padding-left: 16px; // misma sangría que los cards
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+/* Tema especial (solo 1 usuario) */
+.theme-especial {
+  /* Fondo general */
+  --ion-background-color: #f4b6d3;
+
+  /* Cards */
+  --ion-card-background: #f6d9e5;
+  --ion-card-color: #3b0a2a; /* color del texto dentro de cards */
+  --ion-card-title-color: var(--ion-card-color);
+
+  ion-card ion-item,
+  ion-card-title,
+  ion-card-subtitle {
+    --background: var(--ion-card-background) !important;
+    --color: var(--ion-card-color) !important;
+  }
+
+  /* Texto general */
+  --ion-text-color: #6f1d3b; /* párrafos normales */
+  --ion-text-color-step-1: #5e132b; /* títulos y encabezados */
+
+  /* Botones */
+  --ion-color-primary: #e999c6; /* color de fondo del botón */
+  --ion-color-primary-contrast: #ffffff; /* color del texto del botón */
+
+  --ion-toolbar-background: #e999c6;
+
+  /* asegurar que el card padre muestre su fondo (por si acaso) */
+  .tabla-tickets {
+    background-color: var(--ion-card-background) !important;
+  }
+
+  /* que el ion-list no pinte un fondo extra por debajo */
+  .tabla-tickets ion-list.listado-tickets {
+    --background: transparent !important;
+    background: transparent !important;
+  }
+
+  /* filas: forzamos fondo, color y líneas suaves (usa ::part para shadow DOM) */
+  .tabla-tickets ion-list.listado-tickets > ion-item.item {
+    --background: var(--ion-card-background) !important;
+    background-color: var(--ion-card-background) !important;
+
+    --color: var(--ion-card-color) !important;
+    color: var(--ion-card-color) !important;
+
+    --border-color: rgba(59, 10, 42, 0.08) !important;
+    --inner-border-width: 1px !important;
+  }
+
+  /* también forzamos el elemento interno renderizado (shadow DOM) */
+  .tabla-tickets ion-list.listado-tickets > ion-item.item::part(native) {
+    background-color: var(--ion-card-background) !important;
+    color: var(--ion-card-color) !important;
+    border-color: rgba(59, 10, 42, 0.08) !important;
+  }
+
+  /* cabecera de la tabla (primer ion-item) — si quieres que destaque */
+  .tabla-tickets ion-list.listado-tickets:first-of-type > ion-item.item {
+    --background: var(--ion-toolbar-background) !important;
+    background-color: var(--ion-toolbar-background) !important;
+    --color: var(--ion-card-color) !important;
+    color: var(--ion-card-color) !important;
+  }
+
+  /* Feed de actividades - mantener fondos claros y colores coherentes */
+  .form-card {
+    /* Aseguramos que el card padre muestre su fondo claro */
+    background-color: var(--ion-card-background) !important;
+  }
+
+  /* ion-list dentro del card: transparente para ver el fondo del card */
+  .form-card ion-list {
+    --background: transparent !important;
+    background: transparent !important;
+    padding: 0; /* opcional: evita padding extra del list */
+  }
+
+  /* Cada fila (ion-item) usa el fondo del card y color consistente */
+  .form-card ion-list > ion-item {
+    --background: var(--ion-card-background) !important;
+    background-color: var(--ion-card-background) !important;
+
+    --color: var(--ion-card-color) !important;
+    color: var(--ion-card-color) !important;
+
+    /* líneas y separadores suaves */
+    --border-color: rgba(59, 10, 42, 0.08) !important;
+    --inner-border-width: 1px !important;
+  }
+
+  /* Forzamos también la parte interna del item (shadow DOM) */
+  .form-card ion-list > ion-item::part(native) {
+    background-color: var(--ion-card-background) !important;
+    color: var(--ion-card-color) !important;
+    border-color: rgba(59, 10, 42, 0.08) !important;
+  }
+
+  /* Iconos / avatar / notas dentro del item */
+  .form-card ion-icon,
+  .form-card ion-avatar,
+  .form-card ion-label {
+    color: var(--ion-card-color) !important;
+  }
+
+  /* Notas (subtexto) ligeramente más suave */
+  .form-card ion-note {
+    color: var(--ion-text-color) !important;
+    opacity: 0.9;
+    font-size: 0.9rem;
+  }
+
+  /* Si usas items con clase .item-adjunto (bordes punteados), que armonicen */
+  .form-card .item-adjunto {
+    --border-color: rgba(59, 10, 42, 0.12) !important;
+    --border-width: 1px !important;
+    --border-radius: 6px;
+  }
+
+  ion-action-sheet {
+    --color: var(--ion-card-color);
+    --button-color: var(--ion-card-color);
+  }
+
+  /* Forzar color dentro del shadow DOM del select */
+  ion-select::part(native) {
+    color: var(--ion-text-color) !important;
+  }
+
+  /* Overlays que genera ion-select (sin tocar HTML).
+     Se aplican cuando .theme-especial está presente en el app/container. */
+  .action-sheet-group,
+  .popover-content,
+  .alert-wrapper {
+    background: var(--ion-card-background) !important;
+    color: var(--ion-text-color) !important;
+  }
+
+  /* Action sheet: botones y iconos */
+  .action-sheet-button {
+    color: var(--ion-text-color) !important;
+  }
+  .action-sheet-button ion-icon,
+  .action-sheet-button .action-sheet-button-icon {
+    color: var(--ion-text-color) !important;
+  }
+  .action-sheet-destructive {
+    color: var(--ion-color-danger) !important;
+  }
+
+  /* Alert (radio list) */
+  .alert-radio-label,
+  .alert-title,
+  .alert-button {
+    color: var(--ion-text-color) !important;
+  }
+  .alert-button.alert-button-role-destructive {
+    color: var(--ion-color-danger) !important;
+  }
+
+  /* Popover list items */
+  .popover-content ion-item,
+  .popover .select-interface-option {
+    --background: transparent !important;
+    color: var(--ion-text-color) !important;
+  }
+
+  /* encabezados dentro de overlays si existen */
+  .action-sheet-header,
+  .alert-title,
+  .popover .popover-header {
+    color: var(--ion-text-color-step-1) !important;
+  }
 }

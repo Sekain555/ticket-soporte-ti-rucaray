@@ -37,6 +37,12 @@ export class AuthService {
           localStorage.setItem('correo', user.correo);
           localStorage.setItem('usuario', user.usuario);
           localStorage.setItem('rol', user.rol);
+
+          if (user.id === 1) {
+            localStorage.setItem('tema', 'theme-especial');
+          } else {
+            localStorage.setItem('tema', 'theme-default');
+          }
         })
       );
   }
