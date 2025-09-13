@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'ticket-soporte-rucaray',
+  appId: 'cl.rucaray.tisistema',
+  appName: 'Soporte TI Rucaray',
   webDir: 'www'
 };
 

@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TicketService {
-  private apiUrl = 'http://127.0.0.1:8000';
-
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   crearTicket(
@@ -37,7 +36,7 @@ export class TicketService {
       body.dispositivo = dispositivo;
     }
 
-    return this.http.post(`${this.apiUrl}/tickets/`, body, { headers });
+    return this.http.post(`${environment.apiBaseUrl}/tickets/`, body, { headers });
   }
 
   listarTickets(): Observable<any> {
@@ -48,11 +47,11 @@ export class TicketService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get(`${this.apiUrl}/tickets/`, { headers });
+    return this.http.get(`${environment.apiBaseUrl}/tickets/`, { headers });
   }
 
   obtenerTicketPorId(id_ticket: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/tickets/${id_ticket}/`);
+    return this.http.get(`${environment.apiBaseUrl}/tickets/${id_ticket}`);
   }
 
   // Obtener feed de un ticket
@@ -64,7 +63,7 @@ export class TicketService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get(`${this.apiUrl}/tickets/${id_ticket}/feed`, {
+    return this.http.get(`${environment.apiBaseUrl}/tickets/${id_ticket}/feed`, {
       headers,
     });
   }
@@ -84,7 +83,7 @@ export class TicketService {
       comentario: comentario,
     };
 
-    return this.http.post(`${this.apiUrl}/tickets/${id_ticket}/feed`, body, {
+    return this.http.post(`${environment.apiBaseUrl}/tickets/${id_ticket}/feed`, body, {
       headers,
     });
   }
@@ -104,7 +103,7 @@ export class TicketService {
     };
 
     return this.http.patch(
-      `${this.apiUrl}/tickets/${id_ticket}/estado`,
+      `${environment.apiBaseUrl}/tickets/${id_ticket}/estado`,
       body,
       { headers }
     );

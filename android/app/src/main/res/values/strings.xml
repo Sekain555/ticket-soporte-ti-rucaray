@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Soporte TI Rucaray</string>
+    <string name="title_activity_main">Soporte TI Rucaray</string>
+    <string name="package_name">cl.rucaray.tisistema</string>
+    <string name="custom_url_scheme">cl.rucaray.tisistema</string>
+</resources>

@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:8000';
-
   constructor(private http: HttpClient) {}
 
   login(usuario: string, contraseña: string) {
@@ -23,7 +22,7 @@ export class AuthService {
           usuario: string;
           rol: string;
         };
-      }>(`${this.apiUrl}/login`, {
+      }>(`${environment.apiBaseUrl}/login`, {
         usuario,
         contraseña,
       })
@@ -38,7 +37,7 @@ export class AuthService {
           localStorage.setItem('usuario', user.usuario);
           localStorage.setItem('rol', user.rol);
 
-          if (user.id === 1) {
+          if (user.id === 3) {
             localStorage.setItem('tema', 'theme-especial');
           } else {
             localStorage.setItem('tema', 'theme-default');
