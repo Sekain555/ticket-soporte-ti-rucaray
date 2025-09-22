@@ -7,46 +7,56 @@
     <ion-row class="ion-justify-content-start ion-align-items-center">
       <ion-col>
         <ion-text>
-          <h1 class="titulo-pagina">Mis solicitudes</h1>
+          <h1 class="titulo-pagina">Mis tickets</h1>
         </ion-text>
       </ion-col>
       <ion-col class="ion-text-right">
         <ion-button routerLink="/nuevo-ticket"
-          ><ion-icon name="add-outline"></ion-icon> NUEVA SOLICITUD</ion-button
+          ><ion-icon name="add-outline"></ion-icon> NUEVO TICKET</ion-button
         >
       </ion-col>
     </ion-row>
-    <!--
-    <ion-row class="">
-      <ion-col size="auto">
-        <p>Filtrar por estado:</p>
+    <ion-row class="ion-justify-content-around ion-align-items-center">
+      <ion-col size="12" size-md="6" size-lg="6">
+        <ion-select label="Filtrar por:" fill="outline">
+
+        </ion-select>
       </ion-col>
-      <ion-col size="auto">
-        <ion-button fill="clear">TODOS</ion-button>
-      </ion-col>
-      <ion-col size="auto">
-        <ion-button fill="outline">ABIERTO</ion-button>
-      </ion-col>
-      <ion-col size="auto">
-        <ion-button fill="outline">EN PROCESO</ion-button>
-      </ion-col>
-      <ion-col size="auto">
-        <ion-button fill="outline">CERRADO</ion-button>
+      <ion-col size="12" size-md="6" size-lg="6">
+        <ion-select label="Ordenar por:" fill="outline" [value]="ordenSeleccionado" (ionChange)="cambiarOrden($event.detail.value)">
+          <ion-select-option value="fecha_creacion_desc">
+            Fecha de creación (más recientes primero)
+          </ion-select-option>
+          <ion-select-option value="fecha_creacion_asc">
+            Fecha de creación (más antigua primero)
+          </ion-select-option>
+          <ion-select-option value="prioridad_desc">
+            Prioridad (Alta a Baja)
+          </ion-select-option>
+          <ion-select-option value="prioridad_asc">
+            Prioridad (Baja a Alta)
+          </ion-select-option>
+          <ion-select-option value="id_ticket_desc">
+            ID de ticket (mayor a menor)
+          </ion-select-option>
+          <ion-select-option value="id_ticket_asc">
+            ID de ticket (menor a mayor)
+          </ion-select-option>
+        </ion-select>
       </ion-col>
     </ion-row>
-    -->
     <ion-card class="tabla-tickets">
       <ion-row class="ion-align-items-center">
         <ion-list class="listado-tickets">
           <ion-item lines="full">
             <ion-grid [fixed]="true">
               <ion-row>
-                <ion-col size="2">ID Solicitud</ion-col>
+                <ion-col size="2">ID Ticket</ion-col>
                 <ion-col size="2">Asunto</ion-col>
                 <ion-col size="2">Prioridad</ion-col>
                 <ion-col size="2">Estado</ion-col>
                 <ion-col size="2">Creado</ion-col>
-                <ion-col size="2">Última actualización</ion-col>
+                <ion-col size="2">Última Actualización</ion-col>
               </ion-row>
             </ion-grid>
           </ion-item>

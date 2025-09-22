@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -36,18 +36,28 @@ export class TicketService {
       body.dispositivo = dispositivo;
     }
 
-    return this.http.post(`${environment.apiBaseUrl}/tickets/`, body, { headers });
+    return this.http.post(`${environment.apiBaseUrl}/tickets/`, body, {
+      headers,
+    });
   }
 
-  listarTickets(): Observable<any> {
+  listarTickets(opts?: {
+    sort_by?: string;
+    order?: 'asc' | 'desc';
+  }): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
-    return this.http.get(`${environment.apiBaseUrl}/tickets/`, { headers });
+    let params = new HttpParams();
+    if (opts?.sort_by) params = params.set('sort_by', opts.sort_by);
+    if (opts?.order) params = params.set('order', opts.order);
+
+    return this.http.get(`${environment.apiBaseUrl}/tickets/`, {
+      headers,
+      params,
+    });
   }
 
   obtenerTicketPorId(id_ticket: string): Observable<any> {
@@ -63,9 +73,12 @@ export class TicketService {
       Authorization: `Bearer ${token}`,
     });
 
-    return this.http.get(`${environment.apiBaseUrl}/tickets/${id_ticket}/feed`, {
-      headers,
-    });
+    return this.http.get(
+      `${environment.apiBaseUrl}/tickets/${id_ticket}/feed`,
+      {
+        headers,
+      }
+    );
   }
 
   // Agregar un comentario al feed de un ticket
@@ -83,12 +96,20 @@ export class TicketService {
       comentario: comentario,
     };
 
-    return this.http.post(`${environment.apiBaseUrl}/tickets/${id_ticket}/feed`, body, {
-      headers,
-    });
+    return this.http.post(
+      `${environment.apiBaseUrl}/tickets/${id_ticket}/feed`,
+      body,
+      {
+        headers,
+      }
+    );
   }
 
-  cambiarEstadoTicket(id_ticket: string, nuevoEstado: string, comentario: string): Observable<any> {
+  cambiarEstadoTicket(
+    id_ticket: string,
+    nuevoEstado: string,
+    comentario: string
+  ): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
 
