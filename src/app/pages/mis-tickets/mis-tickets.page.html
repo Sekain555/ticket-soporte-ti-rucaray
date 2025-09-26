@@ -18,8 +18,12 @@
     </ion-row>
     <ion-row class="ion-justify-content-around ion-align-items-center">
       <ion-col size="12" size-md="6" size-lg="6">
-        <ion-select label="Filtrar por:" fill="outline">
-
+        <ion-select label="Filtrar por:" fill="outline" [value]="filtroEstado" (ionChange)="cambiarFiltroEstado($event.detail.value)">
+          <ion-select-option value="todos">Todos</ion-select-option>
+          <ion-select-option value="abierto">Abiertos</ion-select-option>
+          <ion-select-option value="en_progreso">En progreso</ion-select-option>
+          <ion-select-option value="resuelto">Resueltos</ion-select-option>
+          <ion-select-option value="cerrado">Cerrados</ion-select-option>
         </ion-select>
       </ion-col>
       <ion-col size="12" size-md="6" size-lg="6">

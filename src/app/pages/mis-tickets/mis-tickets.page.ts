@@ -3,6 +3,8 @@ import { TicketService } from 'src/app/services/ticket.service';
 import { ToastController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 
+type EstadoKey = 'todos' | 'abierto' | 'en_progreso' | 'resuelto' | 'cerrado';
+
 type OrdenKey =
   | 'fecha_creacion_desc'
   | 'fecha_creacion_asc'
@@ -30,6 +32,7 @@ const ORDER_MAP: Record<OrdenKey, { sort_by: string; order: 'asc' | 'desc' }> =
 export class MisTicketsPage implements OnInit {
   tickets: any[] = [];
   ordenSeleccionado: OrdenKey = 'fecha_creacion_desc';
+  filtroEstado: EstadoKey = 'todos';
 
   constructor(
     private ticketService: TicketService,
@@ -39,7 +42,26 @@ export class MisTicketsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.refrescarListado();
+    this.route.queryParamMap.subscribe((qp) => {
+      const sort_by = qp.get('sort_by') as string | null;
+      const order = qp.get('order') as ('asc' | 'desc') | null;
+      const estado = (qp.get('estado') as EstadoKey | null) ?? 'todos';
+
+      // Si en la URL viene un orden, lo mapeamos a tu clave UI
+      const clave = this.inverseOrderKey(sort_by, order);
+      if (clave) this.ordenSeleccionado = clave;
+
+      // Validamos el filtro de estado
+      const ALLOWED: EstadoKey[] = [
+        'todos',
+        'abierto',
+        'en_progreso',
+        'resuelto',
+        'cerrado',
+      ];
+      this.filtroEstado = ALLOWED.includes(estado) ? estado : 'todos';
+      this.refrescarListado();
+    });
   }
 
   getColorPrioridad(prioridad: string): string {
@@ -55,6 +77,7 @@ export class MisTicketsPage implements OnInit {
     const colores: Record<string, string> = {
       abierto: 'success',
       'en progreso': 'warning',
+      resuelto: 'tertiary',
       cerrado: 'danger',
     };
     return colores[estado?.toLowerCase()] || 'medium';
@@ -71,9 +94,31 @@ export class MisTicketsPage implements OnInit {
     const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { sort_by, order },
+      queryParams: {
+        sort_by,
+        order,
+        estado: this.filtroEstado !== 'todos' ? this.filtroEstado : null,
+      },
       queryParamsHandling: 'merge', // conserva otros params
       replaceUrl: true, // opcional: evita “ensuciar” el historial
+    });
+
+    this.refrescarListado();
+  }
+
+  cambiarFiltroEstado(nuevo: EstadoKey) {
+    this.filtroEstado = nuevo || 'todos';
+
+    const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        sort_by,
+        order,
+        estado: this.filtroEstado !== 'todos' ? this.filtroEstado : null, // ← NUEVO
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
     });
 
     this.refrescarListado();
@@ -82,7 +127,7 @@ export class MisTicketsPage implements OnInit {
   private refrescarListado() {
     const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
 
-    this.ticketService.listarTickets({ sort_by, order }).subscribe({
+    this.ticketService.listarTickets({ sort_by, order, estado: this.filtroEstado }).subscribe({
       next: (items) => (this.tickets = items ?? []),
       error: () => this.mostrarToast('No se pudieron cargar los tickets.'),
     });
@@ -95,5 +140,16 @@ export class MisTicketsPage implements OnInit {
       duration: 3000,
     });
     await toast.present();
+  }
+
+  private inverseOrderKey(
+    sort_by?: string | null,
+    order?: 'asc' | 'desc' | null
+  ): OrdenKey | null {
+    if (!sort_by || !order) return null;
+    const entry = Object.entries(ORDER_MAP).find(
+      ([, v]) => v.sort_by === sort_by && v.order === order
+    );
+    return entry ? (entry[0] as OrdenKey) : null;
   }
 }

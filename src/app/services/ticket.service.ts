@@ -44,6 +44,7 @@ export class TicketService {
   listarTickets(opts?: {
     sort_by?: string;
     order?: 'asc' | 'desc';
+    estado?: 'todos' | 'abierto' | 'en_progreso' | 'resuelto' | 'cerrado';
   }): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
@@ -53,6 +54,9 @@ export class TicketService {
     let params = new HttpParams();
     if (opts?.sort_by) params = params.set('sort_by', opts.sort_by);
     if (opts?.order) params = params.set('order', opts.order);
+    if (opts?.estado && opts.estado !== 'todos') {
+      params = params.set('estado', opts.estado);
+    }
 
     return this.http.get(`${environment.apiBaseUrl}/tickets/`, {
       headers,
