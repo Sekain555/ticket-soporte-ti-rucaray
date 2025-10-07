@@ -17,8 +17,13 @@
       </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-around ion-align-items-center">
-      <ion-col size="12" size-md="6" size-lg="6">
-        <ion-select label="Filtrar por:" fill="outline" [value]="filtroEstado" (ionChange)="cambiarFiltroEstado($event.detail.value)">
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Filtrar por:"
+          fill="outline"
+          [value]="filtroEstado"
+          (ionChange)="cambiarFiltroEstado($event.detail.value)"
+        >
           <ion-select-option value="todos">Todos</ion-select-option>
           <ion-select-option value="abierto">Abiertos</ion-select-option>
           <ion-select-option value="en_progreso">En progreso</ion-select-option>
@@ -26,8 +31,13 @@
           <ion-select-option value="cerrado">Cerrados</ion-select-option>
         </ion-select>
       </ion-col>
-      <ion-col size="12" size-md="6" size-lg="6">
-        <ion-select label="Ordenar por:" fill="outline" [value]="ordenSeleccionado" (ionChange)="cambiarOrden($event.detail.value)">
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Ordenar por:"
+          fill="outline"
+          [value]="ordenSeleccionado"
+          (ionChange)="cambiarOrden($event.detail.value)"
+        >
           <ion-select-option value="fecha_creacion_desc">
             Fecha de creación (más recientes primero)
           </ion-select-option>
@@ -46,6 +56,13 @@
           <ion-select-option value="id_ticket_asc">
             ID de ticket (menor a mayor)
           </ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select label="Mostrar:" fill="outline" [value]="pageSize" (ionChange)="cambiarPageSize($event.detail.value)">
+          <ion-select-option [value]="10">10 tickets</ion-select-option>
+          <ion-select-option [value]="25">25 tickets</ion-select-option>
+          <ion-select-option [value]="50">50 tickets</ion-select-option>
         </ion-select>
       </ion-col>
     </ion-row>
@@ -101,5 +118,26 @@
         </ion-list>
       </ion-row>
     </ion-card>
+    <ion-row class="ion-justify-content-between ion-align-items-center">
+      <ion-col size="12" size-md="4">
+        <!-- Texto de rango (lo cableamos luego en TS) -->
+        <ion-text>
+          <small>
+            Mostrando {{ itemsStart }}–{{ itemsEnd }} de {{ total }}
+          </small>
+        </ion-text>
+      </ion-col>
+      <ion-col size="12" size-md="8" class="ion-text-right">
+        <ion-button
+          (click)="goPrevPage()"
+          [disabled]="!puedeAnterior"
+        >
+          Anterior</ion-button
+        >
+        <ion-button (click)="goNextPage()" [disabled]="!puedeSiguiente">
+          Siguiente</ion-button
+        >
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
