@@ -33,6 +33,9 @@ export class MisTicketsPage implements OnInit {
   tickets: any[] = [];
   ordenSeleccionado: OrdenKey = 'fecha_creacion_desc';
   filtroEstado: EstadoKey = 'todos';
+  pageSize = 10; // opciones que usaremos en el select: 10, 25, 50
+  pageIndex = 0; // 0 = primera página
+  total = 0; // lo actualizaremos cuando el backend devuelva total
 
   constructor(
     private ticketService: TicketService,
@@ -46,6 +49,13 @@ export class MisTicketsPage implements OnInit {
       const sort_by = qp.get('sort_by') as string | null;
       const order = qp.get('order') as ('asc' | 'desc') | null;
       const estado = (qp.get('estado') as EstadoKey | null) ?? 'todos';
+      const limit = Number(qp.get('limit'));
+      const offset = Number(qp.get('offset'));
+
+      if (!Number.isNaN(limit) && [10, 25, 50].includes(limit))
+        this.pageSize = limit;
+      if (!Number.isNaN(offset) && offset >= 0)
+        this.pageIndex = Math.floor(offset / this.pageSize);
 
       // Si en la URL viene un orden, lo mapeamos a tu clave UI
       const clave = this.inverseOrderKey(sort_by, order);
@@ -90,47 +100,46 @@ export class MisTicketsPage implements OnInit {
 
   cambiarOrden(valor: OrdenKey) {
     this.ordenSeleccionado = valor;
-
-    const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        sort_by,
-        order,
-        estado: this.filtroEstado !== 'todos' ? this.filtroEstado : null,
-      },
-      queryParamsHandling: 'merge', // conserva otros params
-      replaceUrl: true, // opcional: evita “ensuciar” el historial
-    });
-
-    this.refrescarListado();
+    this.pageIndex = 0;
+    this.syncUrlAndReload();
   }
 
   cambiarFiltroEstado(nuevo: EstadoKey) {
     this.filtroEstado = nuevo || 'todos';
-
-    const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        sort_by,
-        order,
-        estado: this.filtroEstado !== 'todos' ? this.filtroEstado : null, // ← NUEVO
-      },
-      queryParamsHandling: 'merge',
-      replaceUrl: true,
-    });
-
-    this.refrescarListado();
+    this.pageIndex = 0;
+    this.syncUrlAndReload();
   }
 
   private refrescarListado() {
     const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
+    const offset = this.pageIndex * this.pageSize;
 
-    this.ticketService.listarTickets({ sort_by, order, estado: this.filtroEstado }).subscribe({
-      next: (items) => (this.tickets = items ?? []),
-      error: () => this.mostrarToast('No se pudieron cargar los tickets.'),
-    });
+    this.ticketService.listarTickets({
+        sort_by,
+        order,
+        estado: this.filtroEstado,
+        limit: this.pageSize,
+        offset: offset,
+      })
+      .subscribe({
+        next: (resp) => {
+          const items = 
+            Array.isArray(resp?.items) ? resp.items :
+            Array.isArray(resp?.tickets) ? resp.tickets :
+            Array.isArray(resp) ? resp: [];
+
+          this.tickets = items;
+          
+          if (typeof resp?.total === 'number') {
+            this.total = resp.total;
+          } else if (Array.isArray(resp)) {
+            this.total = resp.length;
+          } else {
+            this.total = 0;
+          }
+        },
+        error: () => this.mostrarToast('No se pudieron cargar los tickets.'),
+      });
   }
 
   private async mostrarToast(message: string, color: string = 'danger') {
@@ -151,5 +160,70 @@ export class MisTicketsPage implements OnInit {
       ([, v]) => v.sort_by === sort_by && v.order === order
     );
     return entry ? (entry[0] as OrdenKey) : null;
+  }
+
+  cambiarPageSize(nuevo: number) {
+    const size = Number(nuevo) || 10;
+    if (this.pageSize === size) return;
+
+    this.pageSize = size;
+    this.pageIndex = 0; // al cambiar tamaño, volver al inicio
+    this.syncUrlAndReload();
+  }
+
+  goPrevPage() {
+    if (!this.puedeAnterior) return;
+    this.pageIndex = this.pageIndex - 1;
+    this.syncUrlAndReload();
+  }
+
+  goNextPage() {
+    if (!this.puedeSiguiente) return;
+    this.pageIndex = this.pageIndex + 1;
+    this.syncUrlAndReload();
+  }
+
+  private syncUrlAndReload() {
+    const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
+    const offset = this.pageIndex * this.pageSize;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        sort_by,
+        order,
+        estado: this.filtroEstado !== 'todos' ? this.filtroEstado : null,
+        limit: this.pageSize,
+        offset,
+      },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
+  get itemsStart(): number {
+    // Si total = 0 (aún no devuelto), solo calculamos desde el offset
+    const start = this.pageIndex * this.pageSize + 1;
+    return this.tickets.length ? start : 0;
+  }
+
+  get itemsEnd(): number {
+    // Si no tenemos total, usar start + items - 1
+    const start = this.itemsStart;
+    return start ? start + this.tickets.length - 1 : 0;
+  }
+
+  get puedeAnterior(): boolean {
+    return this.pageIndex > 0;
+  }
+
+  get puedeSiguiente(): boolean {
+    // Con total real:
+    if (this.total > 0) {
+      const nextOffset = (this.pageIndex + 1) * this.pageSize;
+      return nextOffset < this.total;
+    }
+    // Fallback temporal sin total: desactivar “Siguiente” para no crear UX confusa
+    return false;
   }
 }
