@@ -45,6 +45,8 @@ export class TicketService {
     sort_by?: string;
     order?: 'asc' | 'desc';
     estado?: 'todos' | 'abierto' | 'en_progreso' | 'resuelto' | 'cerrado';
+    limit?: number;
+    offset?: number;
   }): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
@@ -56,6 +58,13 @@ export class TicketService {
     if (opts?.order) params = params.set('order', opts.order);
     if (opts?.estado && opts.estado !== 'todos') {
       params = params.set('estado', opts.estado);
+    }
+    const limit = opts?.limit ?? 10;
+    if (typeof opts?.limit === 'number') {
+      params = params.set('limit', String(opts.limit));
+    }
+    if (typeof opts?.offset === 'number') {
+      params = params.set('offset', String(opts.offset));
     }
 
     return this.http.get(`${environment.apiBaseUrl}/tickets/`, {

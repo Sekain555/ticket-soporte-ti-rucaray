@@ -17,8 +17,13 @@
       </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-around ion-align-items-center">
-      <ion-col size="12" size-md="6" size-lg="6">
-        <ion-select label="Filtrar por:" fill="outline" [value]="filtroEstado" (ionChange)="cambiarFiltroEstado($event.detail.value)">
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Filtrar por:"
+          fill="outline"
+          [value]="filtroEstado"
+          (ionChange)="cambiarFiltroEstado($event.detail.value)"
+        >
           <ion-select-option value="todos">Todos</ion-select-option>
           <ion-select-option value="abierto">Abiertos</ion-select-option>
           <ion-select-option value="en_progreso">En progreso</ion-select-option>
@@ -26,8 +31,13 @@
           <ion-select-option value="cerrado">Cerrados</ion-select-option>
         </ion-select>
       </ion-col>
-      <ion-col size="12" size-md="6" size-lg="6">
-        <ion-select label="Ordenar por:" fill="outline" [value]="ordenSeleccionado" (ionChange)="cambiarOrden($event.detail.value)">
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Ordenar por:"
+          fill="outline"
+          [value]="ordenSeleccionado"
+          (ionChange)="cambiarOrden($event.detail.value)"
+        >
           <ion-select-option value="fecha_creacion_desc">
             Fecha de creación (más recientes primero)
           </ion-select-option>
@@ -48,58 +58,117 @@
           </ion-select-option>
         </ion-select>
       </ion-col>
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Mostrar:"
+          fill="outline"
+          [value]="pageSize"
+          (ionChange)="cambiarPageSize($event.detail.value)"
+        >
+          <ion-select-option [value]="10">10 tickets</ion-select-option>
+          <ion-select-option [value]="25">25 tickets</ion-select-option>
+          <ion-select-option [value]="50">50 tickets</ion-select-option>
+        </ion-select>
+      </ion-col>
     </ion-row>
     <ion-card class="tabla-tickets">
-      <ion-row class="ion-align-items-center">
-        <ion-list class="listado-tickets">
-          <ion-item lines="full">
-            <ion-grid [fixed]="true">
-              <ion-row>
-                <ion-col size="2">ID Ticket</ion-col>
-                <ion-col size="2">Asunto</ion-col>
-                <ion-col size="2">Prioridad</ion-col>
-                <ion-col size="2">Estado</ion-col>
-                <ion-col size="2">Creado</ion-col>
-                <ion-col size="2">Última Actualización</ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </ion-list>
-      </ion-row>
-      <ion-row class="ion-align-items-center">
-        <ion-list class="listado-tickets">
-          <ion-item
-            *ngFor="let ticket of tickets"
-            lines="full"
-            [routerLink]="['/detalle-ticket', ticket.id_ticket]"
-          >
-            <ion-grid [fixed]="true">
-              <ion-row class="ion-align-items-center">
-                <ion-col size="2">{{ ticket.id_ticket }}</ion-col>
-                <ion-col size="2">{{ ticket.titulo }}</ion-col>
-                <ion-col size="2">
-                  <ion-chip [color]="getColorPrioridad(ticket?.prioridad)"
-                    >{{ capitalize(ticket.prioridad) }}</ion-chip
-                  >
-                </ion-col>
-                <ion-col size="2">
-                  <ion-chip [color]="getColorEstado(ticket?.estado)"
-                    >{{ capitalize(ticket.estado) }}</ion-chip
-                  >
-                </ion-col>
-                <ion-col size="2"
-                  >{{ ticket.fecha_creacion | date:'dd-MMM-yyyy HH:mm'
-                  }}</ion-col
-                >
-                <ion-col size="2"
-                  >{{ ticket.fecha_actualizacion | date:'dd-MMM-yyyy HH:mm'
-                  }}</ion-col
-                >
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-        </ion-list>
-      </ion-row>
+      <ion-list class="listado-tickets">
+        <!-- Encabezado DESKTOP / TABLET -->
+        <ion-item lines="full" class="ion-hide-md-down">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="2">ID Ticket</ion-col>
+              <ion-col size="2">Asunto</ion-col>
+              <ion-col size="2">Prioridad</ion-col>
+              <ion-col size="2">Estado</ion-col>
+              <ion-col size="2">Creado</ion-col>
+              <ion-col size="2">Última Actualización</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+        <!-- Encabezado MÓVIL -->
+        <ion-item lines="full" class="ion-hide-md-up">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="1">ID</ion-col>
+              <ion-col size="5">Asunto</ion-col>
+              <ion-col size="3">Prioridad</ion-col>
+              <ion-col size="3">Estado</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+        <!-- FILAS -->
+        <ion-item
+          *ngFor="let ticket of tickets"
+          lines="full"
+          [routerLink]="['/detalle-ticket', ticket.id_ticket]"
+        >
+          <ion-grid>
+            <!-- Versión DESKTOP / TABLET -->
+            <ion-row class="ion-align-items-center ion-hide-md-down">
+              <ion-col size="2">{{ ticket.id_ticket }}</ion-col>
+              <ion-col size="2" class="ion-text-wrap"
+                >{{ ticket.titulo }}</ion-col
+              >
+              <ion-col size="2">
+                <ion-chip [color]="getColorPrioridad(ticket?.prioridad)">
+                  {{ capitalize(ticket.prioridad) }}
+                </ion-chip>
+              </ion-col>
+              <ion-col size="2">
+                <ion-chip [color]="getColorEstado(ticket?.estado)">
+                  {{ capitalize(ticket.estado) }}
+                </ion-chip>
+              </ion-col>
+              <ion-col size="2">
+                {{ ticket.fecha_creacion | date:'dd-MMM-yyyy HH:mm' }}
+              </ion-col>
+              <ion-col size="2"
+                >{{ ticket.fecha_actualizacion | date:'dd-MMM-yyyy HH:mm'
+                }}</ion-col
+              >
+            </ion-row>
+
+            <!-- Versión MÓVIL -->
+            <ion-row class="ion-align-items-center ion-hide-md-up">
+              <ion-col size="1">#{{ ticket.id_ticket }}</ion-col>
+              <ion-col size="5" class="ion-text-wrap"
+                >{{ ticket.titulo }}</ion-col
+              >
+              <ion-col size="3">
+                <ion-chip [color]="getColorPrioridad(ticket?.prioridad)">
+                  {{ capitalize(ticket.prioridad) }}
+                </ion-chip>
+              </ion-col>
+              <ion-col size="3">
+                <ion-chip [color]="getColorEstado(ticket?.estado)">
+                  {{ capitalize(ticket.estado) }}
+                </ion-chip>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
     </ion-card>
+
+    <ion-row class="ion-justify-content-between ion-align-items-center">
+      <ion-col size="12" size-md="4">
+        <ion-text>
+          <small>
+            Mostrando {{ itemsStart }}–{{ itemsEnd }} de {{ total }}
+          </small>
+        </ion-text>
+      </ion-col>
+      <ion-col size="12" size-md="8" class="ion-text-right">
+        <ion-button (click)="goPrevPage()" [disabled]="!puedeAnterior">
+          Anterior</ion-button
+        >
+        <ion-button (click)="goNextPage()" [disabled]="!puedeSiguiente">
+          Siguiente</ion-button
+        >
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
