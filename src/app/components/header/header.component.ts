@@ -47,4 +47,18 @@ export class HeaderComponent implements OnInit {
     // Redirigir al login
     this.router.navigate(['/login']);
   }
+
+  volver() {
+    const currentUrl = this.router.url;
+
+    if (currentUrl.startsWith('/detalle-ticket')) {
+      this.router.navigate(['/mis-tickets']);
+    } else if (currentUrl.startsWith('/nuevo-ticket')) {
+      this.router.navigate(['/panel-principal']);
+    } else if (currentUrl.startsWith('/mis-tickets')) {
+      this.router.navigate(['/panel-principal']);
+    } else {
+      this.router.navigate(['/panel-principal']);
+    }
+  }
 }
