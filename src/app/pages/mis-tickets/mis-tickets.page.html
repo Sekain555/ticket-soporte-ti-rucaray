@@ -91,15 +91,14 @@
         <ion-item lines="full" class="ion-hide-md-up">
           <ion-grid>
             <ion-row>
-              <ion-col size="1">ID</ion-col>
-              <ion-col size="5">Asunto</ion-col>
+              <ion-col size="2">ID</ion-col>
+              <ion-col size="4">Asunto</ion-col>
               <ion-col size="3">Prioridad</ion-col>
               <ion-col size="3">Estado</ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
 
-        <!-- FILAS -->
         <ion-item
           *ngFor="let ticket of tickets"
           lines="full"
@@ -133,8 +132,8 @@
 
             <!-- Versión MÓVIL -->
             <ion-row class="ion-align-items-center ion-hide-md-up">
-              <ion-col size="1">#{{ ticket.id_ticket }}</ion-col>
-              <ion-col size="5" class="ion-text-wrap"
+              <ion-col size="2">#{{ ticket.id_ticket }}</ion-col>
+              <ion-col size="4" class="ion-text-wrap"
                 >{{ ticket.titulo }}</ion-col
               >
               <ion-col size="3">
