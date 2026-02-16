@@ -1,5 +1,19 @@
 # 📘 CHANGELOG — Frontend (Ionic / Angular)
 
+## [1.0.0] — 2026-02-16
+### Added
+- Control de permisos por rol en la UI (PermissionsService) para restringir acciones de tickets según tipo de usuario.
+- Ingreso con tecla Enter en pantalla de login para mejorar UX.
+
+### Changed
+- Preparación de assets PWA (manifest e íconos). Nota: PWA no se declara operativo en producción; queda como base para futura activación.
+
+### Compatibility
+- Probado con Backend `1.0.0`.
+
+### Notes
+- Primer release estable en producción (sin sufijos `beta/rc`).
+
 ---
 
 ## [0.10.0-rc.1] — 2025-10-20
@@ -19,8 +33,7 @@
 - Contrato API sin cambios.
 
 ### Notes
-- Versión candidata (`RC`) desplegada en entorno de pruebas internas.
-- Primer ciclo de integración quincenal con múltiples mejoras visuales y funcionales.
+- Versión candidata (`RC`) desplegada en entorno de pruebas internas con múltiples mejoras visuales y funcionales.
 
 ---
 
@@ -47,5 +60,6 @@
 
 | Frontend | Backend | Estado | Fecha | Notas |
 |-----------|----------|--------|--------|-------|
+| 1.0.0 | 1.0.0 | ✅ Compatible | 2026-02-15 | Primera versión estable en producción |
 | 0.10.0-rc.1 | 0.9.0-beta.1 | ✅ Compatible | 2025-10-20 | RC en entorno de pruebas internas |
 | 0.9.0-rc.1 | 0.8.0-beta.1 | ✅ Compatible | 2025-09-28 | Versión inicial de pruebas |
