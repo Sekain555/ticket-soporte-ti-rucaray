@@ -147,17 +147,24 @@
           </ion-card-header>
           <ion-card-content>
             <ion-button
+            expand="block"
+            *ngIf="permisos.canEditTickets()"
+              >EDITAR TICKET</ion-button
+            >
+            <ion-button
+            expand="block"
+            *ngIf="permisos.canAssignTickets()"
+              >ASIGNAR TECNICO</ion-button>
+            <ion-button
               expand="block"
               [color]="ticket?.estado === 'cerrado' ? 'success' : 'danger'"
               (click)="toggleEstadoTicket()"
-              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR TICKET' }}</ion-button
-            >
-            <!--
-            <ion-button expand="block" fill="clear"
-              >REASIGNAR TICKET</ion-button
-            >
-            <ion-button expand="block" fill="clear">ESCALAR TICKET</ion-button>
-          -->
+              *ngIf="permisos.canCloseTickets()"
+              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR TICKET' }}</ion-button>
+            <ion-button
+              expand="block"
+              *ngIf="permisos.canDeleteTickets()"
+              >ELIMINAR TICKET</ion-button>
           </ion-card-content>
         </ion-card>
         <!--

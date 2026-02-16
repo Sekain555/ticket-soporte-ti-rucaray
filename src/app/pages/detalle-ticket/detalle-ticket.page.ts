@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 import { FormsModule } from '@angular/forms';
 import { ToastController, AlertController } from '@ionic/angular';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'app-detalle-ticket',
@@ -19,7 +20,8 @@ export class DetalleTicketPage implements OnInit {
     private route: ActivatedRoute,
     private ticketService: TicketService,
     private toastCtrl: ToastController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    public permisos: PermissionsService
   ) {}
 
   ngOnInit() {

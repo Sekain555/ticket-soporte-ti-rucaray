@@ -1,4 +1,11 @@
 {
+  "name": "Sistema Tickets Rucaray",
+  "short_name": "STR",
+  "theme_color": "#1E3A8A",
+  "background_color": "#F3F4F6",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "assets/icons/icon-48.webp",
