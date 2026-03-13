@@ -11,7 +11,9 @@
           <ion-breadcrumb>Ticket N° {{ ticket?.id_ticket }}</ion-breadcrumb>
         </ion-breadcrumbs>
         <ion-text>
-          <h1 class="titulo-pagina">{{ ticket?.titulo }} | {{ ticket?.dispositivo }}</h1>
+          <h1 class="titulo-pagina">
+            {{ ticket?.titulo }} | {{ ticket?.dispositivo }}
+          </h1>
         </ion-text>
         <p class="subtitulo-pagina">
           Reportado por {{ticket?.nombre_usuario}} {{ticket?.apellido_usuario}}
@@ -30,7 +32,70 @@
                 </ion-col>
                 <ion-col>
                   <strong>CATEGORÍA</strong>
-                  <p>{{ capitalize(ticket?.tipo_problema) }}</p>
+
+                  <!-- Solo lectura (usuarios normales) -->
+                  <ng-container
+                    *ngIf="!permisos.canClassifyTypeTickets(); else editarTipo"
+                  >
+                    <p>
+                      {{ ticket?.tipo_problema ?
+                      traducirCategoria(ticket?.tipo_problema) : 'Pendiente' }}
+                    </p>
+                  </ng-container>
+
+                  <!-- Editable (admin/soporte) -->
+                  <ng-template #editarTipo>
+                    <ion-select
+                      [(ngModel)]="tipoProblemaEdit"
+                      fill="outline"
+                      placeholder="Seleccionar categoría"
+                    >
+                      <ion-select-option value="critico"
+                        >Crítico</ion-select-option
+                      >
+                      <ion-select-option value="critico_fa"
+                        >Crítico con flujo de aprobación</ion-select-option
+                      >
+                      <ion-select-option value="periferico"
+                        >Cambio periferico</ion-select-option
+                      >
+                      <ion-select-option value="hardware"
+                        >Cambio hardware existente</ion-select-option
+                      >
+                      <ion-select-option value="hardware_fa"
+                        >Cambio hardware con flujo de
+                        aprobación</ion-select-option
+                      >
+                      <ion-select-option value="cuentas"
+                        >Creación de cuentas, correos, varios</ion-select-option
+                      >
+                      <ion-select-option value="impresoras"
+                        >Revisión / Cambio / Mantención de
+                        impresoras</ion-select-option
+                      >
+                      <ion-select-option value="info_bd"
+                        >Solicitud información base de datos</ion-select-option
+                      >
+                      <ion-select-option value="inst_software"
+                        >Instalación de programas</ion-select-option
+                      >
+                      <ion-select-option value="red"
+                        >Instalación puntos de red</ion-select-option
+                      >
+                      <ion-select-option value="camara"
+                        >Instalación de cámaras</ion-select-option
+                      >
+                      <ion-select-option value="wifi"
+                        >Instalación de antenas WiFi</ion-select-option
+                      >
+                    </ion-select>
+                    <ion-select-option value="internet"
+                      >Habilitación de acceso a internet</ion-select-option
+                    >
+                    <ion-button expand="block" (click)="guardarTipoProblema()">
+                      GUARDAR CATEGORÍA
+                    </ion-button>
+                  </ng-template>
                 </ion-col>
               </ion-row>
               <ion-row class="ion-margin-bottom">
@@ -146,25 +211,23 @@
             <ion-card-title>Acciones de tickets</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button
-            expand="block"
-            *ngIf="permisos.canEditTickets()"
+            <ion-button expand="block" *ngIf="permisos.canEditTickets()"
               >EDITAR TICKET</ion-button
             >
-            <ion-button
-            expand="block"
-            *ngIf="permisos.canAssignTickets()"
-              >ASIGNAR TECNICO</ion-button>
+            <ion-button expand="block" *ngIf="permisos.canAssignTickets()"
+              >ASIGNAR TECNICO</ion-button
+            >
             <ion-button
               expand="block"
               [color]="ticket?.estado === 'cerrado' ? 'success' : 'danger'"
               (click)="toggleEstadoTicket()"
               *ngIf="permisos.canCloseTickets()"
-              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR TICKET' }}</ion-button>
-            <ion-button
-              expand="block"
-              *ngIf="permisos.canDeleteTickets()"
-              >ELIMINAR TICKET</ion-button>
+              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR
+              TICKET' }}</ion-button
+            >
+            <ion-button expand="block" *ngIf="permisos.canDeleteTickets()"
+              >ELIMINAR TICKET</ion-button
+            >
           </ion-card-content>
         </ion-card>
         <!--

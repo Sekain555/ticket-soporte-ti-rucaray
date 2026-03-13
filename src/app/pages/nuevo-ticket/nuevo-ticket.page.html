@@ -42,7 +42,7 @@
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col>
+              <ion-col *ngIf="permisos.canClassifyTypeTickets()">
                 <ion-select
                   [(ngModel)]="tipo_problema"
                   label="Tipo de problema"
@@ -50,14 +50,44 @@
                   fill="outline"
                   placeholder="Seleccione una categoría"
                 >
+                  <ion-select-option value="critico">Crítico</ion-select-option>
+                  <ion-select-option value="critico_fa"
+                    >Crítico con flujo de aprobación</ion-select-option
+                  >
+                  <ion-select-option value="periferico"
+                    >Cambio periferico</ion-select-option
+                  >
                   <ion-select-option value="hardware"
-                    >Hardware</ion-select-option
+                    >Cambio hardware existente</ion-select-option
                   >
-                  <ion-select-option value="software"
-                    >Software</ion-select-option
+                  <ion-select-option value="hardware_fa"
+                    >Cambio hardware con flujo de aprobación</ion-select-option
                   >
-                  <ion-select-option value="red">Red</ion-select-option>
-                  <ion-select-option value="otro">Otro</ion-select-option>
+                  <ion-select-option value="cuentas"
+                    >Creación de cuentas, correos, varios</ion-select-option
+                  >
+                  <ion-select-option value="impresoras"
+                    >Revisión / Cambio / Mantención de
+                    impresoras</ion-select-option
+                  >
+                  <ion-select-option value="info_bd"
+                    >Solicitud información base de datos</ion-select-option
+                  >
+                  <ion-select-option value="inst_software"
+                    >Instalación de programas</ion-select-option
+                  >
+                  <ion-select-option value="red"
+                    >Instalación puntos de red</ion-select-option
+                  >
+                  <ion-select-option value="camara"
+                    >Instalación de cámaras</ion-select-option
+                  >
+                  <ion-select-option value="wifi"
+                    >Instalación de antenas WiFi</ion-select-option
+                  >
+                  <ion-select-option value="internet"
+                    >Habilitación de acceso a internet</ion-select-option
+                  >
                 </ion-select>
               </ion-col>
               <ion-col>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TicketService } from 'src/app/services/ticket.service';
 import { ToastController } from '@ionic/angular';
+import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'app-nuevo-ticket',
@@ -18,23 +19,25 @@ export class NuevoTicketPage implements OnInit {
 
   constructor(
     private ticketService: TicketService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    public permisos: PermissionsService
   ) {}
 
   async crearTicket() {
+    const tipo = this.permisos.canClassifyTypeTickets() ? this.tipo_problema : undefined;
     try {
       const res = await this.ticketService.crearTicket(
         this.titulo,
         this.descripcion,
-        this.tipo_problema,
         this.prioridad,
-        this.dispositivo || undefined
+        this.dispositivo || undefined,
+        tipo
       ).toPromise();
 
       const toast = await this.toastCtrl.create({
         message: 'Ticket creado exitosamente',
         color: 'success',
-        duration: 3000
+        duration: 5000
       });
       await toast.present();
 
@@ -49,7 +52,7 @@ export class NuevoTicketPage implements OnInit {
       const toast = await this.toastCtrl.create({
         message: 'Error al crear ticket',
         color: 'danger',
-        duration: 3000
+        duration: 5000
       });
       await toast.present();
     }
