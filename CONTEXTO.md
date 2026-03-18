@@ -121,13 +121,14 @@ http://127.0.0.1:8000
 - Vista responsive para móvil
 - Control de permisos por rol en UI (`PermissionsService`)
 - Definición de tipos de problema (integración con SLA del backend)
+- Definición de tipos de problema y SLA (valores alineados con tabla sla_tipos_problema)
+- Asignación automática de tiempo objetivo al crear ticket
 
 ### EN REVISIÓN 🔄
-- Definición de SLA por tipo de problema (integrado con backend)
 - Restricción de acciones de ticket por usuario/rol
 
 ### EN PROGRESO 🚧
-- Asignación automática de tiempo objetivo al crear ticket (BE)
+- (ninguna)
 
 ### BACKLOG (prioridad de arriba hacia abajo)
 1. Evaluación de Cumplimiento SLA al Cerrar Ticket

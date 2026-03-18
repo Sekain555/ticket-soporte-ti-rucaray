@@ -16,21 +16,6 @@ export class DetalleTicketPage implements OnInit {
   feed: any[] = [];
   nuevoComentario: string = '';
   tipoProblemaEdit: string = '';
-  private categoriasMap: { [key: string]: string } = {
-    critico: 'Crítico',
-    critico_fa: 'Crítico con flujo de aprobación',
-    periferico: 'Cambio periférico',
-    hardware: 'Cambio hardware existente',
-    hardware_fa: 'Cambio hardware con flujo de aprobación',
-    cuentas: 'Creación de cuentas, correos, varios',
-    impresoras: 'Revisión / Cambio / Mantención de impresoras',
-    info_bd: 'Solicitud información base de datos',
-    inst_software: 'Instalación de programas',
-    red: 'Instalación puntos de red',
-    camara: 'Instalación de cámaras',
-    wifi: 'Instalación de antenas WiFi',
-    internet: 'Habilitación de acceso a internet',
-  };
 
   constructor(
     private route: ActivatedRoute,
@@ -47,7 +32,7 @@ export class DetalleTicketPage implements OnInit {
         this.ticket = res;
         this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
         this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
-          this.feed = this.procesarFeed(feedRes);
+          this.feed = feedRes;
         });
       });
     }
@@ -63,7 +48,7 @@ export class DetalleTicketPage implements OnInit {
       .subscribe({
         next: (res) => {
           this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
-            this.feed = this.procesarFeed(feedRes);
+            this.feed = feedRes;
             this.nuevoComentario = '';
           });
         },
@@ -114,11 +99,11 @@ export class DetalleTicketPage implements OnInit {
               )
               .subscribe({
                 next: () => {
-                  this.ticket.estado = nuevoEstado; // refresca estado en vista
+                  this.ticket.estado = nuevoEstado;
                   this.ticketService
                     .obtenerFeed(this.ticket.id_ticket)
                     .subscribe((feed) => {
-                      this.feed = this.procesarFeed(feed); // refresca feed
+                      this.feed = feed;
                     });
                   this.mostrarToast(
                     `Ticket ${
@@ -201,48 +186,14 @@ export class DetalleTicketPage implements OnInit {
       .actualizarTipoProblema(id_ticket, this.tipoProblemaEdit)
       .subscribe({
         next: () => {
-          this.ticket.tipo_problema = this.tipoProblemaEdit; // refresca UI
+          this.ticket.tipo_problema = this.tipoProblemaEdit;
           this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
-            this.feed = this.procesarFeed(feedRes); // refresca feed
+            this.feed = feedRes;
           });
           this.mostrarToast('Categoría actualizada', 'success');
         },
         error: () =>
           this.mostrarToast('Error al actualizar categoría', 'danger'),
       });
-  }
-
-  traducirCategoria(valor: string): string {
-    const normalizado = (valor || '').trim().toLowerCase();
-
-    if (normalizado === 'pendiente') {
-      return 'Pendiente';
-    }
-
-    return this.categoriasMap[normalizado] || valor;
-  }
-
-  procesarFeed(feedRes: any[]): any[] {
-    return feedRes.map((item: any) => {
-      if (item.tipo === 'cambio_categoria' && item.detalle?.includes('→')) {
-        const partes = item.detalle.split('→');
-
-        if (partes.length === 2) {
-          const izquierda = partes[0].trim(); // "Categoría actualizada: inst_software"
-          const derecha = partes[1].trim(); // "periferico"
-
-          const valorAnterior = izquierda
-            .replace('Categoría actualizada:', '')
-            .trim();
-
-          const textoAnterior = this.traducirCategoria(valorAnterior);
-          const textoNuevo = this.traducirCategoria(derecha);
-
-          item.detalle = `Categoría actualizada: ${textoAnterior} → ${textoNuevo}`;
-        }
-      }
-
-      return item;
-    });
   }
 }
