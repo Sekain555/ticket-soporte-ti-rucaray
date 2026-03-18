@@ -35,4 +35,8 @@ export class PermissionsService {
     return rol === 'admin' || rol === 'soporte';
   }
 
+  canClassifyTypeTickets(): boolean {
+    const rol = this.getRole();
+    return rol === 'admin' || rol === 'soporte';
+  }
 }
