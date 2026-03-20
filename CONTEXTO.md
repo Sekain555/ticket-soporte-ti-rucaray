@@ -123,6 +123,7 @@ http://127.0.0.1:8000
 - Definición de tipos de problema (integración con SLA del backend)
 - Definición de tipos de problema y SLA (valores alineados con tabla sla_tipos_problema)
 - Asignación automática de tiempo objetivo al crear ticket
+- Evaluación de cumplimiento SLA al cerrar ticket (toast diferenciado por resultado)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol

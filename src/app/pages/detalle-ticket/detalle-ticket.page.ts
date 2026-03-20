@@ -98,21 +98,30 @@ export class DetalleTicketPage implements OnInit {
                 comentario,
               )
               .subscribe({
-                next: () => {
+                next: (res: any) => {
                   this.ticket.estado = nuevoEstado;
                   this.ticketService
                     .obtenerFeed(this.ticket.id_ticket)
                     .subscribe((feed) => {
                       this.feed = feed;
                     });
-                  this.mostrarToast(
-                    `Ticket ${
-                      nuevoEstado === 'cerrado' ? 'cerrado' : 'reabierto'
-                    } con éxito`,
-                  );
+
+                  // Toast con resultado SLA al cerrar
+                  if (nuevoEstado === 'cerrado') {
+                    const sla = res?.resultado_sla;
+                    if (sla === 'dentro_plazo') {
+                      this.mostrarToast('Ticket cerrado · Resuelto dentro del plazo', 'success', 4000);
+                    } else if (sla === 'fuera_plazo') {
+                      this.mostrarToast('Ticket cerrado · Resuelto fuera del plazo', 'danger', 4000);
+                    } else {
+                      this.mostrarToast('Ticket cerrado · Sin SLA asignado', 'warning', 4000);
+                    }
+                  } else {
+                    this.mostrarToast('Ticket reabierto con éxito', 'success');
+                  }
                 },
                 error: () => {
-                  this.mostrarToast('Error al actualizar el estado del ticket');
+                  this.mostrarToast('Error al actualizar el estado del ticket', 'danger');
                 },
               });
 
