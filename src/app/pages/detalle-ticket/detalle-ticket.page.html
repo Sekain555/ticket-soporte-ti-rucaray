@@ -81,6 +81,17 @@
                   >
                 </ion-col>
               </ion-row>
+              <!-- Fila SLA: solo visible si el ticket tiene tiempo objetivo -->
+              <ion-row class="ion-margin-bottom" *ngIf="ticket?.tiempo_objetivo_horas">
+                <ion-col>
+                  <strong class="ion-display-block">TIEMPO OBJETIVO</strong>
+                  <p>{{ formatearTiempoObjetivo(ticket?.sla_tiempo_minimo_horas, ticket?.tiempo_objetivo_horas) }}</p>
+                </ion-col>
+                <ion-col>
+                  <strong class="ion-display-block">FECHA LÍMITE</strong>
+                  <p>{{ ticket?.fecha_limite_resolucion | date:'dd-MMM-yyyy HH:mm' }}</p>
+                </ion-col>
+              </ion-row>
               <!--
               <ion-row>
                 <ion-col>
