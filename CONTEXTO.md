@@ -124,6 +124,7 @@ http://127.0.0.1:8000
 - Definición de tipos de problema y SLA (valores alineados con tabla sla_tipos_problema)
 - Asignación automática de tiempo objetivo al crear ticket
 - Evaluación de cumplimiento SLA al cerrar ticket (toast diferenciado por resultado)
+- Visualización de tiempo objetivo y fecha límite en detalle de ticket (rango SLA humanizado)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
@@ -132,8 +133,6 @@ http://127.0.0.1:8000
 - (ninguna)
 
 ### BACKLOG (prioridad de arriba hacia abajo)
-1. Evaluación de Cumplimiento SLA al Cerrar Ticket
-2. Visualización de Tiempo Objetivo en Detalle de Ticket
 3. Indicador Visual de Tiempo Restante (Semáforo SLA)
 4. Agenda de mantenciones
 5. Etiquetar usuarios en comentarios @

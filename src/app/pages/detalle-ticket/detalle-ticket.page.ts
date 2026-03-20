@@ -106,22 +106,36 @@ export class DetalleTicketPage implements OnInit {
                       this.feed = feed;
                     });
 
-                  // Toast con resultado SLA al cerrar
                   if (nuevoEstado === 'cerrado') {
                     const sla = res?.resultado_sla;
                     if (sla === 'dentro_plazo') {
-                      this.mostrarToast('Ticket cerrado · Resuelto dentro del plazo', 'success', 4000);
+                      this.mostrarToast(
+                        'Ticket cerrado · Resuelto dentro del plazo',
+                        'success',
+                        4000,
+                      );
                     } else if (sla === 'fuera_plazo') {
-                      this.mostrarToast('Ticket cerrado · Resuelto fuera del plazo', 'danger', 4000);
+                      this.mostrarToast(
+                        'Ticket cerrado · Resuelto fuera del plazo',
+                        'danger',
+                        4000,
+                      );
                     } else {
-                      this.mostrarToast('Ticket cerrado · Sin SLA asignado', 'warning', 4000);
+                      this.mostrarToast(
+                        'Ticket cerrado · Sin SLA asignado',
+                        'warning',
+                        4000,
+                      );
                     }
                   } else {
                     this.mostrarToast('Ticket reabierto con éxito', 'success');
                   }
                 },
                 error: () => {
-                  this.mostrarToast('Error al actualizar el estado del ticket', 'danger');
+                  this.mostrarToast(
+                    'Error al actualizar el estado del ticket',
+                    'danger',
+                  );
                 },
               });
 
@@ -195,7 +209,11 @@ export class DetalleTicketPage implements OnInit {
       .actualizarTipoProblema(id_ticket, this.tipoProblemaEdit)
       .subscribe({
         next: () => {
-          this.ticket.tipo_problema = this.tipoProblemaEdit;
+          // Recargar ticket completo para reflejar nuevos valores SLA
+          this.ticketService.obtenerTicketPorId(id_ticket).subscribe((res) => {
+            this.ticket = res;
+            this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
+          });
           this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
             this.feed = feedRes;
           });
@@ -204,5 +222,23 @@ export class DetalleTicketPage implements OnInit {
         error: () =>
           this.mostrarToast('Error al actualizar categoría', 'danger'),
       });
+  }
+
+  formatearTiempoObjetivo(
+    minimo: number | null,
+    maximo: number | null,
+  ): string {
+    if (!maximo) return 'Sin SLA';
+
+    const formatear = (horas: number): string => {
+      const dias = Math.floor(horas / 24);
+      const horasRestantes = horas % 24;
+      if (dias === 0) return `${horas} hora${horas !== 1 ? 's' : ''}`;
+      if (horasRestantes === 0) return `${dias} día${dias !== 1 ? 's' : ''}`;
+      return `${dias} día${dias !== 1 ? 's' : ''} ${horasRestantes} hora${horasRestantes !== 1 ? 's' : ''}`;
+    };
+
+    if (!minimo || minimo === maximo) return formatear(maximo);
+    return `${formatear(minimo)} a ${formatear(maximo)}`;
   }
 }
