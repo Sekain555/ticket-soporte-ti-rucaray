@@ -33,9 +33,9 @@ export class MisTicketsPage implements OnInit {
   tickets: any[] = [];
   ordenSeleccionado: OrdenKey = 'fecha_creacion_desc';
   filtroEstado: EstadoKey = 'todos';
-  pageSize = 10; // opciones que usaremos en el select: 10, 25, 50
-  pageIndex = 0; // 0 = primera página
-  total = 0; // lo actualizaremos cuando el backend devuelva total
+  pageSize = 10;
+  pageIndex = 0;
+  total = 0;
 
   constructor(
     private ticketService: TicketService,
@@ -57,11 +57,9 @@ export class MisTicketsPage implements OnInit {
       if (!Number.isNaN(offset) && offset >= 0)
         this.pageIndex = Math.floor(offset / this.pageSize);
 
-      // Si en la URL viene un orden, lo mapeamos a tu clave UI
       const clave = this.inverseOrderKey(sort_by, order);
       if (clave) this.ordenSeleccionado = clave;
 
-      // Validamos el filtro de estado
       const ALLOWED: EstadoKey[] = [
         'todos',
         'abierto',
@@ -98,6 +96,29 @@ export class MisTicketsPage implements OnInit {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
 
+  // Semáforo SLA: retorna { color, icono, label } o null si no aplica
+  getSemaforoSLA(ticket: any): { color: string; icono: string; label: string } | null {
+    // No mostrar en tickets cerrados
+    if (!ticket?.fecha_limite_resolucion || ticket?.estado === 'cerrado') return null;
+
+    const ahora = new Date().getTime();
+    const fechaCreacion = new Date(ticket.fecha_creacion).getTime();
+    const fechaLimite = new Date(ticket.fecha_limite_resolucion).getTime();
+    const tiempoTotal = fechaLimite - fechaCreacion;
+    const tiempoTranscurrido = ahora - fechaCreacion;
+
+    if (tiempoTranscurrido >= tiempoTotal) {
+      return { color: 'danger', icono: 'alert-circle', label: 'Vencido' };
+    }
+
+    const porcentajeUsado = tiempoTranscurrido / tiempoTotal;
+    if (porcentajeUsado > 0.5) {
+      return { color: 'warning', icono: 'time', label: 'Próximo a vencer' };
+    }
+
+    return { color: 'success', icono: 'checkmark-circle', label: 'En plazo' };
+  }
+
   cambiarOrden(valor: OrdenKey) {
     this.ordenSeleccionado = valor;
     this.pageIndex = 0;
@@ -123,13 +144,13 @@ export class MisTicketsPage implements OnInit {
       })
       .subscribe({
         next: (resp) => {
-          const items = 
+          const items =
             Array.isArray(resp?.items) ? resp.items :
             Array.isArray(resp?.tickets) ? resp.tickets :
-            Array.isArray(resp) ? resp: [];
+            Array.isArray(resp) ? resp : [];
 
           this.tickets = items;
-          
+
           if (typeof resp?.total === 'number') {
             this.total = resp.total;
           } else if (Array.isArray(resp)) {
@@ -167,7 +188,7 @@ export class MisTicketsPage implements OnInit {
     if (this.pageSize === size) return;
 
     this.pageSize = size;
-    this.pageIndex = 0; // al cambiar tamaño, volver al inicio
+    this.pageIndex = 0;
     this.syncUrlAndReload();
   }
 
@@ -202,13 +223,11 @@ export class MisTicketsPage implements OnInit {
   }
 
   get itemsStart(): number {
-    // Si total = 0 (aún no devuelto), solo calculamos desde el offset
     const start = this.pageIndex * this.pageSize + 1;
     return this.tickets.length ? start : 0;
   }
 
   get itemsEnd(): number {
-    // Si no tenemos total, usar start + items - 1
     const start = this.itemsStart;
     return start ? start + this.tickets.length - 1 : 0;
   }
@@ -218,12 +237,10 @@ export class MisTicketsPage implements OnInit {
   }
 
   get puedeSiguiente(): boolean {
-    // Con total real:
     if (this.total > 0) {
       const nextOffset = (this.pageIndex + 1) * this.pageSize;
       return nextOffset < this.total;
     }
-    // Fallback temporal sin total: desactivar “Siguiente” para no crear UX confusa
     return false;
   }
 }

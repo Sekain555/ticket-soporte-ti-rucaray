@@ -209,7 +209,6 @@ export class DetalleTicketPage implements OnInit {
       .actualizarTipoProblema(id_ticket, this.tipoProblemaEdit)
       .subscribe({
         next: () => {
-          // Recargar ticket completo para reflejar nuevos valores SLA
           this.ticketService.obtenerTicketPorId(id_ticket).subscribe((res) => {
             this.ticket = res;
             this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
@@ -240,5 +239,27 @@ export class DetalleTicketPage implements OnInit {
 
     if (!minimo || minimo === maximo) return formatear(maximo);
     return `${formatear(minimo)} a ${formatear(maximo)}`;
+  }
+
+  // Semáforo SLA: retorna { color, icono, label } o null si no aplica
+  getSemaforoSLA(): { color: string; icono: string; label: string } | null {
+    if (!this.ticket?.fecha_limite_resolucion || this.ticket?.estado === 'cerrado') return null;
+
+    const ahora = new Date().getTime();
+    const fechaCreacion = new Date(this.ticket.fecha_creacion).getTime();
+    const fechaLimite = new Date(this.ticket.fecha_limite_resolucion).getTime();
+    const tiempoTotal = fechaLimite - fechaCreacion;
+    const tiempoTranscurrido = ahora - fechaCreacion;
+
+    if (tiempoTranscurrido >= tiempoTotal) {
+      return { color: 'danger', icono: 'alert-circle', label: 'Vencido' };
+    }
+
+    const porcentajeUsado = tiempoTranscurrido / tiempoTotal;
+    if (porcentajeUsado > 0.5) {
+      return { color: 'warning', icono: 'time', label: 'Próximo a vencer' };
+    }
+
+    return { color: 'success', icono: 'checkmark-circle', label: 'En plazo' };
   }
 }
