@@ -80,6 +80,13 @@
                     >{{ capitalize(ticket?.prioridad) }}</ion-chip
                   >
                 </ion-col>
+                <ion-col *ngIf="getSemaforoSLA() as sla">
+                  <strong class="ion-display-block">ESTADO SLA</strong>
+                  <ion-chip [color]="sla.color">
+                    <ion-icon [name]="sla.icono" slot="start"></ion-icon>
+                    {{ sla.label }}
+                  </ion-chip>
+                </ion-col>
               </ion-row>
               <!-- Fila SLA: solo visible si el ticket tiene tiempo objetivo -->
               <ion-row class="ion-margin-bottom" *ngIf="ticket?.tiempo_objetivo_horas">
