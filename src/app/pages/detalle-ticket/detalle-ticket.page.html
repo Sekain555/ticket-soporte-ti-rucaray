@@ -11,7 +11,9 @@
           <ion-breadcrumb>Ticket N° {{ ticket?.id_ticket }}</ion-breadcrumb>
         </ion-breadcrumbs>
         <ion-text>
-          <h1 class="titulo-pagina">{{ ticket?.titulo }} | {{ ticket?.dispositivo }}</h1>
+          <h1 class="titulo-pagina">
+            {{ ticket?.titulo }} | {{ ticket?.dispositivo }}
+          </h1>
         </ion-text>
         <p class="subtitulo-pagina">
           Reportado por {{ticket?.nombre_usuario}} {{ticket?.apellido_usuario}}
@@ -30,7 +32,39 @@
                 </ion-col>
                 <ion-col>
                   <strong>CATEGORÍA</strong>
-                  <p>{{ capitalize(ticket?.tipo_problema) }}</p>
+
+                  <!-- Solo lectura (usuarios normales) -->
+                  <ng-container
+                    *ngIf="!permisos.canClassifyTypeTickets(); else editarTipo"
+                  >
+                    <p>{{ ticket?.tipo_problema || 'Pendiente' }}</p>
+                  </ng-container>
+
+                  <!-- Editable (admin/soporte) -->
+                  <ng-template #editarTipo>
+                    <ion-select
+                      [(ngModel)]="tipoProblemaEdit"
+                      fill="outline"
+                      placeholder="Seleccionar categoría"
+                    >
+                      <ion-select-option value="Crítico">Crítico</ion-select-option>
+                      <ion-select-option value="Crítico con Flujo de Aprobación">Crítico con flujo de aprobación</ion-select-option>
+                      <ion-select-option value="Cambio de Periférico">Cambio de periférico</ion-select-option>
+                      <ion-select-option value="Cambio de Hardware Existente">Cambio de hardware existente</ion-select-option>
+                      <ion-select-option value="Cambio de Hardware con Aprobación">Cambio de hardware con flujo de aprobación</ion-select-option>
+                      <ion-select-option value="Creación de Cuentas">Creación de cuentas, correos, varios</ion-select-option>
+                      <ion-select-option value="Revisión o Habilitación de Impresoras">Revisión / Cambio / Mantención de impresoras</ion-select-option>
+                      <ion-select-option value="Solicitud de Información / Base de Datos">Solicitud de información / base de datos</ion-select-option>
+                      <ion-select-option value="Instalación de Programas">Instalación de programas</ion-select-option>
+                      <ion-select-option value="Instalación de Puntos de RED">Instalación de puntos de red</ion-select-option>
+                      <ion-select-option value="Instalación de Cámaras">Instalación de cámaras</ion-select-option>
+                      <ion-select-option value="Instalación de Antenas WiFi">Instalación de antenas WiFi</ion-select-option>
+                      <ion-select-option value="Habilitación de Acceso a Internet">Habilitación de acceso a internet</ion-select-option>
+                    </ion-select>
+                    <ion-button expand="block" (click)="guardarTipoProblema()">
+                      GUARDAR CATEGORÍA
+                    </ion-button>
+                  </ng-template>
                 </ion-col>
               </ion-row>
               <ion-row class="ion-margin-bottom">
@@ -45,6 +79,24 @@
                   <ion-chip [color]="getColorPrioridad(ticket?.prioridad)"
                     >{{ capitalize(ticket?.prioridad) }}</ion-chip
                   >
+                </ion-col>
+                <ion-col *ngIf="getSemaforoSLA() as sla">
+                  <strong class="ion-display-block">ESTADO SLA</strong>
+                  <ion-chip [color]="sla.color">
+                    <ion-icon [name]="sla.icono" slot="start"></ion-icon>
+                    {{ sla.label }}
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+              <!-- Fila SLA: solo visible si el ticket tiene tiempo objetivo -->
+              <ion-row class="ion-margin-bottom" *ngIf="ticket?.tiempo_objetivo_horas">
+                <ion-col>
+                  <strong class="ion-display-block">TIEMPO OBJETIVO</strong>
+                  <p>{{ formatearTiempoObjetivo(ticket?.sla_tiempo_minimo_horas, ticket?.tiempo_objetivo_horas) }}</p>
+                </ion-col>
+                <ion-col>
+                  <strong class="ion-display-block">FECHA LÍMITE</strong>
+                  <p>{{ ticket?.fecha_limite_resolucion | date:'dd-MMM-yyyy HH:mm' }}</p>
                 </ion-col>
               </ion-row>
               <!--
@@ -146,25 +198,23 @@
             <ion-card-title>Acciones de tickets</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button
-            expand="block"
-            *ngIf="permisos.canEditTickets()"
+            <ion-button expand="block" *ngIf="permisos.canEditTickets()"
               >EDITAR TICKET</ion-button
             >
-            <ion-button
-            expand="block"
-            *ngIf="permisos.canAssignTickets()"
-              >ASIGNAR TECNICO</ion-button>
+            <ion-button expand="block" *ngIf="permisos.canAssignTickets()"
+              >ASIGNAR TECNICO</ion-button
+            >
             <ion-button
               expand="block"
               [color]="ticket?.estado === 'cerrado' ? 'success' : 'danger'"
               (click)="toggleEstadoTicket()"
               *ngIf="permisos.canCloseTickets()"
-              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR TICKET' }}</ion-button>
-            <ion-button
-              expand="block"
-              *ngIf="permisos.canDeleteTickets()"
-              >ELIMINAR TICKET</ion-button>
+              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR
+              TICKET' }}</ion-button
+            >
+            <ion-button expand="block" *ngIf="permisos.canDeleteTickets()"
+              >ELIMINAR TICKET</ion-button
+            >
           </ion-card-content>
         </ion-card>
         <!--

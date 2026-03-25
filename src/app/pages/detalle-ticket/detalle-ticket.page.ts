@@ -15,13 +15,14 @@ export class DetalleTicketPage implements OnInit {
   ticket: any;
   feed: any[] = [];
   nuevoComentario: string = '';
+  tipoProblemaEdit: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private ticketService: TicketService,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
-    public permisos: PermissionsService
+    public permisos: PermissionsService,
   ) {}
 
   ngOnInit() {
@@ -29,7 +30,7 @@ export class DetalleTicketPage implements OnInit {
     if (id_ticket) {
       this.ticketService.obtenerTicketPorId(id_ticket).subscribe((res) => {
         this.ticket = res;
-
+        this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
         this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
           this.feed = feedRes;
         });
@@ -94,24 +95,47 @@ export class DetalleTicketPage implements OnInit {
               .cambiarEstadoTicket(
                 this.ticket.id_ticket,
                 nuevoEstado,
-                comentario
+                comentario,
               )
               .subscribe({
-                next: () => {
-                  this.ticket.estado = nuevoEstado; // refresca estado en vista
+                next: (res: any) => {
+                  this.ticket.estado = nuevoEstado;
                   this.ticketService
                     .obtenerFeed(this.ticket.id_ticket)
                     .subscribe((feed) => {
-                      this.feed = feed; // refresca feed
+                      this.feed = feed;
                     });
-                  this.mostrarToast(
-                    `Ticket ${
-                      nuevoEstado === 'cerrado' ? 'cerrado' : 'reabierto'
-                    } con éxito`
-                  );
+
+                  if (nuevoEstado === 'cerrado') {
+                    const sla = res?.resultado_sla;
+                    if (sla === 'dentro_plazo') {
+                      this.mostrarToast(
+                        'Ticket cerrado · Resuelto dentro del plazo',
+                        'success',
+                        4000,
+                      );
+                    } else if (sla === 'fuera_plazo') {
+                      this.mostrarToast(
+                        'Ticket cerrado · Resuelto fuera del plazo',
+                        'danger',
+                        4000,
+                      );
+                    } else {
+                      this.mostrarToast(
+                        'Ticket cerrado · Sin SLA asignado',
+                        'warning',
+                        4000,
+                      );
+                    }
+                  } else {
+                    this.mostrarToast('Ticket reabierto con éxito', 'success');
+                  }
                 },
                 error: () => {
-                  this.mostrarToast('Error al actualizar el estado del ticket');
+                  this.mostrarToast(
+                    'Error al actualizar el estado del ticket',
+                    'danger',
+                  );
                 },
               });
 
@@ -166,7 +190,7 @@ export class DetalleTicketPage implements OnInit {
   async mostrarToast(
     mensaje: string,
     color: string = 'warning',
-    duracion: number = 2500
+    duracion: number = 2500,
   ) {
     const toast = await this.toastCtrl.create({
       message: mensaje,
@@ -174,5 +198,68 @@ export class DetalleTicketPage implements OnInit {
       duration: duracion,
     });
     toast.present();
+  }
+
+  guardarTipoProblema() {
+    if (!this.permisos.canClassifyTypeTickets()) return;
+
+    const id_ticket = this.ticket.id_ticket;
+
+    this.ticketService
+      .actualizarTipoProblema(id_ticket, this.tipoProblemaEdit)
+      .subscribe({
+        next: () => {
+          this.ticketService.obtenerTicketPorId(id_ticket).subscribe((res) => {
+            this.ticket = res;
+            this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
+          });
+          this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
+            this.feed = feedRes;
+          });
+          this.mostrarToast('Categoría actualizada', 'success');
+        },
+        error: () =>
+          this.mostrarToast('Error al actualizar categoría', 'danger'),
+      });
+  }
+
+  formatearTiempoObjetivo(
+    minimo: number | null,
+    maximo: number | null,
+  ): string {
+    if (!maximo) return 'Sin SLA';
+
+    const formatear = (horas: number): string => {
+      const dias = Math.floor(horas / 24);
+      const horasRestantes = horas % 24;
+      if (dias === 0) return `${horas} hora${horas !== 1 ? 's' : ''}`;
+      if (horasRestantes === 0) return `${dias} día${dias !== 1 ? 's' : ''}`;
+      return `${dias} día${dias !== 1 ? 's' : ''} ${horasRestantes} hora${horasRestantes !== 1 ? 's' : ''}`;
+    };
+
+    if (!minimo || minimo === maximo) return formatear(maximo);
+    return `${formatear(minimo)} a ${formatear(maximo)}`;
+  }
+
+  // Semáforo SLA: retorna { color, icono, label } o null si no aplica
+  getSemaforoSLA(): { color: string; icono: string; label: string } | null {
+    if (!this.ticket?.fecha_limite_resolucion || this.ticket?.estado === 'cerrado') return null;
+
+    const ahora = new Date().getTime();
+    const fechaCreacion = new Date(this.ticket.fecha_creacion).getTime();
+    const fechaLimite = new Date(this.ticket.fecha_limite_resolucion).getTime();
+    const tiempoTotal = fechaLimite - fechaCreacion;
+    const tiempoTranscurrido = ahora - fechaCreacion;
+
+    if (tiempoTranscurrido >= tiempoTotal) {
+      return { color: 'danger', icono: 'alert-circle', label: 'Vencido' };
+    }
+
+    const porcentajeUsado = tiempoTranscurrido / tiempoTotal;
+    if (porcentajeUsado > 0.5) {
+      return { color: 'warning', icono: 'time', label: 'Próximo a vencer' };
+    }
+
+    return { color: 'success', icono: 'checkmark-circle', label: 'En plazo' };
   }
 }

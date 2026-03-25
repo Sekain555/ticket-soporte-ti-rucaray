@@ -8,14 +8,17 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class TicketService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {}
 
   crearTicket(
     titulo: string,
     descripcion: string,
-    tipo_problema: string,
     prioridad: string,
-    dispositivo?: string
+    dispositivo?: string,
+    tipo_problema?: string,
   ): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
@@ -28,9 +31,12 @@ export class TicketService {
     const body: any = {
       titulo,
       descripcion,
-      tipo_problema,
       prioridad,
     };
+
+    if (tipo_problema) {
+      body.tipo_problema = tipo_problema;
+    }
 
     if (dispositivo) {
       body.dispositivo = dispositivo;
@@ -90,7 +96,7 @@ export class TicketService {
       `${environment.apiBaseUrl}/tickets/${id_ticket}/feed`,
       {
         headers,
-      }
+      },
     );
   }
 
@@ -114,14 +120,14 @@ export class TicketService {
       body,
       {
         headers,
-      }
+      },
     );
   }
 
   cambiarEstadoTicket(
     id_ticket: string,
     nuevoEstado: string,
-    comentario: string
+    comentario: string,
   ): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
@@ -139,7 +145,30 @@ export class TicketService {
     return this.http.patch(
       `${environment.apiBaseUrl}/tickets/${id_ticket}/estado`,
       body,
-      { headers }
+      { headers },
+    );
+  }
+
+  actualizarTipoProblema(
+    id_ticket: string,
+    tipo_problema: string,
+  ): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) throw new Error('Usuario no autenticado');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    const body = {
+      tipo_problema,
+    };
+
+    return this.http.patch(
+      `${environment.apiBaseUrl}/tickets/${id_ticket}/tipo-problema`,
+      body,
+      { headers },
     );
   }
 }
