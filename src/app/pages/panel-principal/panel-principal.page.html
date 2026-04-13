@@ -13,8 +13,8 @@
       <p>¿Cómo podemos ayudarle hoy?</p>
     </ion-row>
     <ion-row class="ion-justify-content-center">
-      
-      <!--Tarjeta I-->
+
+      <!--Tarjeta I — Crear Ticket-->
       <ion-col size="12" size-md="6" size-lg="4">
         <ion-card class="card-accion">
           <ion-item
@@ -38,7 +38,7 @@
         </ion-card>
       </ion-col>
 
-      <!--Tarjeta II-->
+      <!--Tarjeta II — Historial de Solicitudes-->
       <ion-col size="12" size-md="6" size-lg="4">
         <ion-card class="card-accion">
           <ion-item
@@ -56,11 +56,36 @@
             <ion-img
               class="img-sticker"
               src="assets/stickers/historial-tickets.png"
-              alt="Crear nueva orden de trabajo"
+              alt="Historial de tickets"
             ></ion-img>
           </ion-item>
         </ion-card>
       </ion-col>
+
+      <!--Tarjeta III — Agenda de Mantenciones-->
+      <ion-col size="12" size-md="6" size-lg="4">
+        <ion-card class="card-accion">
+          <ion-item
+            button
+            detail="false"
+            routerLink="/agenda-mantenimiento"
+            lines="none"
+          >
+            <ion-card-header class="ion-text-center">
+              <ion-card-title>AGENDA DE MANTENCIONES</ion-card-title>
+              <ion-card-subtitle>
+                Presiona aquí para ver y gestionar las mantenciones programadas
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-img
+              class="img-sticker"
+              src="assets/stickers/agenda-mantenimiento.png"
+              alt="Agenda de mantenciones"
+            ></ion-img>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
     </ion-row>
   </ion-grid>
 </ion-content>

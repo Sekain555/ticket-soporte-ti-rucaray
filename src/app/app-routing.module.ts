@@ -27,6 +27,18 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
+  {
+    path: 'agenda-mantenimiento',
+    loadChildren: () => import('./pages/agenda-mantenimiento/agenda-mantenimiento.module').then( m => m.AgendaMantenimientoPageModule)
+  },
+  {
+    path: 'programar-mantenimiento',
+    loadChildren: () => import('./pages/programar-mantenimiento/programar-mantenimiento.module').then( m => m.ProgramarMantenimientoPageModule)
+  },
+  {
+    path: 'detalle-agenda-mant/:id_mantencion',
+    loadChildren: () => import('./pages/detalle-agenda-mant/detalle-agenda-mant.module').then( m => m.DetalleAgendaMantPageModule)
+  },
 ];
 
 @NgModule({

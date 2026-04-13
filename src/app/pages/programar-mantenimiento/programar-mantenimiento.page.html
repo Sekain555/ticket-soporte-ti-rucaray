@@ -1,0 +1,126 @@
+<ion-header>
+  <app-header [mostrarBackButton]="true"></app-header>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-text>
+        <h1>Programar mantención</h1>
+      </ion-text>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <p>
+        Selecciona la fecha y los detalles para agendar una nueva sesión de
+        mantenimiento preventivo o correctivo.
+      </p>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6">
+        <ion-card class="form-card">
+          <ion-grid>
+
+            <!-- Título -->
+            <ion-row>
+              <ion-col>
+                <ion-input
+                  [(ngModel)]="titulo"
+                  fill="outline"
+                  label="Título"
+                  labelPlacement="stacked"
+                  placeholder="Ej.: Mantención preventiva servidores"
+                ></ion-input>
+              </ion-col>
+            </ion-row>
+
+            <!-- Descripción -->
+            <ion-row>
+              <ion-col>
+                <ion-textarea
+                  [(ngModel)]="descripcion"
+                  fill="outline"
+                  label="Descripción"
+                  labelPlacement="stacked"
+                  placeholder="Detalle adicional sobre la mantención (opcional)"
+                  [autoGrow]="true"
+                ></ion-textarea>
+              </ion-col>
+            </ion-row>
+
+            <!-- Fecha propuesta -->
+            <ion-row>
+              <ion-col>
+                <ion-label class="ion-margin-start"><strong>Fecha propuesta</strong></ion-label>
+                <!-- Móvil: selector de rueda -->
+                <ng-container *ngIf="esMobil">
+                  <ion-datetime
+                    presentation="date"
+                    [preferWheel]="true"
+                    [(ngModel)]="fechaPropuesta"
+                  ></ion-datetime>
+                </ng-container>
+                <!-- Desktop: input nativo -->
+                <ng-container *ngIf="!esMobil">
+                  <ion-input
+                    type="date"
+                    fill="outline"
+                    [(ngModel)]="fechaPropuesta"
+                  ></ion-input>
+                </ng-container>
+              </ion-col>
+            </ion-row>
+
+            <!-- Hora inicio y hora fin -->
+            <ion-row>
+              <ion-col>
+                <ion-label class="ion-margin-start"><strong>Hora inicio</strong></ion-label>
+                <!-- Móvil -->
+                <ng-container *ngIf="esMobil">
+                  <ion-datetime
+                    presentation="time"
+                    [preferWheel]="true"
+                    [(ngModel)]="horaInicio"
+                  ></ion-datetime>
+                </ng-container>
+                <!-- Desktop -->
+                <ng-container *ngIf="!esMobil">
+                  <ion-input
+                    type="time"
+                    fill="outline"
+                    [(ngModel)]="horaInicio"
+                  ></ion-input>
+                </ng-container>
+              </ion-col>
+              <ion-col>
+                <ion-label class="ion-margin-start"><strong>Hora término</strong></ion-label>
+                <!-- Móvil -->
+                <ng-container *ngIf="esMobil">
+                  <ion-datetime
+                    presentation="time"
+                    [preferWheel]="true"
+                    [(ngModel)]="horaFin"
+                  ></ion-datetime>
+                </ng-container>
+                <!-- Desktop -->
+                <ng-container *ngIf="!esMobil">
+                  <ion-input
+                    type="time"
+                    fill="outline"
+                    [(ngModel)]="horaFin"
+                  ></ion-input>
+                </ng-container>
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="ion-justify-content-end">
+              <ion-button (click)="programarMantencion()">
+                PROGRAMAR MANTENCIÓN
+              </ion-button>
+            </ion-row>
+
+          </ion-grid>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
