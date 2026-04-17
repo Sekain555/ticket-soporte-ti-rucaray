@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { DetalleAgendaMantPageRoutingModule } from './detalle-agenda-mant-routing.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 import { DetalleAgendaMantPage } from './detalle-agenda-mant.page';
 
@@ -13,7 +14,8 @@ import { DetalleAgendaMantPage } from './detalle-agenda-mant.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    DetalleAgendaMantPageRoutingModule
+    DetalleAgendaMantPageRoutingModule,
+    ComponentsModule,
   ],
   declarations: [DetalleAgendaMantPage]
 })

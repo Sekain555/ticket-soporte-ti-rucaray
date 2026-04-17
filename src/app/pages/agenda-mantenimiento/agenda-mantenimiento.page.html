@@ -21,101 +21,80 @@
       </ion-col>
     </ion-row>
 
-    <!-- Filtros -->
+    <!-- Filtro por estado -->
     <ion-card class="form-card">
       <ion-card-content>
         <ion-row>
           <ion-col size="12" size-md="6">
-            <ion-select label="Período" fill="outline" value="esta-semana">
-              <ion-select-option value="hoy">Hoy</ion-select-option>
-              <ion-select-option value="esta-semana"
-                >Esta semana</ion-select-option
-              >
-              <ion-select-option value="este-mes">Este mes</ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col size="12" size-md="6">
-            <ion-select label="Estado" fill="outline" value="todos">
-              <ion-select-option value="todos"
-                >Todos los estados</ion-select-option
-              >
-              <ion-select-option value="propuesto"
-                >Propuestos</ion-select-option
-              >
-              <ion-select-option value="confirmado"
-                >Confirmados</ion-select-option
-              >
-              <ion-select-option value="reprogramado"
-                >Reprogramados</ion-select-option
-              >
-              <ion-select-option value="cancelado"
-                >Cancelados</ion-select-option
-              >
+            <ion-select
+              label="Estado"
+              fill="outline"
+              [value]="filtroEstado"
+              (ionChange)="cambiarFiltroEstado($event.detail.value)"
+            >
+              <ion-select-option value="todos">Todos los estados</ion-select-option>
+              <ion-select-option value="propuesto">Propuestos</ion-select-option>
+              <ion-select-option value="confirmado">Confirmados</ion-select-option>
+              <ion-select-option value="reprogramado">Reprogramados</ion-select-option>
+              <ion-select-option value="cancelado">Cancelados</ion-select-option>
             </ion-select>
           </ion-col>
         </ion-row>
       </ion-card-content>
     </ion-card>
 
-    <!-- Listado — datos estáticos de referencia hasta Card 5 -->
-    <ion-list lines="none">
-      <ion-item>
-        <ion-label>
-          <h2><strong>Hoy</strong></h2>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-
-    <ion-card class="form-card" button routerLink="/detalle-agenda-mant">
-      <ion-card-content>
-        <ion-row class="ion-justify-content-between ion-align-items-center">
-          <ion-col size="auto">
-            <ion-chip color="success">CONFIRMADO</ion-chip>
-            <ion-note class="ion-margin-start">09:00 - 10:30</ion-note>
-          </ion-col>
-          <ion-col size="auto">
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </ion-col>
-        </ion-row>
-        <h3>Mantenimiento Preventivo Servidores</h3>
-        <p class="ion-no-margin">Sala de Servidores — Planta Principal</p>
-        <ion-row
-          class="ion-justify-content-between ion-align-items-center ion-margin-top"
-        >
-          <ion-col size="auto">
-            <ion-note>Victor Sepúlveda</ion-note>
-          </ion-col>
-          <ion-col size="auto">
-            <ion-note>#M-001</ion-note>
-          </ion-col>
-        </ion-row>
+    <!-- Sin resultados -->
+    <ion-card class="form-card" *ngIf="mantenciones.length === 0">
+      <ion-card-content class="ion-text-center">
+        <p>No hay mantenciones {{ filtroEstado !== 'todos' ? filtroEstado + 's' : '' }} registradas.</p>
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="form-card" button routerLink="/detalle-agenda-mant">
-      <ion-card-content>
-        <ion-row class="ion-justify-content-between ion-align-items-center">
-          <ion-col size="auto">
-            <ion-chip color="warning">PROPUESTO</ion-chip>
-            <ion-note class="ion-margin-start">14:00 - 15:00</ion-note>
-          </ion-col>
-          <ion-col size="auto">
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </ion-col>
-        </ion-row>
-        <h3>Revisión Puntos de Red</h3>
-        <p class="ion-no-margin">Oficinas Administrativas</p>
-        <ion-row
-          class="ion-justify-content-between ion-align-items-center ion-margin-top"
-        >
-          <ion-col size="auto">
-            <ion-note>Sin asignar</ion-note>
-          </ion-col>
-          <ion-col size="auto">
-            <ion-note>#M-002</ion-note>
-          </ion-col>
-        </ion-row>
-      </ion-card-content>
-    </ion-card>
+    <!-- Listado agrupado por fecha -->
+    <ng-container *ngFor="let grupo of mantencionesPorFecha">
+      <ion-list lines="none">
+        <ion-item>
+          <ion-label>
+            <h2><strong>{{ formatearFecha(grupo.fecha) }}</strong></h2>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-card
+        class="form-card"
+        button
+        *ngFor="let m of grupo.items"
+        [routerLink]="['/detalle-agenda-mant', m.id_mantencion]"
+      >
+        <ion-card-content>
+          <ion-row class="ion-justify-content-between ion-align-items-center">
+            <ion-col size="auto">
+              <ion-chip [color]="getColorEstado(m.estado)">
+                {{ capitalize(m.estado) }}
+              </ion-chip>
+              <ion-note class="ion-margin-start">
+                {{ formatearHora(m.hora_inicio) }} - {{ formatearHora(m.hora_fin) }}
+              </ion-note>
+            </ion-col>
+            <ion-col size="auto">
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <h3>{{ m.titulo }}</h3>
+          <p class="ion-no-margin" *ngIf="m.descripcion">{{ m.descripcion }}</p>
+          <ion-row class="ion-justify-content-between ion-align-items-center ion-margin-top">
+            <ion-col size="auto">
+              <ion-note>
+                {{ m.nombre_asignado ? (m.nombre_asignado + ' ' + m.apellido_asignado) : 'Sin asignar' }}
+              </ion-note>
+            </ion-col>
+            <ion-col size="auto">
+              <ion-note>#M-{{ m.id_mantencion }}</ion-note>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
   </ion-grid>
 </ion-content>
