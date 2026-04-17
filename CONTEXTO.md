@@ -132,6 +132,7 @@ http://127.0.0.1:8000
 - Evaluación de cumplimiento SLA al cerrar ticket (toast diferenciado por resultado)
 - Visualización de tiempo objetivo y fecha límite en detalle de ticket (rango SLA humanizado)
 - Crear y proponer agendamiento (formulario + servicio + navegación desde panel principal)
+- Gestión de agendamientos: listado real, detalle y cambio de estado por rol
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
