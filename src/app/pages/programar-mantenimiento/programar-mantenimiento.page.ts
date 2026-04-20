@@ -42,7 +42,6 @@ export class ProgramarMantenimientoPage {
       return;
     }
 
-    // Extraer solo HH:mm desde ISO string si viene del ion-datetime
     const horaInicioFmt = this.formatearHora(this.horaInicio);
     const horaFinFmt = this.formatearHora(this.horaFin);
     const fechaFmt = this.formatearFecha(this.fechaPropuesta);
@@ -58,25 +57,26 @@ export class ProgramarMantenimientoPage {
         this.mostrarToast('Mantención agendada exitosamente.', 'success');
         this.router.navigate(['/agenda-mantenimiento']);
       },
-      error: () => {
-        this.mostrarToast('Error al agendar la mantención.', 'danger');
+      error: (err) => {
+        // Error 409 = conflicto de horario con mensaje descriptivo del backend
+        if (err?.status === 409) {
+          this.mostrarToast(err.error?.detail || 'Conflicto de horario.', 'danger', 5000);
+        } else {
+          this.mostrarToast('Error al agendar la mantención.', 'danger');
+        }
       },
     });
   }
 
-  // Extrae HH:mm de un string ISO o HH:mm
   private formatearHora(valor: string): string {
     if (!valor) return '';
     if (valor.includes('T')) {
-      // Viene de ion-datetime como ISO string
       const date = new Date(valor);
       return date.toTimeString().substring(0, 5);
     }
-    // Ya viene como HH:mm desde input nativo
     return valor.substring(0, 5);
   }
 
-  // Extrae YYYY-MM-DD de un string ISO o fecha
   private formatearFecha(valor: string): string {
     if (!valor) return '';
     if (valor.includes('T')) {
@@ -85,11 +85,11 @@ export class ProgramarMantenimientoPage {
     return valor;
   }
 
-  private async mostrarToast(mensaje: string, color: string = 'warning') {
+  private async mostrarToast(mensaje: string, color: string = 'warning', duracion: number = 3000) {
     const toast = await this.toastCtrl.create({
       message: mensaje,
       color,
-      duration: 3000,
+      duration: duracion,
     });
     toast.present();
   }
