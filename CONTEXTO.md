@@ -133,6 +133,7 @@ http://127.0.0.1:8000
 - Visualización de tiempo objetivo y fecha límite en detalle de ticket (rango SLA humanizado)
 - Crear y proponer agendamiento (formulario + servicio + navegación desde panel principal)
 - Gestión de agendamientos: listado real, detalle y cambio de estado por rol
+- Vista de agenda por día/semana: filtro de período, navegación y mensaje contextual
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
