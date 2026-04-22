@@ -6,6 +6,8 @@ import { CalendarEvent, CalendarView } from 'angular-calendar';
 
 type Periodo = 'hoy' | 'esta-semana' | 'este-mes';
 
+type Periodo = 'hoy' | 'esta-semana' | 'este-mes';
+
 @Component({
   selector: 'app-agenda-mantenimiento',
   templateUrl: './agenda-mantenimiento.page.html',
