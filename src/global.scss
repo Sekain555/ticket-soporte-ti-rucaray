@@ -25,6 +25,9 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+/* Angular Calendar */
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -221,5 +224,58 @@
   .alert-title,
   .popover .popover-header {
     color: var(--ion-text-color-step-1) !important;
+  }
+}
+
+/* Angular Calendar — compatibilidad con tema oscuro Ionic */
+.cal-month-view,
+.cal-week-view {
+  background-color: var(--ion-card-background, #1e1e1e) !important;
+
+  .cal-header,
+  .cal-days,
+  .cal-week-view .cal-day-headers {
+    background-color: var(--ion-card-background, #1e1e1e) !important;
+  }
+
+  .cal-cell,
+  .cal-day-cell,
+  .cal-hour,
+  .cal-hour-segment {
+    background-color: var(--ion-card-background, #1e1e1e) !important;
+    color: var(--ion-text-color, #ffffff) !important;
+  }
+
+  .cal-day-number,
+  .cal-header b,
+  .cal-header span {
+    color: var(--ion-text-color, #ffffff) !important;
+    opacity: 1 !important;
+  }
+
+  .cal-out-month .cal-day-number {
+    opacity: 0.3 !important;
+  }
+
+  .cal-today {
+    background-color: rgba(56, 128, 255, 0.15) !important;
+  }
+
+  .cal-cell-row:hover,
+  .cal-cell:hover {
+    background-color: rgba(255,255,255,0.05) !important;
+  }
+
+  .cal-event {
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: #fff !important;
+  }
+
+  /* Bordes sutiles */
+  .cal-day-cell,
+  .cal-header {
+    border-color: rgba(255,255,255,0.08) !important;
   }
 }
