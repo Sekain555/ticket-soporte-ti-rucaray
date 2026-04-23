@@ -12,6 +12,8 @@ import { PermissionsService } from 'src/app/services/permissions.service';
 })
 export class DetalleAgendaMantPage implements OnInit {
   mantencion: any;
+  feed: any[] = [];
+  nuevoComentario: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -24,12 +26,39 @@ export class DetalleAgendaMantPage implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id_mantencion');
     if (id) {
-      this.mantencionService.obtenerMantencionPorId(Number(id)).subscribe({
-        next: (res) => (this.mantencion = res),
-        error: () =>
-          this.mostrarToast('No se pudo cargar la mantención.', 'danger'),
-      });
+      this.cargarMantencion(Number(id));
     }
+  }
+
+  cargarMantencion(id: number) {
+    this.mantencionService.obtenerMantencionPorId(id).subscribe({
+      next: (res) => {
+        this.mantencion = res;
+        this.cargarFeed(id);
+      },
+      error: () => this.mostrarToast('No se pudo cargar la mantención.', 'danger'),
+    });
+  }
+
+  cargarFeed(id: number) {
+    this.mantencionService.obtenerFeedMantencion(id).subscribe({
+      next: (res) => (this.feed = res || []),
+      error: () => (this.feed = []),
+    });
+  }
+
+  agregarComentario() {
+    if (!this.nuevoComentario.trim()) return;
+
+    this.mantencionService
+      .agregarComentarioMantencion(this.mantencion.id_mantencion, this.nuevoComentario.trim())
+      .subscribe({
+        next: () => {
+          this.nuevoComentario = '';
+          this.cargarFeed(this.mantencion.id_mantencion);
+        },
+        error: () => this.mostrarToast('Error al agregar comentario.', 'danger'),
+      });
   }
 
   async cambiarEstado(nuevo_estado: string) {
@@ -66,13 +95,10 @@ export class DetalleAgendaMantPage implements OnInit {
                   if (data.notas?.trim()) {
                     this.mantencion.notas_soporte = data.notas.trim();
                   }
-                  this.mostrarToast(
-                    `Mantención ${nuevo_estado} correctamente.`,
-                    'success',
-                  );
+                  this.cargarFeed(this.mantencion.id_mantencion);
+                  this.mostrarToast(`Mantención ${nuevo_estado} correctamente.`, 'success');
                 },
-                error: () =>
-                  this.mostrarToast('Error al actualizar el estado.', 'danger'),
+                error: () => this.mostrarToast('Error al actualizar el estado.', 'danger'),
               });
           },
         },
@@ -91,6 +117,19 @@ export class DetalleAgendaMantPage implements OnInit {
     return colores[estado?.toLowerCase()] || 'medium';
   }
 
+  getIconoFeed(tipo: string): string {
+    const iconos: Record<string, string> = {
+      creacion: 'calendar',
+      cambio_estado: 'swap-vertical',
+      comentario: 'chatbubble',
+    };
+    return iconos[tipo?.toLowerCase()] || 'ellipse';
+  }
+
+  esComentario(item: any): boolean {
+    return item.tipo?.toLowerCase() === 'comentario';
+  }
+
   capitalize(text: string): string {
     if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
@@ -98,8 +137,7 @@ export class DetalleAgendaMantPage implements OnInit {
 
   formatearHora(hora: any): string {
     if (!hora) return '';
-    const horaStr = String(hora);
-    return horaStr.substring(0, 5);
+    return String(hora).substring(0, 5);
   }
 
   formatearFecha(fecha: string): string {
