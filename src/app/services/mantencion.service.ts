@@ -32,11 +32,9 @@ export class MantencionService {
     const body: any = { titulo, fecha_propuesta, hora_inicio, hora_fin };
     if (descripcion) body.descripcion = descripcion;
 
-    return this.http.post(
-      `${environment.apiBaseUrl}/mantenciones/`,
-      body,
-      { headers: this.getHeaders() },
-    );
+    return this.http.post(`${environment.apiBaseUrl}/mantenciones/`, body, {
+      headers: this.getHeaders(),
+    });
   }
 
   listarMantenciones(opts?: {
@@ -46,13 +44,15 @@ export class MantencionService {
   }): Observable<any> {
     let params = new HttpParams();
     if (opts?.estado) params = params.set('estado', opts.estado);
-    if (typeof opts?.limit === 'number') params = params.set('limit', String(opts.limit));
-    if (typeof opts?.offset === 'number') params = params.set('offset', String(opts.offset));
+    if (typeof opts?.limit === 'number')
+      params = params.set('limit', String(opts.limit));
+    if (typeof opts?.offset === 'number')
+      params = params.set('offset', String(opts.offset));
 
-    return this.http.get(
-      `${environment.apiBaseUrl}/mantenciones/`,
-      { headers: this.getHeaders(), params },
-    );
+    return this.http.get(`${environment.apiBaseUrl}/mantenciones/`, {
+      headers: this.getHeaders(),
+      params,
+    });
   }
 
   obtenerMantencionPorId(id_mantencion: number): Observable<any> {
@@ -73,6 +73,24 @@ export class MantencionService {
     return this.http.patch(
       `${environment.apiBaseUrl}/mantenciones/${id_mantencion}/estado`,
       body,
+      { headers: this.getHeaders() },
+    );
+  }
+
+  obtenerFeedMantencion(id_mantencion: number): Observable<any> {
+    return this.http.get(
+      `${environment.apiBaseUrl}/mantenciones/${id_mantencion}/feed`,
+      { headers: this.getHeaders() },
+    );
+  }
+
+  agregarComentarioMantencion(
+    id_mantencion: number,
+    comentario: string,
+  ): Observable<any> {
+    return this.http.post(
+      `${environment.apiBaseUrl}/mantenciones/${id_mantencion}/feed`,
+      { comentario },
       { headers: this.getHeaders() },
     );
   }

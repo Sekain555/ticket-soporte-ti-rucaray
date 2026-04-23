@@ -134,6 +134,7 @@ http://127.0.0.1:8000
 - Crear y proponer agendamiento (formulario + servicio + navegación desde panel principal)
 - Gestión de agendamientos: listado real, detalle y cambio de estado por rol
 - Vista de agenda por día/semana: filtro de período, navegación y mensaje contextual
+- Feed de actividades en mantenciones (tabla mantencion_feed, registro automático, comentarios)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
