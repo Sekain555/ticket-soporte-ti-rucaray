@@ -135,6 +135,7 @@ http://127.0.0.1:8000
 - Gestión de agendamientos: listado real, detalle y cambio de estado por rol
 - Vista de agenda por día/semana: filtro de período, navegación y mensaje contextual
 - Feed de actividades en mantenciones (tabla mantencion_feed, registro automático, comentarios)
+- Vista Calendario en Agenda de Mantenciones (angular-calendar, vistas mes/semana)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
@@ -188,3 +189,5 @@ http://127.0.0.1:8000
 - Rama de producción: `main` (solo recibe cambios al lanzar versión)
 - Flujo: `feature/nombre` → squash & merge a `dev`
 - Archivos sensibles en `.gitignore` (credentials, environments con datos reales)
+- Angular actualizado a 20.x (requerido por angular-calendar)
+- angular-calendar + date-fns instalados como dependencias
