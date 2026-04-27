@@ -1,5 +1,35 @@
 # 📘 CHANGELOG — Frontend (Ionic / Angular)
 
+## [1.2.0] — 2026-04-27
+
+### Added
+- Módulo completo **Agenda de Mantenciones** accesible desde el panel principal.
+- Página `programar-mantenimiento` con formulario de creación de mantenciones — campos título, descripción, fecha, hora inicio y hora término. Selector adaptado a plataforma: `ion-datetime` en móvil, input nativo en desktop.
+- Página `agenda-mantenimiento` con vista Lista y vista Calendario intercambiables mediante `ion-segment`.
+  - Vista Lista: filtro por período (Hoy / Esta semana / Este mes) y por estado, con navegación ← → entre períodos y agrupación por fecha.
+  - Vista Calendario: vistas Mes y Semana con navegación entre períodos, eventos con color según estado (amarillo propuesto, verde confirmado, azul/morado reprogramado, rojo cancelado) y panel de detalle al hacer click en un día.
+- Página `detalle-agenda-mant` con información completa de la mantención, acciones de gestión por rol (confirmar, reprogramar, cancelar), feed de actividades y caja de comentarios.
+- Formulario inline de reprogramación en el detalle — prellenado con los valores actuales, adaptado a plataforma, con validación de conflictos y toast descriptivo ante error 409.
+- Feed de actividades en el detalle con iconos diferenciados por tipo de evento (`creacion`, `cambio_estado`, `reprogramacion`, `comentario`).
+- `MantencionService` con métodos: `crearMantencion()`, `listarMantenciones()`, `obtenerMantencionPorId()`, `actualizarEstadoMantencion()`, `reprogramarMantencion()`, `obtenerFeedMantencion()`, `agregarComentarioMantencion()`.
+- Rutas registradas: `/agenda-mantenimiento`, `/programar-mantenimiento`, `/detalle-agenda-mant/:id_mantencion`.
+- Card "Agenda de Mantenciones" agregada al panel principal con navegación al módulo.
+- Librería `angular-calendar` + `date-fns` instaladas para la vista calendario.
+
+### Changed
+- Angular actualizado de `20.1.4` a `20.x` (requerido por `angular-calendar`).
+
+### Compatibility
+- Probado con Backend `1.2.0`.
+
+### Notes
+- Release completo del grupo funcional **Agenda de Mantenciones**.
+- El filtrado por período en la vista Lista es 100% frontend — se cargan todas las mantenciones una vez y se filtran localmente, sin llamadas extra al backend al navegar entre períodos.
+- El click en evento en vista Mes funciona haciendo click en el punto de color dentro del recuadro del día — comportamiento estándar de `angular-calendar`.
+- El import CSS de `angular-calendar` requiere ruta absoluta desde `node_modules` por restricción del exports field de la librería: `@import "../node_modules/angular-calendar/css/angular-calendar.css"`.
+
+---
+
 ## [1.1.0] — 2026-03-24
 
 ### Added
@@ -90,6 +120,7 @@
 
 | Frontend | Backend | Estado | Fecha | Notas |
 |---|---|---|---|---|
+| 1.2.0 | 1.2.0 | ✅ Compatible | 2026-04-27 | Release grupo Agenda de Mantenciones |
 | 1.1.0 | 1.1.0 | ✅ Compatible | 2026-03-24 | Release grupo SLA |
 | 1.0.0 | 1.0.0 | ✅ Compatible | 2026-02-15 | Primera versión estable en producción |
 | 0.10.0-rc.1 | 0.9.0-beta.1 | ✅ Compatible | 2025-10-20 | RC en entorno de pruebas internas |

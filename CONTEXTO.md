@@ -38,6 +38,9 @@ Todos los servicios son `providedIn: 'root'` (singletons globales).
 | `/nuevo-ticket` | `NuevoTicketPage` | `NuevoTicketPageModule` |
 | `/mis-tickets` | `MisTicketsPage` | `MisTicketsPageModule` |
 | `/detalle-ticket` | `DetalleTicketPage` | `DetalleTicketPageModule` |
+| `/agenda-mantenimiento` | `AgendaMantenimientoPage` | Vista de agenda (datos estáticos hasta Card 5) |
+| `/programar-mantenimiento` | `ProgramarMantenimientoPage` | Formulario de propuesta de mantención |
+| `/detalle-agenda-mant/:id_mantencion` | `DetalleAgendaMantPage` | Detalle de mantención |
 
 ---
 
@@ -60,6 +63,9 @@ Todos los servicios son `providedIn: 'root'` (singletons globales).
 
 ### VersionService
 - Control de versión de la aplicación y compatibilidad
+
+### MantencionService
+- Operaciones CRUD de mantenciones con la API backend.
 
 ---
 
@@ -125,6 +131,12 @@ http://127.0.0.1:8000
 - Asignación automática de tiempo objetivo al crear ticket
 - Evaluación de cumplimiento SLA al cerrar ticket (toast diferenciado por resultado)
 - Visualización de tiempo objetivo y fecha límite en detalle de ticket (rango SLA humanizado)
+- Crear y proponer agendamiento (formulario + servicio + navegación desde panel principal)
+- Gestión de agendamientos: listado real, detalle y cambio de estado por rol
+- Vista de agenda por día/semana: filtro de período, navegación y mensaje contextual
+- Feed de actividades en mantenciones (tabla mantencion_feed, registro automático, comentarios)
+- Vista Calendario en Agenda de Mantenciones (angular-calendar, vistas mes/semana)
+- Flujo de reprogramación con cambio de fecha/hora (formulario inline, validación de conflictos, feed)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
@@ -133,7 +145,6 @@ http://127.0.0.1:8000
 - (ninguna)
 
 ### BACKLOG (prioridad de arriba hacia abajo)
-3. Indicador Visual de Tiempo Restante (Semáforo SLA)
 4. Agenda de mantenciones
 5. Etiquetar usuarios en comentarios @
 6. Función de asignación de tickets
@@ -179,3 +190,5 @@ http://127.0.0.1:8000
 - Rama de producción: `main` (solo recibe cambios al lanzar versión)
 - Flujo: `feature/nombre` → squash & merge a `dev`
 - Archivos sensibles en `.gitignore` (credentials, environments con datos reales)
+- Angular actualizado a 20.x (requerido por angular-calendar)
+- angular-calendar + date-fns instalados como dependencias
