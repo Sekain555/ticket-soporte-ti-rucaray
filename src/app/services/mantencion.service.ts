@@ -94,4 +94,20 @@ export class MantencionService {
       { headers: this.getHeaders() },
     );
   }
+
+  reprogramarMantencion(
+    id_mantencion: number,
+    nueva_fecha: string,
+    nueva_hora_inicio: string,
+    nueva_hora_fin: string,
+    notas?: string,
+  ): Observable<any> {
+    const body: any = { nueva_fecha, nueva_hora_inicio, nueva_hora_fin };
+    if (notas) body.notas = notas;
+    return this.http.patch(
+      `${environment.apiBaseUrl}/mantenciones/${id_mantencion}/reprogramar`,
+      body,
+      { headers: this.getHeaders() },
+    );
+  }
 }

@@ -7,7 +7,9 @@
     <ion-row>
       <ion-col size="12" size-md="8">
         <ion-breadcrumbs>
-          <ion-breadcrumb routerLink="/agenda-mantenimiento">Agenda</ion-breadcrumb>
+          <ion-breadcrumb routerLink="/agenda-mantenimiento"
+            >Agenda</ion-breadcrumb
+          >
           <ion-breadcrumb>#M-{{ mantencion?.id_mantencion }}</ion-breadcrumb>
         </ion-breadcrumbs>
 
@@ -15,8 +17,10 @@
           <h1 class="titulo-pagina">{{ mantencion?.titulo }}</h1>
         </ion-text>
         <p class="subtitulo-pagina">
-          Solicitado por {{ mantencion?.nombre_solicitante }} {{ mantencion?.apellido_solicitante }}
-          | {{ mantencion?.departamento_solicitante }} | {{ mantencion?.puesto_solicitante }}
+          Solicitado por {{ mantencion?.nombre_solicitante }} {{
+          mantencion?.apellido_solicitante }} | {{
+          mantencion?.departamento_solicitante }} | {{
+          mantencion?.puesto_solicitante }}
         </p>
 
         <!-- Detalles -->
@@ -45,16 +49,18 @@
                 </ion-col>
                 <ion-col>
                   <strong class="ion-display-block">HORARIO</strong>
-                  <p>{{ formatearHora(mantencion?.hora_inicio) }} — {{ formatearHora(mantencion?.hora_fin) }}</p>
+                  <p>
+                    {{ formatearHora(mantencion?.hora_inicio) }} — {{
+                    formatearHora(mantencion?.hora_fin) }}
+                  </p>
                 </ion-col>
               </ion-row>
               <ion-row class="ion-margin-bottom">
                 <ion-col>
                   <strong class="ion-display-block">TÉCNICO ASIGNADO</strong>
                   <p>
-                    {{ mantencion?.nombre_asignado
-                      ? (mantencion.nombre_asignado + ' ' + mantencion.apellido_asignado)
-                      : 'Sin asignar' }}
+                    {{ mantencion?.nombre_asignado ? (mantencion.nombre_asignado
+                    + ' ' + mantencion.apellido_asignado) : 'Sin asignar' }}
                   </p>
                 </ion-col>
               </ion-row>
@@ -63,6 +69,108 @@
                   <strong class="ion-display-block">NOTAS DE SOPORTE</strong>
                   <p>{{ mantencion?.notas_soporte }}</p>
                 </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Formulario de reprogramación -->
+        <ion-card class="form-card" *ngIf="mostrarFormReprogramar">
+          <ion-card-header>
+            <ion-card-title>Reprogramar mantención</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <!-- Nueva fecha -->
+              <ion-row>
+                <ion-col>
+                  <ion-label class="ion-margin-start"
+                    ><strong>Nueva fecha</strong></ion-label
+                  >
+                  <ng-container *ngIf="esMobil">
+                    <ion-datetime
+                      presentation="date"
+                      [preferWheel]="true"
+                      [(ngModel)]="nuevaFecha"
+                    ></ion-datetime>
+                  </ng-container>
+                  <ng-container *ngIf="!esMobil">
+                    <ion-input
+                      type="date"
+                      fill="outline"
+                      [(ngModel)]="nuevaFecha"
+                    ></ion-input>
+                  </ng-container>
+                </ion-col>
+              </ion-row>
+
+              <!-- Nueva hora inicio y fin -->
+              <ion-row>
+                <ion-col>
+                  <ion-label class="ion-margin-start"
+                    ><strong>Hora inicio</strong></ion-label
+                  >
+                  <ng-container *ngIf="esMobil">
+                    <ion-datetime
+                      presentation="time"
+                      [preferWheel]="true"
+                      [(ngModel)]="nuevaHoraInicio"
+                    ></ion-datetime>
+                  </ng-container>
+                  <ng-container *ngIf="!esMobil">
+                    <ion-input
+                      type="time"
+                      fill="outline"
+                      [(ngModel)]="nuevaHoraInicio"
+                    ></ion-input>
+                  </ng-container>
+                </ion-col>
+                <ion-col>
+                  <ion-label class="ion-margin-start"
+                    ><strong>Hora término</strong></ion-label
+                  >
+                  <ng-container *ngIf="esMobil">
+                    <ion-datetime
+                      presentation="time"
+                      [preferWheel]="true"
+                      [(ngModel)]="nuevaHoraFin"
+                    ></ion-datetime>
+                  </ng-container>
+                  <ng-container *ngIf="!esMobil">
+                    <ion-input
+                      type="time"
+                      fill="outline"
+                      [(ngModel)]="nuevaHoraFin"
+                    ></ion-input>
+                  </ng-container>
+                </ion-col>
+              </ion-row>
+
+              <!-- Notas opcionales -->
+              <ion-row>
+                <ion-col>
+                  <ion-textarea
+                    [(ngModel)]="notasReprogramacion"
+                    fill="outline"
+                    label="Notas (opcional)"
+                    labelPlacement="stacked"
+                    placeholder="Motivo de la reprogramación..."
+                    [autoGrow]="true"
+                  ></ion-textarea>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="ion-justify-content-end">
+                <ion-button
+                  fill="outline"
+                  color="medium"
+                  (click)="cancelarReprogramacion()"
+                >
+                  CANCELAR
+                </ion-button>
+                <ion-button (click)="confirmarReprogramacion()">
+                  CONFIRMAR REPROGRAMACIÓN
+                </ion-button>
               </ion-row>
             </ion-grid>
           </ion-card-content>
@@ -87,16 +195,24 @@
                       </ng-container>
                       <ng-template #avatar>
                         <ion-avatar>
-                          <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                          <img
+                            alt=""
+                            src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                          />
                         </ion-avatar>
                       </ng-template>
                     </ion-col>
                     <ion-col>
                       <ion-label>{{ item.detalle }}</ion-label>
-                      <ion-note>{{ item.nombre_usuario }} {{ item.apellido_usuario }}</ion-note>
+                      <ion-note
+                        >{{ item.nombre_usuario }} {{ item.apellido_usuario
+                        }}</ion-note
+                      >
                     </ion-col>
                     <ion-col size="auto">
-                      <ion-note>{{ item.fecha | date:'dd-MMM-yyyy HH:mm' }}</ion-note>
+                      <ion-note
+                        >{{ item.fecha | date:'dd-MMM-yyyy HH:mm' }}</ion-note
+                      >
                     </ion-col>
                   </ion-row>
                 </ion-grid>
@@ -115,7 +231,10 @@
               <ion-row>
                 <ion-col size="auto">
                   <ion-avatar>
-                    <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                    <img
+                      alt=""
+                      src="https://ionicframework.com/docs/img/demos/avatar.svg"
+                    />
                   </ion-avatar>
                 </ion-col>
                 <ion-col>
@@ -125,15 +244,18 @@
                     fill="outline"
                     placeholder="Añadir un comentario..."
                   ></ion-textarea>
-                  <ion-row class="ion-justify-content-end ion-align-items-center">
-                    <ion-button (click)="agregarComentario()">ENVIAR</ion-button>
+                  <ion-row
+                    class="ion-justify-content-end ion-align-items-center"
+                  >
+                    <ion-button (click)="agregarComentario()"
+                      >ENVIAR</ion-button
+                    >
                   </ion-row>
                 </ion-col>
               </ion-row>
             </ion-grid>
           </ion-card-content>
         </ion-card>
-
       </ion-col>
 
       <!-- Acciones (solo admin/soporte) -->
@@ -154,8 +276,8 @@
             <ion-button
               expand="block"
               color="tertiary"
-              *ngIf="mantencion?.estado !== 'reprogramado' && mantencion?.estado !== 'cancelado'"
-              (click)="cambiarEstado('reprogramado')"
+              *ngIf="mantencion?.estado !== 'cancelado'"
+              (click)="abrirFormReprogramar()"
             >
               REPROGRAMAR
             </ion-button>

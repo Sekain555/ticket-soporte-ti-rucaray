@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 import { MantencionService } from 'src/app/services/mantencion.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-detalle-agenda-mant',
@@ -15,13 +16,24 @@ export class DetalleAgendaMantPage implements OnInit {
   feed: any[] = [];
   nuevoComentario: string = '';
 
+  // Reprogramación
+  mostrarFormReprogramar: boolean = false;
+  nuevaFecha: string = '';
+  nuevaHoraInicio: string = '';
+  nuevaHoraFin: string = '';
+  notasReprogramacion: string = '';
+  esMobil: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private mantencionService: MantencionService,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
     public permisos: PermissionsService,
-  ) {}
+    private platform: Platform,
+  ) {
+    this.esMobil = this.platform.is('mobile') || this.platform.is('capacitor');
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id_mantencion');
@@ -49,7 +61,6 @@ export class DetalleAgendaMantPage implements OnInit {
 
   agregarComentario() {
     if (!this.nuevoComentario.trim()) return;
-
     this.mantencionService
       .agregarComentarioMantencion(this.mantencion.id_mantencion, this.nuevoComentario.trim())
       .subscribe({
@@ -61,10 +72,60 @@ export class DetalleAgendaMantPage implements OnInit {
       });
   }
 
+  // Abre el formulario de reprogramación prellenado con los valores actuales
+  abrirFormReprogramar() {
+    this.nuevaFecha = this.mantencion.fecha_propuesta?.substring(0, 10) || '';
+    this.nuevaHoraInicio = this.mantencion.hora_inicio?.substring(0, 5) || '';
+    this.nuevaHoraFin = this.mantencion.hora_fin?.substring(0, 5) || '';
+    this.notasReprogramacion = '';
+    this.mostrarFormReprogramar = true;
+  }
+
+  cancelarReprogramacion() {
+    this.mostrarFormReprogramar = false;
+  }
+
+  confirmarReprogramacion() {
+    if (!this.nuevaFecha || !this.nuevaHoraInicio || !this.nuevaHoraFin) {
+      this.mostrarToast('Debes completar fecha, hora inicio y hora término.', 'warning');
+      return;
+    }
+
+    const fechaFmt = this.formatearFechaInput(this.nuevaFecha);
+    const horaInicioFmt = this.formatearHoraInput(this.nuevaHoraInicio);
+    const horaFinFmt = this.formatearHoraInput(this.nuevaHoraFin);
+
+    this.mantencionService
+      .reprogramarMantencion(
+        this.mantencion.id_mantencion,
+        fechaFmt,
+        horaInicioFmt,
+        horaFinFmt,
+        this.notasReprogramacion.trim() || undefined,
+      )
+      .subscribe({
+        next: () => {
+          this.mantencion.fecha_propuesta = fechaFmt;
+          this.mantencion.hora_inicio = horaInicioFmt;
+          this.mantencion.hora_fin = horaFinFmt;
+          this.mantencion.estado = 'reprogramado';
+          this.mostrarFormReprogramar = false;
+          this.cargarFeed(this.mantencion.id_mantencion);
+          this.mostrarToast('Mantención reprogramada correctamente.', 'success');
+        },
+        error: (err) => {
+          if (err?.status === 409) {
+            this.mostrarToast(err.error?.detail || 'Conflicto de horario.', 'danger', 5000);
+          } else {
+            this.mostrarToast('Error al reprogramar la mantención.', 'danger');
+          }
+        },
+      });
+  }
+
   async cambiarEstado(nuevo_estado: string) {
     const etiquetas: Record<string, string> = {
       confirmado: 'Confirmar',
-      reprogramado: 'Reprogramar',
       cancelado: 'Cancelar',
     };
 
@@ -107,6 +168,21 @@ export class DetalleAgendaMantPage implements OnInit {
     await alert.present();
   }
 
+  // Helpers para normalizar valores de inputs de fecha y hora
+  private formatearFechaInput(valor: string): string {
+    if (!valor) return '';
+    return valor.includes('T') ? valor.substring(0, 10) : valor;
+  }
+
+  private formatearHoraInput(valor: string): string {
+    if (!valor) return '';
+    if (valor.includes('T')) {
+      const date = new Date(valor);
+      return date.toTimeString().substring(0, 5);
+    }
+    return valor.substring(0, 5);
+  }
+
   getColorEstado(estado: string): string {
     const colores: Record<string, string> = {
       propuesto: 'warning',
@@ -122,6 +198,7 @@ export class DetalleAgendaMantPage implements OnInit {
       creacion: 'calendar',
       cambio_estado: 'swap-vertical',
       comentario: 'chatbubble',
+      reprogramacion: 'calendar',
     };
     return iconos[tipo?.toLowerCase()] || 'ellipse';
   }
@@ -151,11 +228,11 @@ export class DetalleAgendaMantPage implements OnInit {
     });
   }
 
-  private async mostrarToast(mensaje: string, color: string = 'warning') {
+  private async mostrarToast(mensaje: string, color: string = 'warning', duracion: number = 3000) {
     const toast = await this.toastCtrl.create({
       message: mensaje,
       color,
-      duration: 3000,
+      duration: duracion,
     });
     toast.present();
   }
