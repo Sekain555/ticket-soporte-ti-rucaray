@@ -136,6 +136,7 @@ http://127.0.0.1:8000
 - Vista de agenda por día/semana: filtro de período, navegación y mensaje contextual
 - Feed de actividades en mantenciones (tabla mantencion_feed, registro automático, comentarios)
 - Vista Calendario en Agenda de Mantenciones (angular-calendar, vistas mes/semana)
+- Flujo de reprogramación con cambio de fecha/hora (formulario inline, validación de conflictos, feed)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
