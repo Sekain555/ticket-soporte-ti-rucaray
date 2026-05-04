@@ -13,7 +13,6 @@
       <p>¿Cómo podemos ayudarle hoy?</p>
     </ion-row>
     <ion-row class="ion-justify-content-center">
-
       <!--Tarjeta I — Crear Ticket-->
       <ion-col size="12" size-md="6" size-lg="4">
         <ion-card class="card-accion">
@@ -48,9 +47,9 @@
             lines="none"
           >
             <ion-card-header class="ion-text-center">
-              <ion-card-title>HISTORIAL DE SOLICITUDES</ion-card-title>
+              <ion-card-title>HISTORIAL DE TICKETS</ion-card-title>
               <ion-card-subtitle>
-                Presiona aquí para ver el historial de tus tickets
+                Presiona aquí para ver el historial de tus solicitudes de soporte
               </ion-card-subtitle>
             </ion-card-header>
             <ion-img
@@ -86,6 +85,30 @@
         </ion-card>
       </ion-col>
 
+      <!--Tarjeta IV — Dispositivos Informáticos-->
+      <ion-col size="12" size-md="6" size-lg="4">
+        <ion-card class="card-accion">
+          <ion-item
+            button
+            detail="false"
+            routerLink="/listado-dispositivos"
+            lines="none"
+          >
+            <ion-card-header class="ion-text-center">
+              <ion-card-title>DISPOSITIVOS</ion-card-title>
+              <ion-card-subtitle>
+                Presiona aquí para ver el inventario de dispositivos
+                informáticos
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-img
+              class="img-sticker"
+              src="assets/stickers/dispositivos.png"
+              alt="Dispositivos informáticos"
+            ></ion-img>
+          </ion-item>
+        </ion-card>
+      </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>

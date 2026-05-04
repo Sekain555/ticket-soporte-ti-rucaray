@@ -1,0 +1,45 @@
+.dispositivo-card {
+  margin: 4px;
+
+  ion-card-content {
+    padding: 8px;
+    height: 100%;
+  }
+
+  ion-row {
+    height: 100%;
+    flex-wrap: nowrap;
+  }
+}
+
+.dispositivo-icon {
+  font-size: 2rem;
+  color: var(--ion-color-primary);
+  flex-shrink: 0;
+}
+
+.dispositivo-nombre {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dispositivo-area {
+  font-size: 0.8rem;
+  margin: 0 0 2px;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dispositivo-ip {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
