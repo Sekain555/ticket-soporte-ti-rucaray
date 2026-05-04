@@ -1,5 +1,28 @@
 # 📘 CHANGELOG — Frontend (Ionic / Angular)
 
+## [1.3.0] — 2026-04-29
+
+### Added
+- Módulo completo de **Inventario de Dispositivos Informáticos**.
+- Vista `listado-dispositivos` en grilla de 6 columnas (desktop) / 3 columnas (móvil), con iconos diferenciados por tipo (`desktop-outline` para PC, `laptop-outline` para Notebook).
+- Filtros por tipo de equipo y búsqueda por área en `listado-dispositivos`, fuera de card siguiendo el patrón de "Mis tickets".
+- Ordenamiento por nombre asignado, área e IP (ascendente y descendente) — 100% frontend.
+- Texto con ellipsis en cards para mantener uniformidad visual independiente del largo del contenido.
+- Vista `detalle-dispositivo` con información completa del equipo y formulario de edición inline para `admin` y `soporte`.
+- `DispositivoService` con métodos `listarDispositivos()`, `obtenerDispositivoPorId()`, `crearDispositivo()` y `actualizarDispositivo()`.
+- Rutas `/listado-dispositivos` y `/detalle-dispositivo/:id_dispositivo` registradas en `app-routing.module.ts`.
+- Card "Dispositivos" agregada al panel principal con navegación al módulo.
+
+### Compatibility
+- Probado con Backend `1.3.0`.
+
+### Notes
+- Release completo del grupo funcional **Inventario de Dispositivos** (MVP).
+- El módulo fue presentado al jefe como MVP para validación antes de definir el alcance final.
+- La siguiente iteración (`En dispositivos considerar programas y sistemas`) queda en backlog.
+
+---
+
 ## [1.2.0] — 2026-04-27
 
 ### Added
@@ -120,6 +143,7 @@
 
 | Frontend | Backend | Estado | Fecha | Notas |
 |---|---|---|---|---|
+| 1.3.0 | 1.3.0 | ✅ Compatible | 2026-04-29 | Release MVP Inventario de Dispositivos |
 | 1.2.0 | 1.2.0 | ✅ Compatible | 2026-04-27 | Release grupo Agenda de Mantenciones |
 | 1.1.0 | 1.1.0 | ✅ Compatible | 2026-03-24 | Release grupo SLA |
 | 1.0.0 | 1.0.0 | ✅ Compatible | 2026-02-15 | Primera versión estable en producción |
