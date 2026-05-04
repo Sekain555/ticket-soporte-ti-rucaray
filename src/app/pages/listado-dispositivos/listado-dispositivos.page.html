@@ -1,0 +1,121 @@
+<ion-header>
+  <app-header [mostrarBackButton]="true"></app-header>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-justify-content-between ion-align-items-center">
+      <ion-col>
+        <ion-text>
+          <h1 class="titulo-pagina">Dispositivos Informáticos</h1>
+        </ion-text>
+        <p class="subtitulo-pagina">
+          Inventario de equipos — {{ total }} dispositivos registrados
+        </p>
+      </ion-col>
+    </ion-row>
+
+    <!-- Filtros fuera de card -->
+    <ion-row class="ion-justify-content-around ion-align-items-center">
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Tipo de equipo"
+          fill="outline"
+          [value]="filtroTipo"
+          (ionChange)="cambiarFiltroTipo($event.detail.value)"
+        >
+          <ion-select-option value="todos">Todos</ion-select-option>
+          <ion-select-option value="PC">PC</ion-select-option>
+          <ion-select-option value="Notebook">Notebook</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-select
+          label="Ordenar por"
+          fill="outline"
+          [(ngModel)]="ordenamiento"
+        >
+          <ion-select-option value="nombre_asc">Nombre (A-Z)</ion-select-option>
+          <ion-select-option value="nombre_desc"
+            >Nombre (Z-A)</ion-select-option
+          >
+          <ion-select-option value="area_asc">Área (A-Z)</ion-select-option>
+          <ion-select-option value="area_desc">Área (Z-A)</ion-select-option>
+          <ion-select-option value="ip_asc">IP (ascendente)</ion-select-option>
+          <ion-select-option value="ip_desc"
+            >IP (descendente)</ion-select-option
+          >
+        </ion-select>
+      </ion-col>
+      <ion-col size="12" size-md="4" size-lg="4">
+        <ion-input
+          fill="outline"
+          label="Buscar por área"
+          labelPlacement="stacked"
+          placeholder="Ej.: Bodega, SAG..."
+          [(ngModel)]="busquedaArea"
+          (keyup.enter)="buscar()"
+        >
+          <ion-button slot="end" fill="clear" (click)="buscar()">
+            <ion-icon name="search-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            slot="end"
+            fill="clear"
+            *ngIf="busquedaArea"
+            (click)="limpiarBusqueda()"
+          >
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-input>
+      </ion-col>
+    </ion-row>
+
+    <!-- Espacio entre filtros y grilla -->
+    <ion-row class="ion-margin-top ion-margin-bottom">
+      <ion-col></ion-col>
+    </ion-row>
+
+    <!-- Sin resultados -->
+    <ion-row *ngIf="dispositivos.length === 0">
+      <ion-col>
+        <ion-card class="form-card">
+          <ion-card-content class="ion-text-center">
+            <p>No hay dispositivos registrados con los filtros aplicados.</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Grilla de dispositivos -->
+    <ion-row>
+      <ion-col *ngFor="let d of dispositivosOrdenados" size="4" size-md="2">
+        <ion-card
+          class="form-card dispositivo-card"
+          button
+          [routerLink]="['/detalle-dispositivo', d.id_dispositivo]"
+        >
+          <ion-card-content>
+            <ion-row class="ion-align-items-center">
+              <ion-col size="auto">
+                <ion-icon
+                  [name]="d.tipo_equipo === 'Notebook' ? 'laptop-outline' : 'desktop-outline'"
+                  class="dispositivo-icon"
+                ></ion-icon>
+              </ion-col>
+              <ion-col>
+                <p class="dispositivo-nombre">
+                  {{ d.nombre_asignado || 'Sin asignar' }}
+                </p>
+                <p class="dispositivo-area">{{ d.area || '—' }}</p>
+                <ion-note class="dispositivo-ip"
+                  >{{ d.direccion_ip || 'Sin IP' }}</ion-note
+                >
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

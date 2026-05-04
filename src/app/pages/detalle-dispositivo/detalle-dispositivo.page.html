@@ -1,0 +1,227 @@
+<ion-header>
+  <app-header [mostrarBackButton]="true"></app-header>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="8">
+        <ion-breadcrumbs>
+          <ion-breadcrumb routerLink="/listado-dispositivos">Dispositivos</ion-breadcrumb>
+          <ion-breadcrumb>{{ dispositivo?.nombre_equipo || '#' + dispositivo?.id_dispositivo }}</ion-breadcrumb>
+        </ion-breadcrumbs>
+
+        <ion-text>
+          <h1 class="titulo-pagina">{{ dispositivo?.nombre_asignado || 'Sin asignar' }}</h1>
+        </ion-text>
+        <p class="subtitulo-pagina">
+          {{ dispositivo?.tipo_equipo }} | {{ dispositivo?.marca || 'Sin marca' }} | {{ dispositivo?.area || 'Sin área' }}
+        </p>
+
+        <!-- Vista normal -->
+        <ng-container *ngIf="!editando">
+          <ion-card class="form-card">
+            <ion-card-header>
+              <ion-card-title>Información del equipo</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row class="ion-margin-bottom">
+                  <ion-col>
+                    <strong class="ion-display-block">PROCESADOR</strong>
+                    <p>{{ dispositivo?.procesador || '—' }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">RAM</strong>
+                    <p>{{ dispositivo?.ram || '—' }}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-margin-bottom">
+                  <ion-col>
+                    <strong class="ion-display-block">DISCO DURO</strong>
+                    <p>{{ dispositivo?.disco_duro || '—' }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">WINDOWS</strong>
+                    <p>{{ dispositivo?.version_windows || '—' }}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-margin-bottom">
+                  <ion-col>
+                    <strong class="ion-display-block">OFFICE</strong>
+                    <p>{{ dispositivo?.tipo_office || '—' }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">NOMBRE EQUIPO</strong>
+                    <p>{{ dispositivo?.nombre_equipo || '—' }}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-margin-bottom">
+                  <ion-col>
+                    <strong class="ion-display-block">IP</strong>
+                    <p>{{ dispositivo?.direccion_ip || '—' }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">MAC WIFI</strong>
+                    <p>{{ dispositivo?.mac_wifi || '—' }}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-margin-bottom">
+                  <ion-col>
+                    <strong class="ion-display-block">TIPO LAN</strong>
+                    <p>{{ dispositivo?.tipo_lan || '—' }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">DOMINIO</strong>
+                    <p>{{ formatearBooleano(dispositivo?.dominio) }}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-margin-bottom">
+                  <ion-col>
+                    <strong class="ion-display-block">MONITOR</strong>
+                    <p>{{ formatearBooleano(dispositivo?.monitor) }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">ANTIVIRUS</strong>
+                    <p>{{ formatearBooleano(dispositivo?.antivirus) }}</p>
+                  </ion-col>
+                  <ion-col>
+                    <strong class="ion-display-block">RJ45</strong>
+                    <p>{{ formatearBooleano(dispositivo?.rj45) }}</p>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf="dispositivo?.observaciones">
+                  <ion-col>
+                    <strong class="ion-display-block">OBSERVACIONES</strong>
+                    <p>{{ dispositivo?.observaciones }}</p>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+
+        <!-- Formulario de edición -->
+        <ng-container *ngIf="editando">
+          <ion-card class="form-card">
+            <ion-card-header>
+              <ion-card-title>Editar dispositivo</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Nombre asignado" labelPlacement="stacked" [(ngModel)]="edicion.nombre_asignado"></ion-input>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Área" labelPlacement="stacked" [(ngModel)]="edicion.area"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-select fill="outline" label="Tipo de equipo" labelPlacement="stacked" [(ngModel)]="edicion.tipo_equipo">
+                      <ion-select-option value="PC">PC</ion-select-option>
+                      <ion-select-option value="Notebook">Notebook</ion-select-option>
+                    </ion-select>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Marca" labelPlacement="stacked" [(ngModel)]="edicion.marca"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-input fill="outline" label="Procesador" labelPlacement="stacked" [(ngModel)]="edicion.procesador"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="RAM" labelPlacement="stacked" [(ngModel)]="edicion.ram"></ion-input>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Disco Duro" labelPlacement="stacked" [(ngModel)]="edicion.disco_duro"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Windows" labelPlacement="stacked" [(ngModel)]="edicion.version_windows"></ion-input>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Office" labelPlacement="stacked" [(ngModel)]="edicion.tipo_office"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Nombre de equipo" labelPlacement="stacked" [(ngModel)]="edicion.nombre_equipo"></ion-input>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Dirección IP" labelPlacement="stacked" [(ngModel)]="edicion.direccion_ip"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="MAC WiFi" labelPlacement="stacked" [(ngModel)]="edicion.mac_wifi"></ion-input>
+                  </ion-col>
+                  <ion-col size="12" size-md="6">
+                    <ion-input fill="outline" label="Tipo LAN" labelPlacement="stacked" [(ngModel)]="edicion.tipo_lan"></ion-input>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="4">
+                    <ion-select fill="outline" label="Monitor" labelPlacement="stacked" [(ngModel)]="edicion.monitor">
+                      <ion-select-option [value]="1">Sí</ion-select-option>
+                      <ion-select-option [value]="0">No</ion-select-option>
+                    </ion-select>
+                  </ion-col>
+                  <ion-col size="12" size-md="4">
+                    <ion-select fill="outline" label="Antivirus" labelPlacement="stacked" [(ngModel)]="edicion.antivirus">
+                      <ion-select-option [value]="1">Sí</ion-select-option>
+                      <ion-select-option [value]="0">No</ion-select-option>
+                    </ion-select>
+                  </ion-col>
+                  <ion-col size="12" size-md="4">
+                    <ion-select fill="outline" label="RJ45" labelPlacement="stacked" [(ngModel)]="edicion.rj45">
+                      <ion-select-option [value]="1">Sí</ion-select-option>
+                      <ion-select-option [value]="0">No</ion-select-option>
+                    </ion-select>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="12" size-md="6">
+                    <ion-select fill="outline" label="Dominio" labelPlacement="stacked" [(ngModel)]="edicion.dominio">
+                      <ion-select-option [value]="1">Sí</ion-select-option>
+                      <ion-select-option [value]="0">No</ion-select-option>
+                    </ion-select>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-textarea fill="outline" label="Observaciones" labelPlacement="stacked" [(ngModel)]="edicion.observaciones" [autoGrow]="true"></ion-textarea>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-justify-content-end">
+                  <ion-button fill="outline" color="medium" (click)="cancelarEdicion()">CANCELAR</ion-button>
+                  <ion-button (click)="guardarEdicion()">GUARDAR</ion-button>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+
+      </ion-col>
+
+      <!-- Acciones (solo admin/soporte) -->
+      <ion-col size="12" size-md="4" *ngIf="permisos.canEditTickets() && !editando">
+        <ion-card class="form-card">
+          <ion-card-header>
+            <ion-card-title>Acciones</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-button expand="block" (click)="abrirEdicion()">
+              EDITAR DISPOSITIVO
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
