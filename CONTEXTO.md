@@ -139,11 +139,12 @@ http://127.0.0.1:8000
 - Flujo de reprogramación con cambio de fecha/hora (formulario inline, validación de conflictos, feed)
 - Base de datos para dispositivos informáticos (tabla + importación + CRUD + grilla frontend)
 - Fix: foto de perfil sobredimensionada en feed de mantenciones
+- Switch Lista/Calendario en agenda: mejora visual con botones pill personalizados
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
 
-### BACKLOG (prioridad de arriba hacia abajo)
+### BACKLOG
 5. Etiquetar usuarios en comentarios @
 6. Función de asignación de tickets
 7. Redirección al login cuando expire la sesión
@@ -160,7 +161,6 @@ http://127.0.0.1:8000
 18. Normalización de tamaño de cards en panel principal
 19. Reporte diario de trabajos (turnos día/noche)
 20. Horarios de disponibilidad de soporte
-21. Vista Calendario en Agenda de Mantenciones
 23. Dispositivos: considerar programas y sistemas
 24. Chat propio del sistema
 25. Evaluaciones (3 ítems) para resolución de ticket
