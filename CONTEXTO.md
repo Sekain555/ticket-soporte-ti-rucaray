@@ -138,6 +138,7 @@ http://127.0.0.1:8000
 - Vista Calendario en Agenda de Mantenciones (angular-calendar, vistas mes/semana)
 - Flujo de reprogramación con cambio de fecha/hora (formulario inline, validación de conflictos, feed)
 - Base de datos para dispositivos informáticos (tabla + importación + CRUD + grilla frontend)
+- Fix: foto de perfil sobredimensionada en feed de mantenciones
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
