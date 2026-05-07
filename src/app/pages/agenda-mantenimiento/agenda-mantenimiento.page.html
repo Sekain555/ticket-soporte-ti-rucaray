@@ -23,21 +23,26 @@
 
     <!-- Switch Lista / Calendario -->
     <ion-row class="ion-justify-content-center ion-margin-bottom">
-      <ion-segment [value]="vistaActiva" (ionChange)="cambiarVista($any($event.detail.value))">
-        <ion-segment-button value="lista">
-          <ion-icon name="list-outline"></ion-icon>
-          <ion-label>Lista</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="calendario">
-          <ion-icon name="calendar-outline"></ion-icon>
-          <ion-label>Calendario</ion-label>
-        </ion-segment-button>
-      </ion-segment>
+      <div class="switch-pill">
+        <button
+          class="pill-btn"
+          [class.active]="vistaActiva === 'lista'"
+          (click)="cambiarVista('lista')"
+        >
+          <ion-icon name="list-outline"></ion-icon> Lista
+        </button>
+        <button
+          class="pill-btn"
+          [class.active]="vistaActiva === 'calendario'"
+          (click)="cambiarVista('calendario')"
+        >
+          <ion-icon name="calendar-outline"></ion-icon> Calendario
+        </button>
+      </div>
     </ion-row>
 
     <!-- ==================== VISTA LISTA ==================== -->
     <ng-container *ngIf="vistaActiva === 'lista'">
-
       <!-- Filtros -->
       <ion-card class="form-card">
         <ion-card-content>
@@ -50,7 +55,9 @@
                 (ionChange)="cambiarFiltroPeriodo($event.detail.value)"
               >
                 <ion-select-option value="hoy">Hoy</ion-select-option>
-                <ion-select-option value="esta-semana">Esta semana</ion-select-option>
+                <ion-select-option value="esta-semana"
+                  >Esta semana</ion-select-option
+                >
                 <ion-select-option value="este-mes">Este mes</ion-select-option>
               </ion-select>
             </ion-col>
@@ -61,11 +68,21 @@
                 [value]="filtroEstado"
                 (ionChange)="cambiarFiltroEstado($event.detail.value)"
               >
-                <ion-select-option value="todos">Todos los estados</ion-select-option>
-                <ion-select-option value="propuesto">Propuestos</ion-select-option>
-                <ion-select-option value="confirmado">Confirmados</ion-select-option>
-                <ion-select-option value="reprogramado">Reprogramados</ion-select-option>
-                <ion-select-option value="cancelado">Cancelados</ion-select-option>
+                <ion-select-option value="todos"
+                  >Todos los estados</ion-select-option
+                >
+                <ion-select-option value="propuesto"
+                  >Propuestos</ion-select-option
+                >
+                <ion-select-option value="confirmado"
+                  >Confirmados</ion-select-option
+                >
+                <ion-select-option value="reprogramado"
+                  >Reprogramados</ion-select-option
+                >
+                <ion-select-option value="cancelado"
+                  >Cancelados</ion-select-option
+                >
               </ion-select>
             </ion-col>
           </ion-row>
@@ -73,7 +90,9 @@
       </ion-card>
 
       <!-- Navegación de período -->
-      <ion-row class="ion-justify-content-between ion-align-items-center ion-margin-bottom">
+      <ion-row
+        class="ion-justify-content-between ion-align-items-center ion-margin-bottom"
+      >
         <ion-col size="auto">
           <ion-button fill="clear" (click)="periodoAnterior()">
             <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
@@ -84,7 +103,10 @@
         </ion-col>
         <ion-col size="auto">
           <ion-button fill="clear" (click)="periodoSiguiente()">
-            <ion-icon name="chevron-forward-outline" slot="icon-only"></ion-icon>
+            <ion-icon
+              name="chevron-forward-outline"
+              slot="icon-only"
+            ></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
@@ -93,9 +115,8 @@
       <ion-card class="form-card" *ngIf="mantencionesFiltradas.length === 0">
         <ion-card-content class="ion-text-center">
           <p>
-            No hay mantenciones
-            {{ filtroEstado !== 'todos' ? filtroEstado + 's' : '' }}
-            en este período.
+            No hay mantenciones {{ filtroEstado !== 'todos' ? filtroEstado + 's'
+            : '' }} en este período.
           </p>
         </ion-card-content>
       </ion-card>
@@ -123,7 +144,8 @@
                   {{ capitalize(m.estado) }}
                 </ion-chip>
                 <ion-note class="ion-margin-start">
-                  {{ formatearHora(m.hora_inicio) }} - {{ formatearHora(m.hora_fin) }}
+                  {{ formatearHora(m.hora_inicio) }} - {{
+                  formatearHora(m.hora_fin) }}
                 </ion-note>
               </ion-col>
               <ion-col size="auto">
@@ -131,11 +153,16 @@
               </ion-col>
             </ion-row>
             <h3>{{ m.titulo }}</h3>
-            <p class="ion-no-margin" *ngIf="m.descripcion">{{ m.descripcion }}</p>
-            <ion-row class="ion-justify-content-between ion-align-items-center ion-margin-top">
+            <p class="ion-no-margin" *ngIf="m.descripcion">
+              {{ m.descripcion }}
+            </p>
+            <ion-row
+              class="ion-justify-content-between ion-align-items-center ion-margin-top"
+            >
               <ion-col size="auto">
                 <ion-note>
-                  {{ m.nombre_asignado ? (m.nombre_asignado + ' ' + m.apellido_asignado) : 'Sin asignar' }}
+                  {{ m.nombre_asignado ? (m.nombre_asignado + ' ' +
+                  m.apellido_asignado) : 'Sin asignar' }}
                 </ion-note>
               </ion-col>
               <ion-col size="auto">
@@ -145,37 +172,61 @@
           </ion-card-content>
         </ion-card>
       </ng-container>
-
     </ng-container>
 
     <!-- ==================== VISTA CALENDARIO ==================== -->
     <ng-container *ngIf="vistaActiva === 'calendario'">
-
       <!-- Selector mes/semana -->
       <ion-row class="ion-justify-content-center ion-margin-bottom">
-        <ion-segment [value]="calendarView" (ionChange)="setCalendarView($any($event.detail.value))">
-          <ion-segment-button [value]="CalendarView.Month">
-            <ion-label>Mes</ion-label>
-          </ion-segment-button>
-          <ion-segment-button [value]="CalendarView.Week">
-            <ion-label>Semana</ion-label>
-          </ion-segment-button>
-        </ion-segment>
+        <div class="switch-pill">
+          <button
+            class="pill-btn"
+            [class.active]="calendarView === CalendarView.Month"
+            (click)="setCalendarView(CalendarView.Month)"
+          >
+            Mes
+          </button>
+          <button
+            class="pill-btn"
+            [class.active]="calendarView === CalendarView.Week"
+            (click)="setCalendarView(CalendarView.Week)"
+          >
+            Semana
+          </button>
+        </div>
       </ion-row>
 
       <!-- Navegación del calendario -->
-      <ion-row class="ion-justify-content-between ion-align-items-center ion-margin-bottom">
+      <ion-row
+        class="ion-justify-content-between ion-align-items-center ion-margin-bottom"
+      >
         <ion-col size="auto">
-          <ion-button fill="clear" mwlCalendarPreviousView [view]="calendarView" [(viewDate)]="viewDate">
+          <ion-button
+            fill="clear"
+            mwlCalendarPreviousView
+            [view]="calendarView"
+            [(viewDate)]="viewDate"
+          >
             <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col class="ion-text-center">
-          <strong>{{ viewDate | calendarDate:(calendarView + 'ViewTitle'):'es' }}</strong>
+          <strong
+            >{{ viewDate | calendarDate:(calendarView + 'ViewTitle'):'es'
+            }}</strong
+          >
         </ion-col>
         <ion-col size="auto">
-          <ion-button fill="clear" mwlCalendarNextView [view]="calendarView" [(viewDate)]="viewDate">
-            <ion-icon name="chevron-forward-outline" slot="icon-only"></ion-icon>
+          <ion-button
+            fill="clear"
+            mwlCalendarNextView
+            [view]="calendarView"
+            [(viewDate)]="viewDate"
+          >
+            <ion-icon
+              name="chevron-forward-outline"
+              slot="icon-only"
+            ></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
@@ -199,8 +250,6 @@
         [weekStartsOn]="1"
         (eventClicked)="onEventClick($event.event)"
       ></mwl-calendar-week-view>
-
     </ng-container>
-
   </ion-grid>
 </ion-content>
