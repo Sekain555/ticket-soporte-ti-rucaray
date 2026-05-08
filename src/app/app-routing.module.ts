@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -8,7 +9,13 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    loadChildren: () =>
+      import('./pages/login/login.module').then((m) => m.LoginPageModule),
+  },
+  {
     path: 'panel-principal',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/panel-principal/panel-principal.module').then(
         (m) => m.PanelPrincipalPageModule,
@@ -16,6 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'nuevo-ticket',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/nuevo-ticket/nuevo-ticket.module').then(
         (m) => m.NuevoTicketPageModule,
@@ -23,6 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'mis-tickets',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/mis-tickets/mis-tickets.module').then(
         (m) => m.MisTicketsPageModule,
@@ -30,18 +39,15 @@ const routes: Routes = [
   },
   {
     path: 'detalle-ticket/:id_ticket',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/detalle-ticket/detalle-ticket.module').then(
         (m) => m.DetalleTicketPageModule,
       ),
   },
   {
-    path: 'login',
-    loadChildren: () =>
-      import('./pages/login/login.module').then((m) => m.LoginPageModule),
-  },
-  {
     path: 'agenda-mantenimiento',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/agenda-mantenimiento/agenda-mantenimiento.module').then(
         (m) => m.AgendaMantenimientoPageModule,
@@ -49,6 +55,7 @@ const routes: Routes = [
   },
   {
     path: 'programar-mantenimiento',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/programar-mantenimiento/programar-mantenimiento.module').then(
         (m) => m.ProgramarMantenimientoPageModule,
@@ -56,6 +63,7 @@ const routes: Routes = [
   },
   {
     path: 'detalle-agenda-mant/:id_mantencion',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/detalle-agenda-mant/detalle-agenda-mant.module').then(
         (m) => m.DetalleAgendaMantPageModule,
@@ -63,20 +71,7 @@ const routes: Routes = [
   },
   {
     path: 'listado-dispositivos',
-    loadChildren: () =>
-      import('./pages/listado-dispositivos/listado-dispositivos.module').then(
-        (m) => m.ListadoDispositivosPageModule,
-      ),
-  },
-  {
-    path: 'detalle-dispositivo',
-    loadChildren: () =>
-      import('./pages/detalle-dispositivo/detalle-dispositivo.module').then(
-        (m) => m.DetalleDispositivoPageModule,
-      ),
-  },
-  {
-    path: 'listado-dispositivos',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/listado-dispositivos/listado-dispositivos.module').then(
         (m) => m.ListadoDispositivosPageModule,
@@ -84,6 +79,7 @@ const routes: Routes = [
   },
   {
     path: 'detalle-dispositivo/:id_dispositivo',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/detalle-dispositivo/detalle-dispositivo.module').then(
         (m) => m.DetalleDispositivoPageModule,
