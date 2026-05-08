@@ -140,6 +140,7 @@ http://127.0.0.1:8000
 - Base de datos para dispositivos informáticos (tabla + importación + CRUD + grilla frontend)
 - Fix: foto de perfil sobredimensionada en feed de mantenciones
 - Switch Lista/Calendario en agenda: mejora visual con botones pill personalizados
+- Redirección al login cuando expire la sesión (AuthGuard + AuthInterceptor + JWT 8h)
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
