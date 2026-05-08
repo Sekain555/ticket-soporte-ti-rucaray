@@ -141,6 +141,7 @@ http://127.0.0.1:8000
 - Fix: foto de perfil sobredimensionada en feed de mantenciones
 - Switch Lista/Calendario en agenda: mejora visual con botones pill personalizados
 - Redirección al login cuando expire la sesión (AuthGuard + AuthInterceptor + JWT 8h)
+- Redirigir al detalle al crear ticket
 
 ### EN REVISIÓN 🔄
 - Restricción de acciones de ticket por usuario/rol
@@ -148,8 +149,6 @@ http://127.0.0.1:8000
 ### BACKLOG
 5. Etiquetar usuarios en comentarios @
 6. Función de asignación de tickets
-7. Redirección al login cuando expire la sesión
-8. Redirigir a detalle al crear ticket
 9. Mostrar quién creó el ticket en el listado
 10. Funciones completas para "admin"
 11. Histórico de acciones del usuario en su perfil
