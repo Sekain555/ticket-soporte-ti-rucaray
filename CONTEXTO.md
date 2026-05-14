@@ -4,15 +4,17 @@
 
 | Tecnología | Versión | Rol |
 |---|---|---|
-| Angular | 18.x | Framework principal SPA |
+| Angular | 20.x | Framework principal SPA |
 | Ionic | 8.x | UI components responsivos |
 | TypeScript | 5.x | Lenguaje principal |
 | RxJS | 7.x | Programación reactiva (Observables) |
-| Angular Router | 18.x | Navegación con lazy loading |
-| Angular HttpClient | 18.x | Comunicación REST con el backend |
+| Angular Router | 20.x | Navegación con lazy loading |
+| Angular HttpClient | 20.x | Comunicación REST con el backend |
+| angular-calendar | Latest | Vista calendario en Agenda de Mantenciones |
+| date-fns | Latest | Utilidades de fecha requeridas por angular-calendar |
 
-**Versión actual:** `1.0.0`  
-**Compatibilidad backend:** `1.0.0`
+**Versión actual:** `1.3.0`
+**Compatibilidad backend:** `1.3.0`
 
 ---
 
@@ -23,7 +25,9 @@ SPA con arquitectura en capas:
 1. **Presentation Layer** — Page components (una página = un módulo lazy-loaded)
 2. **Shared Components** — `ComponentsModule` con componentes reutilizables (ej. `HeaderComponent`)
 3. **Service Layer** — Lógica de negocio e integración con API
-4. **Infrastructure** — `localStorage` para sesión, Service Worker para PWA
+4. **Guards** — Protección de rutas por autenticación (`AuthGuard`)
+5. **Interceptors** — Manejo global de errores HTTP (`AuthInterceptor`)
+6. **Infrastructure** — `localStorage` para sesión, Service Worker para PWA
 
 Todos los servicios son `providedIn: 'root'` (singletons globales).
 
@@ -31,16 +35,18 @@ Todos los servicios son `providedIn: 'root'` (singletons globales).
 
 ## Rutas principales
 
-| Ruta | Componente | Módulo |
+| Ruta | Componente | Guard |
 |---|---|---|
-| `/login` | `LoginPage` | `LoginPageModule` |
-| `/panel-principal` | `PanelPrincipalPage` | `PanelPrincipalPageModule` |
-| `/nuevo-ticket` | `NuevoTicketPage` | `NuevoTicketPageModule` |
-| `/mis-tickets` | `MisTicketsPage` | `MisTicketsPageModule` |
-| `/detalle-ticket` | `DetalleTicketPage` | `DetalleTicketPageModule` |
-| `/agenda-mantenimiento` | `AgendaMantenimientoPage` | Vista de agenda (datos estáticos hasta Card 5) |
-| `/programar-mantenimiento` | `ProgramarMantenimientoPage` | Formulario de propuesta de mantención |
-| `/detalle-agenda-mant/:id_mantencion` | `DetalleAgendaMantPage` | Detalle de mantención |
+| `/login` | `LoginPage` | ❌ |
+| `/panel-principal` | `PanelPrincipalPage` | ✅ AuthGuard |
+| `/nuevo-ticket` | `NuevoTicketPage` | ✅ AuthGuard |
+| `/mis-tickets` | `MisTicketsPage` | ✅ AuthGuard |
+| `/detalle-ticket/:id_ticket` | `DetalleTicketPage` | ✅ AuthGuard |
+| `/agenda-mantenimiento` | `AgendaMantenimientoPage` | ✅ AuthGuard |
+| `/programar-mantenimiento` | `ProgramarMantenimientoPage` | ✅ AuthGuard |
+| `/detalle-agenda-mant/:id_mantencion` | `DetalleAgendaMantPage` | ✅ AuthGuard |
+| `/listado-dispositivos` | `ListadoDispositivosPage` | ✅ AuthGuard |
+| `/detalle-dispositivo/:id_dispositivo` | `DetalleDispositivoPage` | ✅ AuthGuard |
 
 ---
 
@@ -48,60 +54,150 @@ Todos los servicios son `providedIn: 'root'` (singletons globales).
 
 ### AuthService
 - Autenticación usuario/contraseña contra el backend
-- Almacena en `localStorage`: token JWT, `id_usuario`, nombre, `rol`, preferencia de tema
-- `isLoggedIn()` verifica presencia de token válido
-- Navigation guards protegen rutas autenticadas
-- Logout limpia `localStorage` y redirige a `/login`
+- Almacena en `localStorage`: token JWT, `id_usuario`, nombre, apellido, correo, usuario, rol, tema
+- `isLoggedIn()` verifica presencia de token
+- `logout()` limpia `localStorage`
 
 ### TicketService
-- Todas las operaciones CRUD de tickets vía HTTP
-- Retorna Observables para integración reactiva con componentes
-
-### PermissionsService
-- Verifica permisos por rol para controlar elementos UI y acciones disponibles
-- Roles: `admin`, `soporte`, `usuario`
-
-### VersionService
-- Control de versión de la aplicación y compatibilidad
+- CRUD de tickets vía HTTP
+- Retorna Observables para integración reactiva
 
 ### MantencionService
-- Operaciones CRUD de mantenciones con la API backend.
+- CRUD de mantenciones vía HTTP
+- Métodos: `crearMantencion()`, `listarMantenciones()`, `obtenerMantencionPorId()`, `actualizarEstadoMantencion()`, `reprogramarMantencion()`, `obtenerFeedMantencion()`, `agregarComentarioMantencion()`
 
----
+### DispositivoService
+- CRUD de dispositivos informáticos vía HTTP
+- Métodos: `listarDispositivos()`, `obtenerDispositivoPorId()`, `crearDispositivo()`, `actualizarDispositivo()`
 
-## Flujo de usuario
+### PermissionsService
+- Verifica permisos por rol para controlar elementos UI
+- Roles: `admin`, `soporte`, `usuario`
+- Lee rol desde `localStorage` dinámicamente
 
-```
-/login → (token guardado) → /panel-principal → /nuevo-ticket
-                                             → /mis-tickets → /detalle-ticket
-```
+### AuthGuard
+- Verifica `isLoggedIn()` antes de permitir navegación
+- Redirige a `/login` si no hay token
+
+### AuthInterceptor
+- Intercepta todas las respuestas HTTP
+- Detecta error 401 → ejecuta `logout()` y redirige a `/login`
 
 ---
 
 ## Sesión y autenticación
 
 - Token JWT almacenado en `localStorage`
-- Expiración del token manejada por el backend (2 horas)
-- Datos de sesión: `token`, `id_usuario`, `nombre`, `rol`, `tema`
-- Guards validan sesión antes de permitir acceso a rutas protegidas
+- Expiración: 8 horas (manejada por el backend)
+- Guard bloquea navegación sin token
+- Interceptor expulsa al usuario cuando el token expira durante el uso
+- Datos de sesión: `token`, `id_usuario`, `nombre`, `apellido`, `correo`, `usuario`, `rol`, `tema`
 
 ---
 
-## PWA
+## Flujo de usuario
 
-- Configurada con `manifest.webmanifest` y service worker (`ngsw-config.json`)
-- `display: standalone`, `theme_color: #1E3A8A`
-- 7 tamaños de íconos WebP (48px → 512px)
-- **Estado:** base configurada, no declarada operativa en producción aún
+```
+/login → /panel-principal → /nuevo-ticket → (crear) → /detalle-ticket/:id
+                          → /mis-tickets → /detalle-ticket/:id
+                          → /agenda-mantenimiento → /programar-mantenimiento
+                                                  → /detalle-agenda-mant/:id
+                          → /listado-dispositivos → /detalle-dispositivo/:id
+```
+
+---
+
+## Módulos principales
+
+### Tickets
+- Listado con filtro por estado, ordenamiento y paginación
+- Creación con redirección automática al detalle tras crear
+- Detalle con feed de actividades, cambio de estado, categoría SLA editable
+- Semáforo SLA (verde/amarillo/rojo) en listado y detalle
+- Mensaje "Sin tickets" cuando no hay resultados
+
+### Agenda de Mantenciones
+- Vista Lista: filtro por período (Hoy/Semana/Mes) y estado, navegación ←→
+- Vista Calendario: vistas Mes/Semana con angular-calendar, eventos con color por estado
+- Switch Lista/Calendario con botones pill personalizados
+- Detalle con feed, formulario de reprogramación inline, acciones por rol
+
+### Inventario de Dispositivos
+- Grilla 6 columnas desktop / 3 móvil con iconos por tipo (PC/Notebook)
+- Filtro por tipo y búsqueda por área
+- Ordenamiento por nombre, área o IP
+- Detalle con formulario de edición inline para admin/soporte
+
+---
+
+## Convenciones de UI
+
+- **Filtros** — fuera de card, directamente sobre el contenido (patrón "Mis tickets")
+- **Switch de vistas** — botones pill personalizados (`.switch-pill` / `.pill-btn`)
+- **Avatares en feed** — `width: 32px; height: 32px` definido en SCSS del componente
+- **Cards del panel principal** — con sticker ilustrativo y navegación al módulo
+- **Detección de plataforma** — `ion-datetime` en móvil, `input` nativo en desktop para fechas/horas
 
 ---
 
 ## Conexión con backend
 
-URL base de la API:
+URL base de la API (hardcodeada — pendiente mover a `environments/*.ts`):
 ```
 http://127.0.0.1:8000
 ```
+
+---
+
+## PWA
+
+- Configurada con `manifest.webmanifest` y service worker
+- **Estado:** base configurada, no declarada operativa en producción aún
+
+---
+
+## Estado del roadmap
+
+### DONE ✅
+- Autenticación con login
+- Flujo completo de tickets: listado, creación, detalle
+- Paginación, filtro y ordenamiento de tickets
+- Control de permisos por rol (PermissionsService)
+- SLA: tipos de problema, semáforo, toast diferenciado, visualización en detalle
+- Agenda de Mantenciones completa (Cards 1-7 + 3.1 + 3.2)
+- Inventario de Dispositivos Informáticos (MVP)
+- Fix: foto de perfil sobredimensionada en feed de mantenciones
+- Switch Lista/Calendario: mejora visual con botones pill
+- AuthGuard + AuthInterceptor para protección de sesión
+- Redirección al detalle al crear ticket
+- Mensaje "Sin tickets" si no hay resultados
+- Normalización de tamaño de cards en panel principal
+
+### BACKLOG (ver Trello para orden completo)
+- Unificación del flujo de acceso a tickets (Hub de Funciones)
+- Barra de búsqueda por términos en "Mis tickets"
+- Mostrar quién creó el ticket en el listado
+- Editar información de ticket (con control por rol)
+- Restringir campos obligatorios al crear ticket
+- Generar PDFs de reporte por ticket
+- Función de asignación de tickets
+- Etiquetar usuarios en comentarios @
+- Notificaciones: bandeja + sonido + recordatorio mantenciones
+- Funciones completas para "admin"
+- Histórico de acciones del usuario en su perfil
+- Horarios de disponibilidad de soporte
+- En dispositivos considerar programas y sistemas
+- Vista alternativa listado en dispositivos
+- KPI y Reportes SLA (múltiples cards)
+- Evaluaciones y solucionadores rápidos
+- Infraestructura: URL en environments, CORS en .env, endpoints sin auth, PWA, chat
+
+---
+
+## Pendientes técnicos conocidos
+
+- URL base del backend hardcodeada — pendiente mover a `environments/*.ts`
+- PWA operativa pendiente de activación formal en producción
 
 ---
 
@@ -114,78 +210,19 @@ http://127.0.0.1:8000
 | Servicios en root | Singleton global, evita múltiples instancias |
 | `localStorage` para sesión | Persistencia simple sin backend de sesión |
 | `PermissionsService` centralizado | Control de acceso uniforme en toda la UI |
-
----
-
-## Estado del roadmap
-
-### DONE ✅
-- Autenticación con login + Enter para enviar
-- Flujo completo de tickets: listado, creación, detalle
-- Paginación y filtro por estado (abiertos/cerrados)
-- Reordenamiento por fecha descendente
-- Vista responsive para móvil
-- Control de permisos por rol en UI (`PermissionsService`)
-- Definición de tipos de problema (integración con SLA del backend)
-- Definición de tipos de problema y SLA (valores alineados con tabla sla_tipos_problema)
-- Asignación automática de tiempo objetivo al crear ticket
-- Evaluación de cumplimiento SLA al cerrar ticket (toast diferenciado por resultado)
-- Visualización de tiempo objetivo y fecha límite en detalle de ticket (rango SLA humanizado)
-- Crear y proponer agendamiento (formulario + servicio + navegación desde panel principal)
-- Gestión de agendamientos: listado real, detalle y cambio de estado por rol
-- Vista de agenda por día/semana: filtro de período, navegación y mensaje contextual
-- Feed de actividades en mantenciones (tabla mantencion_feed, registro automático, comentarios)
-- Vista Calendario en Agenda de Mantenciones (angular-calendar, vistas mes/semana)
-- Flujo de reprogramación con cambio de fecha/hora (formulario inline, validación de conflictos, feed)
-- Base de datos para dispositivos informáticos (tabla + importación + CRUD + grilla frontend)
-- Fix: foto de perfil sobredimensionada en feed de mantenciones
-- Switch Lista/Calendario en agenda: mejora visual con botones pill personalizados
-- Redirección al login cuando expire la sesión (AuthGuard + AuthInterceptor + JWT 8h)
-- Redirigir al detalle al crear ticket
-
-### EN REVISIÓN 🔄
-- Restricción de acciones de ticket por usuario/rol
-
-### BACKLOG
-5. Etiquetar usuarios en comentarios @
-6. Función de asignación de tickets
-9. Mostrar quién creó el ticket en el listado
-10. Funciones completas para "admin"
-11. Histórico de acciones del usuario en su perfil
-12. Restricción de campos obligatorios al crear ticket
-13. Editar información de ticket (con control por rol)
-14. Unificación del flujo de acceso a tickets (Hub de Funciones)
-15. Barra de búsqueda por términos en "Mis tickets"
-16. Generar PDFs de reporte por ticket
-17. Mensaje "Sin tickets" si no hay resultados
-18. Normalización de tamaño de cards en panel principal
-19. Reporte diario de trabajos (turnos día/noche)
-20. Horarios de disponibilidad de soporte
-23. Dispositivos: considerar programas y sistemas
-24. Chat propio del sistema
-25. Evaluaciones (3 ítems) para resolución de ticket
-26. Solucionadores rápidos para problemas conocidos
-27. Configurar como PWA (activación completa)
-28. Notificaciones: sencillas y urgentes tipo alarma
-29. Registro Histórico de Cumplimiento SLA
-30. Cálculo Automático del KPI de Resolución TI
-31. Vista Interna de Indicadores KPI
-32. Exportación de Reporte KPI (Excel/Tabla)
-
----
-
-## Pendientes técnicos conocidos
-
-- URL base del backend hardcodeada en servicios — pendiente mover a `environments/*.ts`
-- PWA operativa pendiente de activación formal en producción
+| AuthGuard + AuthInterceptor | Guard bloquea navegación; interceptor expulsa en 401 |
+| Filtrado por período 100% frontend | Sin llamadas extra al backend al navegar entre períodos |
+| Detección de plataforma para fechas | ion-datetime en móvil, input nativo en desktop |
 
 ---
 
 ## Notas de desarrollo
 
 - Rama principal de desarrollo: `dev`
-- Rama de producción: `main` (solo recibe cambios al lanzar versión)
+- Rama de producción: `main`
 - Flujo: `feature/nombre` → squash & merge a `dev`
-- Archivos sensibles en `.gitignore` (credentials, environments con datos reales)
 - Angular actualizado a 20.x (requerido por angular-calendar)
 - angular-calendar + date-fns instalados como dependencias
+- Import CSS angular-calendar: `@import "../node_modules/angular-calendar/css/angular-calendar.css"` (ruta absoluta requerida)
+- `npm install` puede requerir `--legacy-peer-deps` por conflictos de versiones
+- Deepwiki disponible en `deepwiki.com/Sekain555/[repo]`
