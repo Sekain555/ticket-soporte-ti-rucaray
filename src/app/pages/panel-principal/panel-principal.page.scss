@@ -1,26 +1,50 @@
+ion-row.ion-justify-content-center {
+  align-items: stretch;
+}
+
+ion-col {
+  display: flex;
+}
+
 .card-accion {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  display: flex;
-  flex-direction: column;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  height: 200px;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    --background: var(--ion-color-step-100);
+    background: var(--ion-color-step-100);
+
+    ion-item {
+      --background: var(--ion-color-step-100);
+    }
   }
 
   ion-item {
+    --background: transparent;
+    --background-hover-opacity: 0;
     --padding-start: 0;
     --inner-padding-end: 0;
     cursor: pointer;
+    height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
+  }
+
+  ion-card {
+    --background: transparent;
   }
 
   ion-card-header {
     text-align: center;
+    flex: 1;
   }
 
   ion-card-title {
@@ -34,24 +58,31 @@
   }
 
   .img-sticker {
-    max-width: 100%;
-    height: auto;       // mantiene proporción
-    max-height: 250px;  // opcional, evita que se haga demasiado grande en pantallas grandes
-    object-fit: contain; // no recorta
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
     display: block;
-    margin: 16px 16px;
+    margin: 0 16px;
+    flex-shrink: 0;
   }
 }
 
-// Ajustes responsivos
 @media (max-width: 768px) {
+  .card-accion {
+    height: 160px;
+  }
   .img-sticker {
-    max-height: 200px;
+    width: 90px;
+    height: 90px;
   }
 }
 
 @media (max-width: 480px) {
+  .card-accion {
+    height: 140px;
+  }
   .img-sticker {
-    max-height: 150px;
+    width: 70px;
+    height: 70px;
   }
 }
