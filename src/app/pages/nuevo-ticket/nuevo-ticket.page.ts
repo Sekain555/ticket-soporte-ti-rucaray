@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { TicketService } from 'src/app/services/ticket.service';
 import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { PermissionsService } from 'src/app/services/permissions.service';
 
 @Component({
   selector: 'app-nuevo-ticket',
   templateUrl: './nuevo-ticket.page.html',
   styleUrls: ['./nuevo-ticket.page.scss'],
-  standalone: false
+  standalone: false,
 })
-
 export class NuevoTicketPage implements OnInit {
   titulo: string = '';
   descripcion: string = '';
@@ -20,26 +20,34 @@ export class NuevoTicketPage implements OnInit {
   constructor(
     private ticketService: TicketService,
     private toastCtrl: ToastController,
-    public permisos: PermissionsService
+    public permisos: PermissionsService,
+    private router: Router,
   ) {}
 
   async crearTicket() {
-    const tipo = this.permisos.canClassifyTypeTickets() ? this.tipo_problema : undefined;
+    const tipo = this.permisos.canClassifyTypeTickets()
+      ? this.tipo_problema
+      : undefined;
     try {
-      const res = await this.ticketService.crearTicket(
-        this.titulo,
-        this.descripcion,
-        this.prioridad,
-        this.dispositivo || undefined,
-        tipo
-      ).toPromise();
+      const res = await this.ticketService
+        .crearTicket(
+          this.titulo,
+          this.descripcion,
+          this.prioridad,
+          this.dispositivo || undefined,
+          tipo,
+        )
+        .toPromise();
 
       const toast = await this.toastCtrl.create({
         message: 'Ticket creado exitosamente',
         color: 'success',
-        duration: 5000
+        duration: 1000,
       });
       await toast.present();
+
+      await toast.onDidDismiss();
+      this.router.navigate(['/detalle-ticket', res.id_ticket]);
 
       // Limpiar formulario
       this.titulo = '';
@@ -47,18 +55,15 @@ export class NuevoTicketPage implements OnInit {
       this.tipo_problema = '';
       this.prioridad = '';
       this.dispositivo = '';
-
     } catch (error) {
       const toast = await this.toastCtrl.create({
         message: 'Error al crear ticket',
         color: 'danger',
-        duration: 5000
+        duration: 5000,
       });
       await toast.present();
     }
   }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 }

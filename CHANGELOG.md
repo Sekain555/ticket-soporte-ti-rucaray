@@ -1,5 +1,33 @@
 # 📘 CHANGELOG — Frontend (Ionic / Angular)
 
+## [1.4.0] — 2026-05-10
+
+### Added
+- `AuthGuard` — protección de rutas que verifica sesión activa antes de permitir navegación, redirige a `/login` si no hay token.
+- `AuthInterceptor` — interceptor HTTP global que detecta errores 401 y redirige al login automáticamente.
+- Mensaje contextual "Sin tickets" en el listado cuando no hay resultados con el filtro aplicado.
+- Redirección automática al detalle del ticket tras crearlo exitosamente.
+
+### Changed
+- Token JWT con expiración de 8 horas (configurado en backend).
+- Switch Lista/Calendario en Agenda de Mantenciones reemplazado por botones pill personalizados — más limpio y coherente con el diseño del sistema.
+- Switch Mes/Semana en vista Calendario también migrado a botones pill.
+- Cards del panel principal normalizadas a altura fija de 200px con contenido centrado verticalmente.
+- Stickers del panel principal normalizados a 160px con `object-fit: contain`.
+
+### Fixed
+- Avatar sobredimensionado en feed de actividades de mantenciones — ajustado a 32px consistente con feed de tickets.
+
+### Compatibility
+- Probado con Backend `1.3.0` (sin cambios en backend).
+
+### Notes
+- Release completo de la **Sección 1 — Mejoras de UX y Flujo de Tickets**.
+- El efecto hover de color en cards del panel principal queda pendiente de refinamiento visual.
+- Card "Unificación del flujo de acceso a tickets" movida al final del backlog — se evaluará cuando la adopción del sistema mejore.
+
+---
+
 ## [1.3.0] — 2026-04-29
 
 ### Added
@@ -143,6 +171,7 @@
 
 | Frontend | Backend | Estado | Fecha | Notas |
 |---|---|---|---|---|
+| 1.4.0 | 1.3.0 | ✅ Compatible | 2026-05-10 | Release Mejoras UX y Flujo |
 | 1.3.0 | 1.3.0 | ✅ Compatible | 2026-04-29 | Release MVP Inventario de Dispositivos |
 | 1.2.0 | 1.2.0 | ✅ Compatible | 2026-04-27 | Release grupo Agenda de Mantenciones |
 | 1.1.0 | 1.1.0 | ✅ Compatible | 2026-03-24 | Release grupo SLA |

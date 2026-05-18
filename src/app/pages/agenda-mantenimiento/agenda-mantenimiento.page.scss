@@ -1,0 +1,26 @@
+.switch-pill {
+  display: flex;
+  background: var(--ion-color-step-100);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--ion-text-color);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+
+  &.active {
+    background: var(--ion-color-primary);
+    color: #fff;
+  }
+}
