@@ -12,12 +12,32 @@
       </ion-col>
       <ion-col class="ion-text-right">
         <ion-button routerLink="/nuevo-ticket"
-          ><ion-icon name="add-outline" slot="start"></ion-icon> NUEVO TICKET</ion-button
+          ><ion-icon name="add-outline" slot="start"></ion-icon> NUEVO
+          TICKET</ion-button
         >
       </ion-col>
     </ion-row>
     <ion-row class="ion-justify-content-around ion-align-items-center">
-      <ion-col size="12" size-md="4" size-lg="4">
+      <ion-col size="12" size-md="3" size-lg="3">
+        <ion-input
+          fill="outline"
+          label="Buscar ticket:"
+          labelPlacement="stacked"
+          placeholder="Título, descripción o N° ticket..."
+          [(ngModel)]="busqueda"
+          (ionInput)="onBusquedaChange()"
+        >
+          <ion-button
+            slot="end"
+            fill="clear"
+            *ngIf="busqueda"
+            (click)="limpiarBusqueda()"
+          >
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-input>
+      </ion-col>
+      <ion-col size="12" size-md="3" size-lg="3">
         <ion-select
           label="Filtrar por:"
           fill="outline"
@@ -31,7 +51,7 @@
           <ion-select-option value="cerrado">Cerrados</ion-select-option>
         </ion-select>
       </ion-col>
-      <ion-col size="12" size-md="4" size-lg="4">
+      <ion-col size="12" size-md="3" size-lg="3">
         <ion-select
           label="Ordenar por:"
           fill="outline"
@@ -58,7 +78,7 @@
           </ion-select-option>
         </ion-select>
       </ion-col>
-      <ion-col size="12" size-md="4" size-lg="4">
+      <ion-col size="12" size-md="3" size-lg="3">
         <ion-select
           label="Mostrar:"
           fill="outline"
@@ -110,7 +130,9 @@
             <!-- Versión DESKTOP / TABLET -->
             <ion-row class="ion-align-items-center ion-hide-md-down">
               <ion-col size="1">{{ ticket.id_ticket }}</ion-col>
-              <ion-col size="2" class="ion-text-wrap">{{ ticket.titulo }}</ion-col>
+              <ion-col size="2" class="ion-text-wrap"
+                >{{ ticket.titulo }}</ion-col
+              >
               <ion-col size="2">
                 <ion-chip [color]="getColorPrioridad(ticket?.prioridad)">
                   {{ capitalize(ticket.prioridad) }}
@@ -140,7 +162,9 @@
             <!-- Versión MÓVIL -->
             <ion-row class="ion-align-items-center ion-hide-md-up">
               <ion-col size="2">#{{ ticket.id_ticket }}</ion-col>
-              <ion-col size="3" class="ion-text-wrap">{{ ticket.titulo }}</ion-col>
+              <ion-col size="3" class="ion-text-wrap"
+                >{{ ticket.titulo }}</ion-col
+              >
               <ion-col size="3">
                 <ion-chip [color]="getColorPrioridad(ticket?.prioridad)">
                   {{ capitalize(ticket.prioridad) }}
@@ -153,7 +177,11 @@
               </ion-col>
               <ion-col size="2">
                 <ng-container *ngIf="getSemaforoSLA(ticket) as sla">
-                  <ion-icon [name]="sla.icono" [color]="sla.color" size="large"></ion-icon>
+                  <ion-icon
+                    [name]="sla.icono"
+                    [color]="sla.color"
+                    size="large"
+                  ></ion-icon>
                 </ng-container>
               </ion-col>
             </ion-row>
