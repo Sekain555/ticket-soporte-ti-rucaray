@@ -172,10 +172,10 @@ http://127.0.0.1:8000
 - Redirección al detalle al crear ticket
 - Mensaje "Sin tickets" si no hay resultados
 - Normalización de tamaño de cards en panel principal
+- Barra de búsqueda por términos en Mis tickets (título, descripción, N° ticket)
 
 ### BACKLOG (ver Trello para orden completo)
 - Unificación del flujo de acceso a tickets (Hub de Funciones)
-- Barra de búsqueda por términos en "Mis tickets"
 - Mostrar quién creó el ticket en el listado
 - Editar información de ticket (con control por rol)
 - Restringir campos obligatorios al crear ticket
