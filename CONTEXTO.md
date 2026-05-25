@@ -13,7 +13,7 @@
 | angular-calendar | Latest | Vista calendario en Agenda de Mantenciones |
 | date-fns | Latest | Utilidades de fecha requeridas por angular-calendar |
 
-**Versión actual:** `1.3.0`
+**Versión actual:** `1.4.0`
 **Compatibilidad backend:** `1.3.0`
 
 ---
@@ -173,10 +173,10 @@ http://127.0.0.1:8000
 - Mensaje "Sin tickets" si no hay resultados
 - Normalización de tamaño de cards en panel principal
 - Barra de búsqueda por términos en Mis tickets (título, descripción, N° ticket)
+- Mostrar quién creó el ticket en el listado
 
 ### BACKLOG (ver Trello para orden completo)
 - Unificación del flujo de acceso a tickets (Hub de Funciones)
-- Mostrar quién creó el ticket en el listado
 - Editar información de ticket (con control por rol)
 - Restringir campos obligatorios al crear ticket
 - Generar PDFs de reporte por ticket

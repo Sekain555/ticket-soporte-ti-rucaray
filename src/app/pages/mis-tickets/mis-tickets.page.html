@@ -99,11 +99,12 @@
             <ion-row>
               <ion-col size="1">ID Ticket</ion-col>
               <ion-col size="2">Asunto</ion-col>
-              <ion-col size="2">Prioridad</ion-col>
-              <ion-col size="2">Estado</ion-col>
+              <ion-col size="1">Prioridad</ion-col>
+              <ion-col size="1">Estado</ion-col>
               <ion-col size="1">SLA</ion-col>
+              <ion-col size="2">Creado por</ion-col>
               <ion-col size="2">Creado</ion-col>
-              <ion-col size="2">Última Actualización</ion-col>
+              <ion-col size="2">Última Act.</ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
@@ -133,12 +134,12 @@
               <ion-col size="2" class="ion-text-wrap"
                 >{{ ticket.titulo }}</ion-col
               >
-              <ion-col size="2">
+              <ion-col size="1">
                 <ion-chip [color]="getColorPrioridad(ticket?.prioridad)">
                   {{ capitalize(ticket.prioridad) }}
                 </ion-chip>
               </ion-col>
-              <ion-col size="2">
+              <ion-col size="1">
                 <ion-chip [color]="getColorEstado(ticket?.estado)">
                   {{ capitalize(ticket.estado) }}
                 </ion-chip>
@@ -151,31 +152,41 @@
                   </ion-chip>
                 </ng-container>
               </ion-col>
-              <ion-col size="2">
-                {{ ticket.fecha_creacion | date:'dd-MMM-yyyy HH:mm' }}
-              </ion-col>
-              <ion-col size="2">
-                {{ ticket.fecha_actualizacion | date:'dd-MMM-yyyy HH:mm' }}
-              </ion-col>
+              <ion-col size="2"
+                >{{ ticket.nombre_usuario }} {{ ticket.apellido_usuario
+                }}</ion-col
+              >
+              <ion-col size="2"
+                >{{ ticket.fecha_creacion | date:'dd-MMM-yyyy HH:mm' }}</ion-col
+              >
+              <ion-col size="2"
+                >{{ ticket.fecha_actualizacion | date:'dd-MMM-yyyy HH:mm'
+                }}</ion-col
+              >
             </ion-row>
 
             <!-- Versión MÓVIL -->
             <ion-row class="ion-align-items-center ion-hide-md-up">
               <ion-col size="2">#{{ ticket.id_ticket }}</ion-col>
-              <ion-col size="3" class="ion-text-wrap"
-                >{{ ticket.titulo }}</ion-col
-              >
+              <ion-col size="3" class="ion-text-wrap">
+                {{ ticket.titulo }}
+                <br />
+                <ion-note style="font-size: 0.75rem"
+                  >{{ ticket.nombre_usuario }} {{ ticket.apellido_usuario
+                  }}</ion-note
+                >
+              </ion-col>
               <ion-col size="3">
                 <ion-chip [color]="getColorPrioridad(ticket?.prioridad)">
                   {{ capitalize(ticket.prioridad) }}
                 </ion-chip>
               </ion-col>
-              <ion-col size="2">
+              <ion-col size="3">
                 <ion-chip [color]="getColorEstado(ticket?.estado)">
                   {{ capitalize(ticket.estado) }}
                 </ion-chip>
               </ion-col>
-              <ion-col size="2">
+              <ion-col size="1">
                 <ng-container *ngIf="getSemaforoSLA(ticket) as sla">
                   <ion-icon
                     [name]="sla.icono"
