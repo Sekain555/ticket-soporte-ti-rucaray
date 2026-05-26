@@ -173,4 +173,20 @@ export class TicketService {
       { headers },
     );
   }
+
+  editarTicket(id_ticket: string, campos: any): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) throw new Error('Usuario no autenticado');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.patch(
+      `${environment.apiBaseUrl}/tickets/${id_ticket}`,
+      campos,
+      { headers },
+    );
+  }
 }
