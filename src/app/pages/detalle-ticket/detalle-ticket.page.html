@@ -23,6 +23,7 @@
           <ion-card-header>
             <ion-card-title>Detalles del ticket</ion-card-title>
           </ion-card-header>
+
           <ion-card-content>
             <ion-grid>
               <ion-row class="ion-margin-bottom">
@@ -32,39 +33,7 @@
                 </ion-col>
                 <ion-col>
                   <strong>CATEGORÍA</strong>
-
-                  <!-- Solo lectura (usuarios normales) -->
-                  <ng-container
-                    *ngIf="!permisos.canClassifyTypeTickets(); else editarTipo"
-                  >
-                    <p>{{ ticket?.tipo_problema || 'Pendiente' }}</p>
-                  </ng-container>
-
-                  <!-- Editable (admin/soporte) -->
-                  <ng-template #editarTipo>
-                    <ion-select
-                      [(ngModel)]="tipoProblemaEdit"
-                      fill="outline"
-                      placeholder="Seleccionar categoría"
-                    >
-                      <ion-select-option value="Crítico">Crítico</ion-select-option>
-                      <ion-select-option value="Crítico con Flujo de Aprobación">Crítico con flujo de aprobación</ion-select-option>
-                      <ion-select-option value="Cambio de Periférico">Cambio de periférico</ion-select-option>
-                      <ion-select-option value="Cambio de Hardware Existente">Cambio de hardware existente</ion-select-option>
-                      <ion-select-option value="Cambio de Hardware con Aprobación">Cambio de hardware con flujo de aprobación</ion-select-option>
-                      <ion-select-option value="Creación de Cuentas">Creación de cuentas, correos, varios</ion-select-option>
-                      <ion-select-option value="Revisión o Habilitación de Impresoras">Revisión / Cambio / Mantención de impresoras</ion-select-option>
-                      <ion-select-option value="Solicitud de Información / Base de Datos">Solicitud de información / base de datos</ion-select-option>
-                      <ion-select-option value="Instalación de Programas">Instalación de programas</ion-select-option>
-                      <ion-select-option value="Instalación de Puntos de RED">Instalación de puntos de red</ion-select-option>
-                      <ion-select-option value="Instalación de Cámaras">Instalación de cámaras</ion-select-option>
-                      <ion-select-option value="Instalación de Antenas WiFi">Instalación de antenas WiFi</ion-select-option>
-                      <ion-select-option value="Habilitación de Acceso a Internet">Habilitación de acceso a internet</ion-select-option>
-                    </ion-select>
-                    <ion-button expand="block" (click)="guardarTipoProblema()">
-                      GUARDAR CATEGORÍA
-                    </ion-button>
-                  </ng-template>
+                  <p>{{ ticket?.tipo_problema || 'Pendiente' }}</p>
                 </ion-col>
               </ion-row>
               <ion-row class="ion-margin-bottom">
@@ -89,24 +58,24 @@
                 </ion-col>
               </ion-row>
               <!-- Fila SLA: solo visible si el ticket tiene tiempo objetivo -->
-              <ion-row class="ion-margin-bottom" *ngIf="ticket?.tiempo_objetivo_horas">
+              <ion-row
+                class="ion-margin-bottom"
+                *ngIf="ticket?.tiempo_objetivo_horas"
+              >
                 <ion-col>
                   <strong class="ion-display-block">TIEMPO OBJETIVO</strong>
-                  <p>{{ formatearTiempoObjetivo(ticket?.sla_tiempo_minimo_horas, ticket?.tiempo_objetivo_horas) }}</p>
+                  <p>
+                    {{ formatearTiempoObjetivo(ticket?.sla_tiempo_minimo_horas,
+                    ticket?.tiempo_objetivo_horas) }}
+                  </p>
                 </ion-col>
                 <ion-col>
                   <strong class="ion-display-block">FECHA LÍMITE</strong>
-                  <p>{{ ticket?.fecha_limite_resolucion | date:'dd-MMM-yyyy HH:mm' }}</p>
+                  <p>
+                    {{ ticket?.fecha_limite_resolucion | date:'dd-MMM-yyyy HH:mm' }}
+                  </p>
                 </ion-col>
               </ion-row>
-              <!--
-              <ion-row>
-                <ion-col>
-                  <p>ASIGNADO A</p>
-                  <p>Equipo Soporte TI</p>
-                </ion-col>
-              </ion-row>
-              -->
             </ion-grid>
           </ion-card-content>
         </ion-card>
@@ -198,9 +167,13 @@
             <ion-card-title>Acciones de tickets</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-button expand="block" *ngIf="permisos.canEditTickets()"
-              >EDITAR TICKET</ion-button
+            <ion-button
+              expand="block"
+              *ngIf="permisos.canEditTickets() || ticket?.estado === 'abierto'"
+              (click)="abrirEdicion()"
             >
+              EDITAR TICKET
+            </ion-button>
             <ion-button expand="block" *ngIf="permisos.canAssignTickets()"
               >ASIGNAR TECNICO</ion-button
             >
@@ -209,42 +182,131 @@
               [color]="ticket?.estado === 'cerrado' ? 'success' : 'danger'"
               (click)="toggleEstadoTicket()"
               *ngIf="permisos.canCloseTickets()"
-              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR
-              TICKET' }}</ion-button
+              >{{ ticket?.estado === 'cerrado' ? 'ABRIR TICKET' : 'CERRAR TICKET' }}</ion-button
             >
             <ion-button expand="block" *ngIf="permisos.canDeleteTickets()"
               >ELIMINAR TICKET</ion-button
             >
           </ion-card-content>
         </ion-card>
-        <!--
-        <ion-card>
+        <ion-card class="form-card" *ngIf="modoEdicion">
           <ion-card-header>
-            <ion-card-title>Archivos adjuntos</ion-card-title>
+            <ion-card-title>Editar ticket</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-item button class="item-adjunto">
-              <ion-grid>
-                <ion-row class="ion-justify-content-center">
-                  <ion-text>
-                    <h2>Sin archivos adjuntos</h2>
-                  </ion-text>
-                </ion-row>
-                <ion-row class="ion-justify-content-center">
-                  <p>
-                    Arrastre y suelte archivos aquí, o navegue para cargarlos
-                  </p>
-                </ion-row>
-                <ion-row class="ion-justify-content-center">
-                  <ion-text class="ion-text-center" color="primary">
-                    Buscar archivos
-                  </ion-text>
-                </ion-row>
-              </ion-grid>
-            </ion-item>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-input
+                    fill="outline"
+                    label="Título"
+                    labelPlacement="stacked"
+                    [(ngModel)]="edicion.titulo"
+                  ></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-textarea
+                    fill="outline"
+                    label="Descripción"
+                    labelPlacement="stacked"
+                    [(ngModel)]="edicion.descripcion"
+                    [autoGrow]="true"
+                  ></ion-textarea>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-input
+                    fill="outline"
+                    label="Dispositivo"
+                    labelPlacement="stacked"
+                    [(ngModel)]="edicion.dispositivo"
+                  ></ion-input>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-select
+                    fill="outline"
+                    label="Prioridad"
+                    labelPlacement="stacked"
+                    [(ngModel)]="edicion.prioridad"
+                  >
+                    <ion-select-option value="alta">Alta</ion-select-option>
+                    <ion-select-option value="media">Media</ion-select-option>
+                    <ion-select-option value="baja">Baja</ion-select-option>
+                  </ion-select>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="permisos.canClassifyTypeTickets()">
+                <ion-col>
+                  <ion-select
+                    fill="outline"
+                    label="Categoría"
+                    labelPlacement="stacked"
+                    [(ngModel)]="edicion.tipo_problema"
+                  >
+                    <ion-select-option value="Crítico"
+                      >Crítico</ion-select-option
+                    >
+                    <ion-select-option value="Crítico con Flujo de Aprobación"
+                      >Crítico con flujo de aprobación</ion-select-option
+                    >
+                    <ion-select-option value="Cambio de Periférico"
+                      >Cambio de periférico</ion-select-option
+                    >
+                    <ion-select-option value="Cambio de Hardware Existente"
+                      >Cambio de hardware existente</ion-select-option
+                    >
+                    <ion-select-option value="Cambio de Hardware con Aprobación"
+                      >Cambio de hardware con flujo de
+                      aprobación</ion-select-option
+                    >
+                    <ion-select-option value="Creación de Cuentas"
+                      >Creación de cuentas, correos, varios</ion-select-option
+                    >
+                    <ion-select-option
+                      value="Revisión o Habilitación de Impresoras"
+                      >Revisión / Cambio / Mantención de
+                      impresoras</ion-select-option
+                    >
+                    <ion-select-option
+                      value="Solicitud de Información / Base de Datos"
+                      >Solicitud de información / base de
+                      datos</ion-select-option
+                    >
+                    <ion-select-option value="Instalación de Programas"
+                      >Instalación de programas</ion-select-option
+                    >
+                    <ion-select-option value="Instalación de Puntos de RED"
+                      >Instalación de puntos de red</ion-select-option
+                    >
+                    <ion-select-option value="Instalación de Cámaras"
+                      >Instalación de cámaras</ion-select-option
+                    >
+                    <ion-select-option value="Instalación de Antenas WiFi"
+                      >Instalación de antenas WiFi</ion-select-option
+                    >
+                    <ion-select-option value="Habilitación de Acceso a Internet"
+                      >Habilitación de acceso a internet</ion-select-option
+                    >
+                  </ion-select>
+                </ion-col>
+              </ion-row>
+              <ion-row class="ion-justify-content-end ion-margin-top">
+                <ion-button
+                  fill="outline"
+                  color="medium"
+                  (click)="cancelarEdicion()"
+                  >CANCELAR</ion-button
+                >
+                <ion-button (click)="guardarEdicion()">GUARDAR</ion-button>
+              </ion-row>
+            </ion-grid>
           </ion-card-content>
         </ion-card>
-        -->
       </ion-col>
     </ion-row>
   </ion-grid>

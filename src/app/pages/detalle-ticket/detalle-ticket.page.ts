@@ -15,7 +15,8 @@ export class DetalleTicketPage implements OnInit {
   ticket: any;
   feed: any[] = [];
   nuevoComentario: string = '';
-  tipoProblemaEdit: string = '';
+  modoEdicion: boolean = false;
+  edicion: any = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +31,6 @@ export class DetalleTicketPage implements OnInit {
     if (id_ticket) {
       this.ticketService.obtenerTicketPorId(id_ticket).subscribe((res) => {
         this.ticket = res;
-        this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
         this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
           this.feed = feedRes;
         });
@@ -200,29 +200,6 @@ export class DetalleTicketPage implements OnInit {
     toast.present();
   }
 
-  guardarTipoProblema() {
-    if (!this.permisos.canClassifyTypeTickets()) return;
-
-    const id_ticket = this.ticket.id_ticket;
-
-    this.ticketService
-      .actualizarTipoProblema(id_ticket, this.tipoProblemaEdit)
-      .subscribe({
-        next: () => {
-          this.ticketService.obtenerTicketPorId(id_ticket).subscribe((res) => {
-            this.ticket = res;
-            this.tipoProblemaEdit = this.ticket?.tipo_problema || '';
-          });
-          this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
-            this.feed = feedRes;
-          });
-          this.mostrarToast('Categoría actualizada', 'success');
-        },
-        error: () =>
-          this.mostrarToast('Error al actualizar categoría', 'danger'),
-      });
-  }
-
   formatearTiempoObjetivo(
     minimo: number | null,
     maximo: number | null,
@@ -243,7 +220,11 @@ export class DetalleTicketPage implements OnInit {
 
   // Semáforo SLA: retorna { color, icono, label } o null si no aplica
   getSemaforoSLA(): { color: string; icono: string; label: string } | null {
-    if (!this.ticket?.fecha_limite_resolucion || this.ticket?.estado === 'cerrado') return null;
+    if (
+      !this.ticket?.fecha_limite_resolucion ||
+      this.ticket?.estado === 'cerrado'
+    )
+      return null;
 
     const ahora = new Date().getTime();
     const fechaCreacion = new Date(this.ticket.fecha_creacion).getTime();
@@ -261,5 +242,43 @@ export class DetalleTicketPage implements OnInit {
     }
 
     return { color: 'success', icono: 'checkmark-circle', label: 'En plazo' };
+  }
+
+  abrirEdicion() {
+    this.edicion = {
+      titulo: this.ticket.titulo || '',
+      descripcion: this.ticket.descripcion || '',
+      prioridad: this.ticket.prioridad || '',
+      dispositivo: this.ticket.dispositivo || '',
+      tipo_problema: this.ticket.tipo_problema || '',
+    };
+    this.modoEdicion = true;
+  }
+
+  cancelarEdicion() {
+    this.modoEdicion = false;
+    this.edicion = {};
+  }
+
+  guardarEdicion() {
+    const id_ticket = this.ticket.id_ticket;
+    this.ticketService.editarTicket(id_ticket, this.edicion).subscribe({
+      next: (res) => {
+        this.ticket = res;
+        this.modoEdicion = false;
+        this.edicion = {};
+        this.ticketService.obtenerFeed(id_ticket).subscribe((feedRes) => {
+          this.feed = feedRes;
+        });
+        this.mostrarToast('Ticket actualizado correctamente.', 'success');
+      },
+      error: () =>
+        this.mostrarToast('Error al actualizar el ticket.', 'danger'),
+    });
+  }
+
+  puedeEditar(): boolean {
+    if (this.permisos.canEditTickets()) return true;
+    return this.ticket?.estado === 'abierto';
   }
 }
