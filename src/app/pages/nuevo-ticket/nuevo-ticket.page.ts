@@ -25,6 +25,19 @@ export class NuevoTicketPage implements OnInit {
   ) {}
 
   async crearTicket() {
+    if (!this.titulo.trim()) {
+      this.mostrarToast('El título es obligatorio.', 'warning');
+      return;
+    }
+    if (!this.descripcion.trim()) {
+      this.mostrarToast('La descripción es obligatoria.', 'warning');
+      return;
+    }
+    if (!this.prioridad) {
+      this.mostrarToast('Debes seleccionar una prioridad.', 'warning');
+      return;
+    }
+
     const tipo = this.permisos.canClassifyTypeTickets()
       ? this.tipo_problema
       : undefined;
@@ -63,6 +76,15 @@ export class NuevoTicketPage implements OnInit {
       });
       await toast.present();
     }
+  }
+
+  private async mostrarToast(mensaje: string, color: string = 'warning') {
+    const toast = await this.toastCtrl.create({
+      message: mensaje,
+      color,
+      duration: 3000,
+    });
+    await toast.present();
   }
 
   ngOnInit(): void {}
