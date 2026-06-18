@@ -4,6 +4,7 @@ import { TicketService } from 'src/app/services/ticket.service';
 import { FormsModule } from '@angular/forms';
 import { ToastController, AlertController } from '@ionic/angular';
 import { PermissionsService } from 'src/app/services/permissions.service';
+declare const html2pdf: any;
 
 @Component({
   selector: 'app-detalle-ticket',
@@ -280,5 +281,114 @@ export class DetalleTicketPage implements OnInit {
   puedeEditar(): boolean {
     if (this.permisos.canEditTickets()) return true;
     return this.ticket?.estado === 'abierto';
+  }
+
+  descargarPDF() {
+    const fecha = new Date().toLocaleDateString('es-CL', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const contenido = document.createElement('div');
+    contenido.innerHTML = `
+    <div style="font-family: Arial, sans-serif; color: #1a1a1a; padding: 32px; max-width: 800px; margin: 0 auto;">
+
+      <!-- Cabecera -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #1a56db; padding-bottom: 16px; margin-bottom: 24px;">
+        <div>
+          <img src="assets/stickers/rucaray-logo.png" style="height: 72px;" alt="Rucaray" />
+        </div>
+        <div style="text-align: right;">
+          <p style="margin: 0; font-size: 11px; color: #6b7280;">SOPORTE TI — RUCARAY</p>
+          <h1 style="margin: 4px 0 0; font-size: 18px; color: #1a56db;">Reporte de Ticket #${this.ticket.id_ticket}</h1>
+        </div>
+      </div>
+
+      <!-- Info del ticket -->
+      <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+        <h2 style="margin: 0 0 16px; font-size: 14px; text-transform: uppercase; color: #6b7280; letter-spacing: 0.05em;">Información del ticket</h2>
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280; width: 140px;">Título</td>
+            <td style="padding: 6px 0; font-weight: bold;">${this.ticket.titulo}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Descripción</td>
+            <td style="padding: 6px 0;">${this.ticket.descripcion}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Estado</td>
+            <td style="padding: 6px 0;">${this.capitalize(this.ticket.estado)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Prioridad</td>
+            <td style="padding: 6px 0;">${this.capitalize(this.ticket.prioridad)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Categoría</td>
+            <td style="padding: 6px 0;">${this.ticket.tipo_problema || 'Pendiente'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Dispositivo</td>
+            <td style="padding: 6px 0;">${this.ticket.dispositivo || '—'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Reportado por</td>
+            <td style="padding: 6px 0;">${this.ticket.nombre_usuario} ${this.ticket.apellido_usuario} | ${this.ticket.departamento_usuario} | ${this.ticket.puesto_usuario}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Fecha de creación</td>
+            <td style="padding: 6px 0;">${new Date(this.ticket.fecha_creacion).toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+          </tr>
+          ${
+            this.ticket.fecha_limite_resolucion
+              ? `
+          <tr>
+            <td style="padding: 6px 0; color: #6b7280;">Fecha límite SLA</td>
+            <td style="padding: 6px 0;">${new Date(this.ticket.fecha_limite_resolucion).toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+          </tr>`
+              : ''
+          }
+        </table>
+      </div>
+
+      <!-- Cronología -->
+      <div style="margin-bottom: 24px;">
+        <h2 style="margin: 0 0 16px; font-size: 14px; text-transform: uppercase; color: #6b7280; letter-spacing: 0.05em;">Cronología de actividades</h2>
+        ${this.feed
+          .map(
+            (item) => `
+          <div style="display: flex; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; font-size: 13px;">
+            <div style="color: #6b7280; min-width: 130px; font-size: 11px; padding-top: 2px;">
+              ${new Date(item.fecha).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+            </div>
+            <div style="flex: 1;">
+              <div>${item.detalle || item.tipo}</div>
+              <div style="color: #6b7280; font-size: 11px; margin-top: 2px;">${item.nombre_usuario} ${item.apellido_usuario}</div>
+            </div>
+          </div>
+        `,
+          )
+          .join('')}
+      </div>
+
+      <!-- Pie -->
+      <div style="border-top: 1px solid #e5e7eb; padding-top: 12px; display: flex; justify-content: space-between; font-size: 11px; color: #9ca3af;">
+        <span>Sistema de Tickets Rucaray — STR v1.4.0</span>
+        <span>Generado el ${fecha}</span>
+      </div>
+    </div>
+  `;
+
+    const opciones = {
+      margin: 0,
+      filename: `ticket-${this.ticket.id_ticket}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    };
+
+    html2pdf().set(opciones).from(contenido).save();
   }
 }

@@ -177,6 +177,9 @@
             <ion-button expand="block" *ngIf="permisos.canAssignTickets()"
               >ASIGNAR TECNICO</ion-button
             >
+            <ion-button expand="block" fill="outline" (click)="descargarPDF()">
+              <ion-icon name="document-outline" slot="start"></ion-icon>DESCARGAR REPORTE
+            </ion-button>
             <ion-button
               expand="block"
               [color]="ticket?.estado === 'cerrado' ? 'success' : 'danger'"
