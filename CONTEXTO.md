@@ -176,10 +176,10 @@ http://127.0.0.1:8000
 - Mostrar quién creó el ticket en el listado
 - Editar información de ticket con control por rol
 - Restringir campos obligatorios al crear ticket
+- Generar PDF de reporte por ticket (html2pdf.js, frontend-only)
 
 ### BACKLOG (ver Trello para orden completo)
 - Unificación del flujo de acceso a tickets (Hub de Funciones)
-- Generar PDFs de reporte por ticket
 - Función de asignación de tickets
 - Etiquetar usuarios en comentarios @
 - Notificaciones: bandeja + sonido + recordatorio mantenciones
