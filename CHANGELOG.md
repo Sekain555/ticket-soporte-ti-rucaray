@@ -1,5 +1,27 @@
 # 📘 CHANGELOG — Frontend (Ionic / Angular)
 
+## [1.5.0] — 2026-06-18
+
+### Added
+- Barra de búsqueda en "Mis tickets" — filtra por título, descripción o N° de ticket con debounce de 400ms.
+- Columna "Creado por" en listado de tickets desktop; texto secundario en versión móvil.
+- Formulario de edición inline de ticket en columna derecha del detalle, activado desde botón "EDITAR TICKET" — campos según rol.
+- Validación de campos obligatorios al crear ticket (título, descripción, prioridad) con toast descriptivo por campo faltante y asterisco en labels.
+- Generación de reporte PDF por ticket desde el detalle — librería `html2pdf.js`, 100% frontend, sin dependencias en el servidor.
+
+### Changed
+- Selector de categoría eliminado del modo lectura en detalle de ticket — ahora muestra texto para todos los roles y solo es editable desde el formulario de edición.
+
+### Compatibility
+- Probado con Backend `1.5.0`.
+
+### Notes
+- Release completo de la **Sección 2 — Gestión y Búsqueda de Tickets**.
+- El PDF incluye logo Rucaray, cabecera, tabla de información, cronología de actividades y pie de página. Nombre de archivo: `ticket-{id}.pdf`.
+- La edición de ticket respeta control de acceso por rol: admin/soporte editan todos los campos; usuarios solo editan tickets abiertos (título, descripción, dispositivo).
+
+---
+
 ## [1.4.0] — 2026-05-10
 
 ### Added
@@ -171,6 +193,7 @@
 
 | Frontend | Backend | Estado | Fecha | Notas |
 |---|---|---|---|---|
+| 1.5.0 | 1.4.0 | ✅ Compatible | 2026-06-18 | Release Gestión y Búsqueda |
 | 1.4.0 | 1.3.0 | ✅ Compatible | 2026-05-10 | Release Mejoras UX y Flujo |
 | 1.3.0 | 1.3.0 | ✅ Compatible | 2026-04-29 | Release MVP Inventario de Dispositivos |
 | 1.2.0 | 1.2.0 | ✅ Compatible | 2026-04-27 | Release grupo Agenda de Mantenciones |
