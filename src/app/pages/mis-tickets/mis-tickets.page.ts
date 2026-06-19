@@ -36,12 +36,14 @@ export class MisTicketsPage implements OnInit {
   pageSize = 10;
   pageIndex = 0;
   total = 0;
+  busqueda: string = '';
+  private searchTimer: any = null;
 
   constructor(
     private ticketService: TicketService,
     private toastCtrl: ToastController,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -97,9 +99,12 @@ export class MisTicketsPage implements OnInit {
   }
 
   // Semáforo SLA: retorna { color, icono, label } o null si no aplica
-  getSemaforoSLA(ticket: any): { color: string; icono: string; label: string } | null {
+  getSemaforoSLA(
+    ticket: any,
+  ): { color: string; icono: string; label: string } | null {
     // No mostrar en tickets cerrados
-    if (!ticket?.fecha_limite_resolucion || ticket?.estado === 'cerrado') return null;
+    if (!ticket?.fecha_limite_resolucion || ticket?.estado === 'cerrado')
+      return null;
 
     const ahora = new Date().getTime();
     const fechaCreacion = new Date(ticket.fecha_creacion).getTime();
@@ -135,19 +140,24 @@ export class MisTicketsPage implements OnInit {
     const { sort_by, order } = ORDER_MAP[this.ordenSeleccionado];
     const offset = this.pageIndex * this.pageSize;
 
-    this.ticketService.listarTickets({
+    this.ticketService
+      .listarTickets({
         sort_by,
         order,
         estado: this.filtroEstado,
         limit: this.pageSize,
         offset: offset,
+        search: this.busqueda.trim() || undefined,
       })
       .subscribe({
         next: (resp) => {
-          const items =
-            Array.isArray(resp?.items) ? resp.items :
-            Array.isArray(resp?.tickets) ? resp.tickets :
-            Array.isArray(resp) ? resp : [];
+          const items = Array.isArray(resp?.items)
+            ? resp.items
+            : Array.isArray(resp?.tickets)
+              ? resp.tickets
+              : Array.isArray(resp)
+                ? resp
+                : [];
 
           this.tickets = items;
 
@@ -174,11 +184,11 @@ export class MisTicketsPage implements OnInit {
 
   private inverseOrderKey(
     sort_by?: string | null,
-    order?: 'asc' | 'desc' | null
+    order?: 'asc' | 'desc' | null,
   ): OrdenKey | null {
     if (!sort_by || !order) return null;
     const entry = Object.entries(ORDER_MAP).find(
-      ([, v]) => v.sort_by === sort_by && v.order === order
+      ([, v]) => v.sort_by === sort_by && v.order === order,
     );
     return entry ? (entry[0] as OrdenKey) : null;
   }
@@ -242,5 +252,19 @@ export class MisTicketsPage implements OnInit {
       return nextOffset < this.total;
     }
     return false;
+  }
+
+  onBusquedaChange() {
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => {
+      this.pageIndex = 0;
+      this.refrescarListado();
+    }, 400);
+  }
+
+  limpiarBusqueda() {
+    this.busqueda = '';
+    this.pageIndex = 0;
+    this.refrescarListado();
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "ticket-soporte-rucaray",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "author": "Sekain Labs",
   "homepage": "",
   "scripts": {
@@ -32,6 +32,7 @@
     "@ionic/angular": "^8.0.0",
     "angular-calendar": "^0.32.2",
     "date-fns": "^4.1.0",
+    "html2pdf.js": "^0.14.0",
     "ionicons": "^7.0.0",
     "ngx-avatars": "^1.10.0",
     "rxjs": "~7.8.0",
@@ -50,6 +51,7 @@
     "@angular/language-service": "^20.3.19",
     "@capacitor/cli": "7.4.2",
     "@ionic/angular-toolkit": "^12.0.0",
+    "@types/html2pdf.js": "^0.10.0",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",

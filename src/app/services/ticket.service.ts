@@ -53,6 +53,7 @@ export class TicketService {
     estado?: 'todos' | 'abierto' | 'en_progreso' | 'resuelto' | 'cerrado';
     limit?: number;
     offset?: number;
+    search?: string;
   }): Observable<any> {
     const token = this.authService.getToken();
     if (!token) throw new Error('Usuario no autenticado');
@@ -72,6 +73,7 @@ export class TicketService {
     if (typeof opts?.offset === 'number') {
       params = params.set('offset', String(opts.offset));
     }
+    if (opts?.search) params = params.set('search', opts.search);
 
     return this.http.get(`${environment.apiBaseUrl}/tickets/`, {
       headers,
@@ -168,6 +170,22 @@ export class TicketService {
     return this.http.patch(
       `${environment.apiBaseUrl}/tickets/${id_ticket}/tipo-problema`,
       body,
+      { headers },
+    );
+  }
+
+  editarTicket(id_ticket: string, campos: any): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) throw new Error('Usuario no autenticado');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.patch(
+      `${environment.apiBaseUrl}/tickets/${id_ticket}`,
+      campos,
       { headers },
     );
   }
