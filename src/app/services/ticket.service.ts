@@ -189,4 +189,24 @@ export class TicketService {
       { headers },
     );
   }
+
+  asignarTicket(
+    id_ticket: string,
+    id_asignado: number | null,
+    comentario?: string,
+  ): Observable<any> {
+    const token = this.authService.getToken();
+    if (!token) throw new Error('Usuario no autenticado');
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.patch(
+      `${environment.apiBaseUrl}/tickets/${id_ticket}/asignar`,
+      { id_asignado, comentario },
+      { headers },
+    );
+  }
 }

@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { ToastController, AlertController } from '@ionic/angular';
 import { PermissionsService } from 'src/app/services/permissions.service';
 declare const html2pdf: any;
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-detalle-ticket',
@@ -25,6 +27,8 @@ export class DetalleTicketPage implements OnInit {
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
     public permisos: PermissionsService,
+    private usuarioService: UsuarioService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -390,5 +394,111 @@ export class DetalleTicketPage implements OnInit {
     };
 
     html2pdf().set(opciones).from(contenido).save();
+  }
+
+  async asignarTicket() {
+    const rol = this.authService.getRol();
+    const idUsuarioActual = Number(this.authService.getIdUsuario());
+
+    // Soporte solo puede asignarse a sí mismo
+    if (rol === 'soporte') {
+      this.ticketService
+        .asignarTicket(this.ticket.id_ticket, idUsuarioActual)
+        .subscribe({
+          next: (res) => {
+            this.ticket = res;
+            this.ticketService
+              .obtenerFeed(this.ticket.id_ticket)
+              .subscribe((f) => (this.feed = f));
+            this.mostrarToast('Ticket asignado correctamente.', 'success');
+          },
+          error: () =>
+            this.mostrarToast('Error al asignar el ticket.', 'danger'),
+        });
+      return;
+    }
+
+    // Admin ve listado completo
+    this.usuarioService.listarAdminsYTecnicos().subscribe({
+      next: async (usuarios: any[]) => {
+        const inputs: any[] = usuarios.map((u: any) => ({
+          type: 'radio',
+          label: `${u.nombre} ${u.apellido} (${u.rol === 'admin' ? 'Administrador' : 'Soporte'})`,
+          value: u.id_usuario,
+          checked: this.ticket.id_asignado === u.id_usuario,
+        }));
+
+        inputs.push({
+          type: 'radio',
+          label: 'Sin asignar',
+          value: null,
+          checked: !this.ticket.id_asignado,
+        });
+
+        const alert = await this.alertCtrl.create({
+          header: 'Asignar ticket',
+          inputs,
+          buttons: [
+            { text: 'Cancelar', role: 'cancel' },
+            {
+              text: 'Asignar',
+              handler: (data) => {
+                const id_asignado = data ?? null;
+
+                // Cerrar el alert actual y pedir comentario en uno nuevo
+                this.alertCtrl
+                  .create({
+                    header: 'Comentario (opcional)',
+                    inputs: [
+                      {
+                        name: 'comentario',
+                        type: 'text',
+                        placeholder: 'Ej: Asignado por urgencia...',
+                      },
+                    ],
+                    buttons: [
+                      {
+                        text: 'Omitir',
+                        handler: () => {
+                          this.ejecutarAsignacion(id_asignado, undefined);
+                        },
+                      },
+                      {
+                        text: 'Confirmar',
+                        handler: (d) => {
+                          this.ejecutarAsignacion(
+                            id_asignado,
+                            d.comentario?.trim() || undefined,
+                          );
+                        },
+                      },
+                    ],
+                  })
+                  .then((a) => a.present());
+
+                return true;
+              },
+            },
+          ],
+        });
+        await alert.present();
+      },
+      error: () => this.mostrarToast('Error al cargar técnicos.', 'danger'),
+    });
+  }
+
+  private ejecutarAsignacion(id_asignado: number | null, comentario?: string) {
+    this.ticketService
+      .asignarTicket(this.ticket.id_ticket, id_asignado, comentario)
+      .subscribe({
+        next: (res) => {
+          this.ticket = res;
+          this.ticketService
+            .obtenerFeed(this.ticket.id_ticket)
+            .subscribe((f) => (this.feed = f));
+          this.mostrarToast('Ticket asignado correctamente.', 'success');
+        },
+        error: () => this.mostrarToast('Error al asignar el ticket.', 'danger'),
+      });
   }
 }
