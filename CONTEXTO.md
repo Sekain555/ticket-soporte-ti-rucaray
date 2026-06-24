@@ -177,10 +177,10 @@ http://127.0.0.1:8000
 - Editar información de ticket con control por rol
 - Restringir campos obligatorios al crear ticket
 - Generar PDF de reporte por ticket (html2pdf.js, frontend-only)
+- Función de asignación de tickets con control por rol
 
 ### BACKLOG (ver Trello para orden completo)
 - Unificación del flujo de acceso a tickets (Hub de Funciones)
-- Función de asignación de tickets
 - Etiquetar usuarios en comentarios @
 - Notificaciones: bandeja + sonido + recordatorio mantenciones
 - Funciones completas para "admin"
