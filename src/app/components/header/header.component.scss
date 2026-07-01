@@ -2,3 +2,18 @@ ion-avatar {
   width: 40px;
   height: 40px;
 }
+
+.boton-notif {
+  position: relative;
+}
+
+.badge-punto {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 8px;
+  height: 12px;
+  min-width: 12px;
+  padding: 0;
+  border-radius: 50%;
+}
