@@ -6,11 +6,14 @@
   </ion-buttons>
   <ion-title>Soporte TI - Rucaray</ion-title>
   <ion-buttons slot="secondary">
-    <!--
-    <ion-button>
+    <ion-button (click)="abrirNotificaciones($event)" class="boton-notif">
       <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      <ion-badge
+        *ngIf="noLeidas > 0"
+        color="danger"
+        class="badge-punto"
+      >{{ noLeidas }}</ion-badge>
     </ion-button>
-    -->
     <ion-button (click)="abrirMenuUsuario()">
       <ion-avatar>
         <img
