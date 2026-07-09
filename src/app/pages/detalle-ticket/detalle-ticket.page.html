@@ -76,6 +76,12 @@
                   </p>
                 </ion-col>
               </ion-row>
+              <ion-row class="ion-margin-bottom">
+                <ion-col>
+                  <strong class="ion-display-block">TÉCNICO ASIGNADO</strong>
+                  <p>{{ ticket?.nombre_asignado ? (ticket.nombre_asignado + ' ' + ticket.apellido_asignado) : 'Sin asignar' }}</p>
+                </ion-col>
+              </ion-row>
             </ion-grid>
           </ion-card-content>
         </ion-card>
@@ -147,6 +153,10 @@
                     fill="outline"
                     placeholder="Añadir un comentario..."
                   ></ion-textarea>
+                  <ion-button fill="clear" size="small" (click)="abrirModalMencion()">
+                  <ion-icon name="at-outline" slot="start"></ion-icon>
+                    Mencionar
+                  </ion-button>
                   <ion-row
                     class="ion-justify-content-end ion-align-items-center"
                   >
@@ -174,9 +184,9 @@
             >
               EDITAR TICKET
             </ion-button>
-            <ion-button expand="block" *ngIf="permisos.canAssignTickets()"
-              >ASIGNAR TECNICO</ion-button
-            >
+            <ion-button expand="block" *ngIf="permisos.canAssignTickets()" (click)="asignarTicket()">
+              ASIGNAR TECNICO
+            </ion-button>
             <ion-button expand="block" fill="outline" (click)="descargarPDF()">
               <ion-icon name="document-outline" slot="start"></ion-icon>DESCARGAR REPORTE
             </ion-button>

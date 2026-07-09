@@ -1,6 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, PopoverController } from '@ionic/angular';
+import { NotificacionService } from 'src/app/services/notificacion.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { Subscription } from 'rxjs';
+import { NotificacionesPopoverComponent } from '../notificaciones-popover/notificaciones-popover.component';
 
 @Component({
   selector: 'app-header',
@@ -8,15 +12,38 @@ import { ActionSheetController } from '@ionic/angular';
   styleUrls: ['./header.component.scss'],
   standalone: false,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   @Input() mostrarBackButton: boolean = false;
+  noLeidas: number = 0;
+  private sub: Subscription | null = null;
 
   constructor(
     private router: Router,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private notificacionService: NotificacionService,
+    private authService: AuthService,
+    private popoverCtrl: PopoverController,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.sub = this.notificacionService.noLeidas$.subscribe(
+      (n) => (this.noLeidas = n),
+    );
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
+  async abrirNotificaciones(event: Event) {
+    const popover = await this.popoverCtrl.create({
+      component: NotificacionesPopoverComponent,
+      event,
+      dismissOnSelect: false,
+      cssClass: 'notif-popover-rounded',
+    });
+    await popover.present();
+  }
 
   async abrirMenuUsuario() {
     const actionSheet = await this.actionSheetCtrl.create({
@@ -25,9 +52,7 @@ export class HeaderComponent implements OnInit {
         {
           text: 'Cerrar sesión',
           icon: 'log-out-outline',
-          handler: () => {
-            this.cerrarSesion();
-          },
+          handler: () => this.cerrarSesion(),
         },
         {
           text: 'Cancelar',
@@ -36,21 +61,17 @@ export class HeaderComponent implements OnInit {
         },
       ],
     });
-
     await actionSheet.present();
   }
 
   cerrarSesion() {
-    // Eliminar token del storage o localStorage
-    localStorage.removeItem('access_token');
-
-    // Redirigir al login
+    this.notificacionService.detenerPolling();
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 
   volver() {
     const currentUrl = this.router.url;
-
     if (currentUrl.startsWith('/detalle-ticket')) {
       this.router.navigate(['/mis-tickets']);
     } else if (currentUrl.startsWith('/nuevo-ticket')) {

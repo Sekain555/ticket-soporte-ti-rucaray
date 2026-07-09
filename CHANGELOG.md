@@ -1,5 +1,32 @@
 # 📘 CHANGELOG — Frontend (Ionic / Angular)
 
+## [1.6.0] — 2026-07-08
+
+### Added
+- Función de asignación de tickets con alert de selección — admin puede asignar a cualquier técnico/admin, soporte solo puede asignarse a sí mismo.
+- Comentario opcional al asignar ticket — registrado en el feed.
+- Campo "TÉCNICO ASIGNADO" visible en detalles del ticket.
+- Sistema de notificaciones in-app con polling cada 30 segundos — `BehaviorSubject` + `interval`.
+- Icono de campana en header con badge punto rojo para notificaciones no leídas.
+- `NotificacionesPopoverComponent` con listado de notificaciones, navegación directa al ticket/mantención y marcado de leídas.
+- Sonido de notificación al recibir nuevas notificaciones.
+- `NotificacionService` con métodos `iniciarPolling()`, `detenerPolling()`, `forzarActualizacion()`.
+- Polling iniciado/detenido desde `app.component.ts` según estado de sesión.
+- `MencionarUsuarioModalComponent` con buscador en tiempo real para seleccionar usuarios.
+- Botón "@ Mencionar" en comentarios de tickets y mantenciones.
+- `UsuarioService` refactorizado con métodos correctamente nombrados: `listarSoporte()`, `listarAdminsYSoporte()`, `listarTodos()`, `listarUsuariosRucaray()`.
+
+### Compatibility
+- Probado con Backend `1.5.0`.
+
+### Notes
+- Release completo de la **Sección 3 — Asignación y Colaboración**.
+- Polling elegido sobre SSE/WebSockets por incompatibilidad con `--workers 2` de uvicorn.
+- Convención de mención: `@NombreApellido` sin espacio — búsqueda en BD por `CONCAT(nombre, apellido)`.
+- Queda pendiente dar acceso al ticket a usuarios mencionados que no son dueños — anotado como feature futura.
+
+---
+
 ## [1.5.0] — 2026-06-18
 
 ### Added
@@ -193,6 +220,7 @@
 
 | Frontend | Backend | Estado | Fecha | Notas |
 |---|---|---|---|---|
+| 1.6.0 | 1.5.0 | ✅ Compatible | 2026-07-08 | Release Asignación y Colaboración |
 | 1.5.0 | 1.4.0 | ✅ Compatible | 2026-06-18 | Release Gestión y Búsqueda |
 | 1.4.0 | 1.3.0 | ✅ Compatible | 2026-05-10 | Release Mejoras UX y Flujo |
 | 1.3.0 | 1.3.0 | ✅ Compatible | 2026-04-29 | Release MVP Inventario de Dispositivos |

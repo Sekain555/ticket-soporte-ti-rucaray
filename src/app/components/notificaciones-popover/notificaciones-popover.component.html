@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title size="small">Notificaciones</ion-title>
+    <ion-buttons slot="end">
+      <ion-button size="small" (click)="marcarTodasLeidas()"  color="primary">
+        <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+        Marcar leídas
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--padding-bottom: 0;">
+  <div class="notif-empty" *ngIf="cargando">
+    <ion-spinner name="dots"></ion-spinner>
+  </div>
+
+  <div class="notif-empty" *ngIf="!cargando && notificaciones.length === 0">
+    <ion-icon name="notifications-off-outline"></ion-icon>
+    <p>Sin notificaciones</p>
+  </div>
+
+  <ion-list *ngIf="!cargando && notificaciones.length > 0" lines="full">
+    <ion-item
+      *ngFor="let n of notificaciones"
+      [color]="!n.leida ? 'light' : undefined"
+      button
+      (click)="navegarA(n)"
+    >
+      <ion-icon
+        [name]="n.referencia_tipo === 'ticket' ? 'ticket-outline' : 'calendar-outline'"
+        slot="start"
+      ></ion-icon>
+      <ion-label class="ion-text-wrap">
+        <p>{{ n.mensaje }}</p>
+        <ion-note>{{ formatearFecha(n.fecha) }}</ion-note>
+      </ion-label>
+      <ion-badge slot="end" color="primary" *ngIf="!n.leida">●</ion-badge>
+    </ion-item>
+  </ion-list>
+</ion-content>
