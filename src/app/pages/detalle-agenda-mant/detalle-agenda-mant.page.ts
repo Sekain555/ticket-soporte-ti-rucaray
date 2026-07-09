@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  ToastController,
+  ModalController,
+} from '@ionic/angular';
 import { MantencionService } from 'src/app/services/mantencion.service';
 import { PermissionsService } from 'src/app/services/permissions.service';
 import { Platform } from '@ionic/angular';
+import { MencionarUsuarioModalComponent } from 'src/app/components/mencionar-usuario-modal/mencionar-usuario-modal.component';
 
 @Component({
   selector: 'app-detalle-agenda-mant',
@@ -31,6 +36,7 @@ export class DetalleAgendaMantPage implements OnInit {
     private toastCtrl: ToastController,
     public permisos: PermissionsService,
     private platform: Platform,
+    private modalCtrl: ModalController,
   ) {
     this.esMobil = this.platform.is('mobile') || this.platform.is('capacitor');
   }
@@ -48,7 +54,8 @@ export class DetalleAgendaMantPage implements OnInit {
         this.mantencion = res;
         this.cargarFeed(id);
       },
-      error: () => this.mostrarToast('No se pudo cargar la mantención.', 'danger'),
+      error: () =>
+        this.mostrarToast('No se pudo cargar la mantención.', 'danger'),
     });
   }
 
@@ -62,13 +69,17 @@ export class DetalleAgendaMantPage implements OnInit {
   agregarComentario() {
     if (!this.nuevoComentario.trim()) return;
     this.mantencionService
-      .agregarComentarioMantencion(this.mantencion.id_mantencion, this.nuevoComentario.trim())
+      .agregarComentarioMantencion(
+        this.mantencion.id_mantencion,
+        this.nuevoComentario.trim(),
+      )
       .subscribe({
         next: () => {
           this.nuevoComentario = '';
           this.cargarFeed(this.mantencion.id_mantencion);
         },
-        error: () => this.mostrarToast('Error al agregar comentario.', 'danger'),
+        error: () =>
+          this.mostrarToast('Error al agregar comentario.', 'danger'),
       });
   }
 
@@ -87,7 +98,10 @@ export class DetalleAgendaMantPage implements OnInit {
 
   confirmarReprogramacion() {
     if (!this.nuevaFecha || !this.nuevaHoraInicio || !this.nuevaHoraFin) {
-      this.mostrarToast('Debes completar fecha, hora inicio y hora término.', 'warning');
+      this.mostrarToast(
+        'Debes completar fecha, hora inicio y hora término.',
+        'warning',
+      );
       return;
     }
 
@@ -111,11 +125,18 @@ export class DetalleAgendaMantPage implements OnInit {
           this.mantencion.estado = 'reprogramado';
           this.mostrarFormReprogramar = false;
           this.cargarFeed(this.mantencion.id_mantencion);
-          this.mostrarToast('Mantención reprogramada correctamente.', 'success');
+          this.mostrarToast(
+            'Mantención reprogramada correctamente.',
+            'success',
+          );
         },
         error: (err) => {
           if (err?.status === 409) {
-            this.mostrarToast(err.error?.detail || 'Conflicto de horario.', 'danger', 5000);
+            this.mostrarToast(
+              err.error?.detail || 'Conflicto de horario.',
+              'danger',
+              5000,
+            );
           } else {
             this.mostrarToast('Error al reprogramar la mantención.', 'danger');
           }
@@ -157,9 +178,13 @@ export class DetalleAgendaMantPage implements OnInit {
                     this.mantencion.notas_soporte = data.notas.trim();
                   }
                   this.cargarFeed(this.mantencion.id_mantencion);
-                  this.mostrarToast(`Mantención ${nuevo_estado} correctamente.`, 'success');
+                  this.mostrarToast(
+                    `Mantención ${nuevo_estado} correctamente.`,
+                    'success',
+                  );
                 },
-                error: () => this.mostrarToast('Error al actualizar el estado.', 'danger'),
+                error: () =>
+                  this.mostrarToast('Error al actualizar el estado.', 'danger'),
               });
           },
         },
@@ -228,12 +253,31 @@ export class DetalleAgendaMantPage implements OnInit {
     });
   }
 
-  private async mostrarToast(mensaje: string, color: string = 'warning', duracion: number = 3000) {
+  private async mostrarToast(
+    mensaje: string,
+    color: string = 'warning',
+    duracion: number = 3000,
+  ) {
     const toast = await this.toastCtrl.create({
       message: mensaje,
       color,
       duration: duracion,
     });
     toast.present();
+  }
+
+  async abrirModalMencion() {
+    const modal = await this.modalCtrl.create({
+      component: MencionarUsuarioModalComponent,
+      breakpoints: [0, 0.5, 0.75],
+      initialBreakpoint: 0.75,
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data?.usuario) {
+      const mencion = `@${data.usuario.nombre}${data.usuario.apellido} `;
+      this.nuevoComentario = (this.nuevoComentario || '') + mencion;
+    }
   }
 }

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 import { FormsModule } from '@angular/forms';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController, AlertController, ModalController } from '@ionic/angular';
 import { PermissionsService } from 'src/app/services/permissions.service';
 declare const html2pdf: any;
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { MencionarUsuarioModalComponent } from 'src/app/components/mencionar-usuario-modal/mencionar-usuario-modal.component';
 
 @Component({
   selector: 'app-detalle-ticket',
@@ -29,6 +30,7 @@ export class DetalleTicketPage implements OnInit {
     public permisos: PermissionsService,
     private usuarioService: UsuarioService,
     private authService: AuthService,
+    private modalCtrl: ModalController,
   ) {}
 
   ngOnInit() {
@@ -500,5 +502,20 @@ export class DetalleTicketPage implements OnInit {
         },
         error: () => this.mostrarToast('Error al asignar el ticket.', 'danger'),
       });
+  }
+
+  async abrirModalMencion() {
+    const modal = await this.modalCtrl.create({
+      component: MencionarUsuarioModalComponent,
+      breakpoints: [0, 0.5, 0.75],
+      initialBreakpoint: 0.75,
+    });
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data?.usuario) {
+      const mencion = `@${data.usuario.nombre}${data.usuario.apellido} `;
+      this.nuevoComentario = (this.nuevoComentario || '') + mencion;
+    }
   }
 }

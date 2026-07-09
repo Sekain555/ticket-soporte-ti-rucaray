@@ -36,4 +36,10 @@ export class UsuarioService {
       params,
     });
   }
+
+  listarTodos(): Observable<any> {
+    return this.http.get(`${environment.apiBaseUrl}/usuarios`, {
+      headers: this.getHeaders(),
+    });
+  }
 }
