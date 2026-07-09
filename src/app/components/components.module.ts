@@ -4,10 +4,11 @@ import { IonicModule } from '@ionic/angular';
 
 import { HeaderComponent } from './header/header.component';
 import { NotificacionesPopoverComponent } from './notificaciones-popover/notificaciones-popover.component';
+import { MencionarUsuarioModalComponent } from './mencionar-usuario-modal/mencionar-usuario-modal.component';
 
 @NgModule({
-  declarations: [HeaderComponent, NotificacionesPopoverComponent],
+  declarations: [HeaderComponent, NotificacionesPopoverComponent, MencionarUsuarioModalComponent],
   imports: [CommonModule, IonicModule],
-  exports: [HeaderComponent, NotificacionesPopoverComponent],
+  exports: [HeaderComponent, NotificacionesPopoverComponent, MencionarUsuarioModalComponent],
 })
 export class ComponentsModule {}
